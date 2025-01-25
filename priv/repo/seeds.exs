@@ -125,12 +125,24 @@ create_product_transactions_and_total = fn products, transaction_id ->
   {product_transactions, total_price}
 end
 
+generate_random_date = fn ->
+  # Generate a random number of days between 0 and 90
+  random_days = :rand.uniform(90)
+
+  # Get the current UTC time
+  now = DateTime.utc_now()
+
+  # Subtract the random number of days from the current time
+  DateTime.add(now, -random_days * 86400, :second)
+  |> DateTime.truncate(:second)  # Ensure we remove any microseconds
+end
+
 for _ <- 1..10 do
   # Create a new transaction with a total price of 0 (which will be updated later)
   transaction =
     %Transaction{
       total_price: Decimal.new(0),
-      inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      inserted_at: generate_random_date.(),
       updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
     |> Repo.insert!()

@@ -1,5 +1,31 @@
 <div class="container mx-auto p-4">
   <h1 class="text-2xl font-semibold text-gray-800 mb-6">Transactions History</h1>
+  
+  <div class="mb-6">
+    <.form :let={f} for={%{}} action={~p"/transactions"} method="get">
+      <div class="flex items-center gap-4">
+        <div class="w-64">
+          <.input 
+            field={f[:month]} 
+            type="month" 
+            value={@selected_month}
+            label="Filter by Month"
+          />
+        </div>
+        <div class="mt-6">
+          <.button type="submit" class="bg-blue-500 hover:bg-blue-700 mt-2">
+            Filter
+          </.button>
+          <%= if @selected_month do %>
+            <.link href={~p"/transactions"} class="ml-2 text-gray-600 hover:text-gray-900">
+              Clear Filter
+            </.link>
+          <% end %>
+        </div>
+      </div>
+    </.form>
+  </div>
+
   <table
     class="min-w-full border-collapse border border-gray-300 shadow-lg rounded-lg"
   >
