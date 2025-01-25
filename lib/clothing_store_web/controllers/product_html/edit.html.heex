@@ -1,8 +1,12 @@
 <.header>
-  Edit Product {@product.id}
-  <:subtitle>Use this form to manage product records in your database.</:subtitle>
+  <h1 class="text-2xl font-semibold text-gray-800">Edit Product {@product.id}</h1>
+  <:subtitle>
+    <p class="text-gray-600">Use this form to manage product records in your database.</p>
+  </:subtitle>
 </.header>
 
 <.product_form changeset={@changeset} action={~p"/products/#{@product}"} />
 
-<.back navigate={~p"/products"}>Back to products</.back>
+<.back navigate={~p"/products"}>
+  Back to products
+</.back>

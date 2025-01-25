@@ -1,20 +1,36 @@
 <.header>
-  Product {@product.id}
-  <:subtitle>This is a product record from your database.</:subtitle>
+  <h1 class="text-2xl font-semibold text-gray-800">Product {@product.id}</h1>
+  <:subtitle>
+    <p class="text-gray-600">This is a product record from your database.</p>
+  </:subtitle>
   <:actions>
     <.link href={~p"/products/#{@product}/edit"}>
-      <.button>Edit product</.button>
+      <.button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit product</.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Photo">{@product.photo}</:item>
-  <:item title="Title">{@product.title}</:item>
-  <:item title="Description">{@product.description}</:item>
-  <:item title="Category">{@product.category}</:item>
-  <:item title="Price">{@product.price}</:item>
-  <:item title="Stock">{@product.stock}</:item>
+  <:item title="Photo">
+    <img src={@product.photo} alt={@product.title} class="h-32 w-32 object-cover rounded"/>
+  </:item>
+  <:item title="Title">
+    <p class="text-gray-900">{@product.title}</p>
+  </:item>
+  <:item title="Description">
+    <p class="text-gray-500">{@product.description}</p>
+  </:item>
+  <:item title="Category">
+    <p class="text-gray-500">{@product.category}</p>
+  </:item>
+  <:item title="Price">
+    <p class="text-gray-500">${@product.price}</p>
+  </:item>
+  <:item title="Stock">
+    <p class="text-gray-500">{@product.stock}</p>
+  </:item>
 </.list>
 
-<.back navigate={~p"/products"}>Back to products</.back>
+<.back navigate={~p"/products"}>
+  Back to products
+</.back>

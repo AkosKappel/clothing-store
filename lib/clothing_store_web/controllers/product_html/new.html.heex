@@ -1,8 +1,12 @@
 <.header>
-  New Product
-  <:subtitle>Use this form to manage product records in your database.</:subtitle>
+  <h1 class="text-2xl font-semibold text-gray-800">New Product</h1>
+  <:subtitle>
+    <p class="text-gray-600">Use this form to manage product records in your database.</p>
+  </:subtitle>
 </.header>
 
 <.product_form changeset={@changeset} action={~p"/products"} />
 
-<.back navigate={~p"/products"}>Back to products</.back>
+<.back navigate={~p"/products"}>
+  Back to products
+</.back>
