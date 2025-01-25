@@ -1,0 +1,20 @@
+<.header>
+  Product {@product.id}
+  <:subtitle>This is a product record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/products/#{@product}/edit"}>
+      <.button>Edit product</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Photo">{@product.photo}</:item>
+  <:item title="Title">{@product.title}</:item>
+  <:item title="Description">{@product.description}</:item>
+  <:item title="Category">{@product.category}</:item>
+  <:item title="Price">{@product.price}</:item>
+  <:item title="Stock">{@product.stock}</:item>
+</.list>
+
+<.back navigate={~p"/products"}>Back to products</.back>
