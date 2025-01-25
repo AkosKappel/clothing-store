@@ -1,8 +1,8 @@
 <.header>
-  <h1 class="text-2xl font-semibold text-gray-800">Products inventory</h1>
+  <h1 class="text-2xl font-semibold text-gray-800 mb-6">Products Inventory</h1>
   <:actions>
     <.link href={~p"/products/new"}>
-      <.button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <.button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-6">
         New Product
       </.button>
     </.link>
@@ -11,13 +11,17 @@
 
 <.table id="products" rows={@products} row_click={&JS.navigate(~p"/products/#{&1}")}>
   <:col :let={product} label="Photo">
-    <img src={product.photo} alt={product.title} class="h-16 w-16 object-cover rounded"/>
+    <img src={product.photo} alt={product.title} class="h-24 w-24 object-cover rounded"/>
   </:col>
   <:col :let={product} label="Title">
     {product.title}
   </:col>
   <:col :let={product} label="Description">
-    {product.description}
+    <%= if String.length(product.description) > 30 do %>
+      <%= String.slice(product.description, 0, 30) <> "..." %>
+    <% else %>
+      <%= product.description %>
+    <% end %>
   </:col>
   <:col :let={product} label="Category">
     {product.category}
@@ -28,12 +32,19 @@
   <:col :let={product} label="Stock">
     {product.stock}
   </:col>
-  <:col label="Actions" :let={product}>
-    <div class="flex space-x-2">
-      <.link href={~p"/products/#{product}/edit"} class="text-indigo-600 hover:text-indigo-900">Edit</.link>
-      <.link href={~p"/products/#{product}"} method="delete" data-confirm="Are you sure?" class="text-red-600 hover:text-red-900">
-        Delete
+  <:action :let={product}>
+    <div class="sr-only">
+      <.link navigate={~p"/products/#{product}"}>
+        <i class="hero-eye-solid"></i> Show
       </.link>
     </div>
-  </:col>
+    <.link navigate={~p"/products/#{product}/edit"} class="text-purple-500 hover:text-purple-700">
+      <i class="hero-pencil-solid"></i> Edit
+    </.link>
+  </:action>
+  <:action :let={product}>
+    <.link href={~p"/products/#{product}"} method="delete" data-confirm="Are you sure?" class="text-red-500 hover:text-red-700">
+      <i class="hero-trash-solid"></i> Delete
+    </.link>
+  </:action>
 </.table>

@@ -13,7 +13,10 @@
 products = [
   %{
     title: "T-Shirt",
-    description: "A T-Shirt",
+    description: """
+    A T-Shirt is a type of casual shirt that is generally short-sleeved and collarless.
+    It is a popular casual wear item that is often worn for recreational activities.
+    """,
     category: "Clothing",
     photo: "https://images.pexels.com/photos/325876/pexels-photo-325876.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("19.99"),
@@ -29,7 +32,9 @@ products = [
   },
   %{
     title: "Sweater",
-    description: "A sweater",
+    description: """
+    This is a sweater. It is a piece of clothing that is typically made of thick, warm fabric such as wool, and is often worn over a shirt or other top for warmth. It can be long or short, and can be worn for casual or dressy occasions. This sweater is a great choice for anyone looking for a cozy and comfortable piece of clothing.
+    """,
     category: "Clothing",
     photo: "https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("29.99"),

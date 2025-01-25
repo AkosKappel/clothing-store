@@ -1,36 +1,40 @@
-<.header>
-  <h1 class="text-2xl font-semibold text-gray-800">Product {@product.id}</h1>
-  <:subtitle>
-    <p class="text-gray-600">This is a product record from your database.</p>
-  </:subtitle>
-  <:actions>
-    <.link href={~p"/products/#{@product}/edit"}>
-      <.button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit product</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
+  <.header>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Product Details</h1>
+    <:subtitle>
+      <p class="text-gray-500 italic">Click the "Edit Product" button to update this product.</p>
+    </:subtitle>
+    <:actions>
+      <.link href={~p"/products/#{@product}/edit"}>
+        <.button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Edit Product</.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<.list>
-  <:item title="Photo">
-    <img src={@product.photo} alt={@product.title} class="h-32 w-32 object-cover rounded"/>
-  </:item>
-  <:item title="Title">
-    <p class="text-gray-900">{@product.title}</p>
-  </:item>
-  <:item title="Description">
-    <p class="text-gray-500">{@product.description}</p>
-  </:item>
-  <:item title="Category">
-    <p class="text-gray-500">{@product.category}</p>
-  </:item>
-  <:item title="Price">
-    <p class="text-gray-500">${@product.price}</p>
-  </:item>
-  <:item title="Stock">
-    <p class="text-gray-500">{@product.stock}</p>
-  </:item>
-</.list>
+  <div class="flex gap-8 mt-6">
+    <img src={@product.photo} alt={@product.title} class="h-80 w-80 object-cover border-4 border-gray-200 rounded-lg m-4"/>
+    <div class="flex-1 space-y-6">
+      <.list>
+        <:item title="Title">
+          <p class="text-xl font-bold text-gray-900">{@product.title}</p>
+        </:item>
+        <:item title="Description">
+          <p class="text-gray-700">{@product.description}</p>
+        </:item>
+        <:item title="Category">
+          <p class="text-gray-700">{@product.category}</p>
+        </:item>
+        <:item title="Price">
+          <p class="text-lg font-semibold text-gray-800">${@product.price}</p>
+        </:item>
+        <:item title="Stock">
+          <p class="text-sm font-medium text-gray-700">{@product.stock}</p>
+        </:item>
+      </.list>
+    </div>
+  </div>
 
-<.back navigate={~p"/products"}>
-  Back to products
-</.back>
+  <.back navigate={~p"/products"}>
+    Back to products
+  </.back>
+</div>

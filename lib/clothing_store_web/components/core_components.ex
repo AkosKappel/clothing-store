@@ -202,7 +202,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8 bg-white">
+      <div class="my-6 space-y-8 bg-white">
         {render_slot(@inner_block, f)}
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           {render_slot(action, f)}
@@ -442,13 +442,13 @@ defmodule ClothingStoreWeb.CoreComponents do
   end
 
   @doc ~S"""
-  Renders a table with generic styling.
+  Renders a table with enhanced styling and responsiveness.
 
   ## Examples
 
       <.table id="users" rows={@users}>
-        <:col :let={user} label="id">{user.id}</:col>
-        <:col :let={user} label="username">{user.username}</:col>
+        <:col :let={user} label="ID">{user.id}</:col>
+        <:col :let={user} label="Username">{user.username}</:col>
       </.table>
   """
   attr :id, :string, required: true
@@ -473,47 +473,52 @@ defmodule ClothingStoreWeb.CoreComponents do
       end
 
     ~H"""
-    <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
-      <table class="w-[40rem] mt-11 sm:w-full">
-        <thead class="text-sm text-left leading-6 text-zinc-500">
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse border border-gray-200 rounded-lg shadow-sm">
+        <thead class="bg-gray-100">
           <tr>
-            <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal">{col[:label]}</th>
-            <th :if={@action != []} class="relative p-0 pb-4">
-              <span class="sr-only">{gettext("Actions")}</span>
+            <th
+              :for={col <- @col}
+              class="px-6 py-3 text-left text-sm font-semibold text-gray-700 tracking-wider"
+            >
+              {col[:label]}
+            </th>
+            <th :if={@action != []} class="px-6 py-3 text-right text-sm font-semibold text-gray-700">
+              {gettext("Actions")}
             </th>
           </tr>
         </thead>
-        <tbody
-          id={@id}
-          phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-          class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
-        >
-          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
-            <td
-              :for={{col, i} <- Enum.with_index(@col)}
-              phx-click={@row_click && @row_click.(row)}
-              class={["relative p-0", @row_click && "hover:cursor-pointer"]}
-            >
-              <div class="block py-4 pr-6">
-                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-                <span class={["relative", i == 0 && "font-semibold text-zinc-900"]}>
-                  {render_slot(col, @row_item.(row))}
-                </span>
-              </div>
-            </td>
-            <td :if={@action != []} class="relative w-14 p-0">
-              <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
-                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
-                <span
-                  :for={action <- @action}
-                  class="relative ml-4 font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-                >
-                  {render_slot(action, @row_item.(row))}
-                </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+          <tbody
+            id={@id}
+            phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
+            class="divide-y divide-gray-200 bg-white">
+            <tr
+              :for={row <- @rows}
+              id={@row_id && @row_id.(row)}
+              class="group hover:bg-gray-200 transition">
+              <td
+                :for={{col, i} <- Enum.with_index(@col)}
+                phx-click={@row_click && @row_click.(row)}
+                class={[
+                  "px-6 py-4 whitespace-nowrap",
+                  @row_click && "hover:cursor-pointer",
+                  i == 0 && "font-medium text-gray-900"
+                ]}>
+                {render_slot(col, @row_item.(row))}
+              </td>
+              <td
+                :if={@action != []}
+                class="px-4 py-4 whitespace-nowrap text-right w-32">
+                <div class="flex justify-end space-x-2">
+                  <span
+                    :for={action <- @action}
+                    class="font-medium transition truncate px-2 py-1">
+                    {render_slot(action, @row_item.(row))}
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
       </table>
     </div>
     """
@@ -561,9 +566,9 @@ defmodule ClothingStoreWeb.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        class="inline-flex items-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2"
       >
-        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
+        <.icon name="hero-arrow-left-solid" class="h-5 w-5" />
         {render_slot(@inner_block)}
       </.link>
     </div>

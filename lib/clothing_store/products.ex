@@ -17,9 +17,29 @@ defmodule ClothingStore.Products do
       [%Product{}, ...]
 
   """
-  def list_products do
-    Repo.all(Product)
+  def list_products(filters \\ %{}) do
+    Product
+    |> apply_filters(filters)
+    |> Repo.all()
   end
+
+  defp apply_filters(query, %{"category" => category}) when category != "" do
+    from(p in query, where: p.category == ^category)
+  end
+
+  defp apply_filters(query, %{"min_price" => min_price}) when min_price != "" do
+    from(p in query, where: p.price >= ^String.to_float(min_price))
+  end
+
+  defp apply_filters(query, %{"max_price" => max_price}) when max_price != "" do
+    from(p in query, where: p.price <= ^String.to_float(max_price))
+  end
+
+  defp apply_filters(query, %{"in_stock" => "true"}) do
+    from(p in query, where: p.stock > 0)
+  end
+
+  defp apply_filters(query, _), do: query
 
   @doc """
   Gets a single product.

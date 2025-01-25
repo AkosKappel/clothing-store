@@ -4,9 +4,9 @@ defmodule ClothingStoreWeb.ProductController do
   alias ClothingStore.Products
   alias ClothingStore.Products.Product
 
-  def index(conn, _params) do
-    products = Products.list_products()
-    render(conn, :index, products: products)
+  def index(conn, params) do
+    products = Products.list_products(params)
+    render(conn, :index, products: products, filters: params)
   end
 
   def new(conn, _params) do
