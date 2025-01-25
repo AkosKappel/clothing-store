@@ -1,43 +1,45 @@
-<.header>
-  <h1 class="text-2xl font-semibold text-gray-800">Products Inventory</h1>
-  <:actions>
-    <.link href={~p"/products/new"}>
-      <.button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        New Product
-      </.button>
-    </.link>
-  </:actions>
-</.header>
-
-<div class="bg-white p-6 rounded-lg shadow-sm my-6">
-  <h2 class="text-lg font-semibold mb-4">Filter Products</h2>
-  <.form :let={f} for={%{}} action={~p"/products"} method="get">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div>
-        <.input field={f[:category]} type="select" label="Category" options={@categories} value={@filters["category"]} />
-      </div>
-      <div>
-        <.input field={f[:min_price]} type="number" min="0.00" step="0.01" label="Min Price" value={@filters["min_price"]} />
-      </div>
-      <div>
-        <.input field={f[:max_price]} type="number" min="0.00" step="0.01" label="Max Price" value={@filters["max_price"]} />
-      </div>
-      <div class="flex items-center mt-6">
-        <label class="inline-flex items-center">
-          <input type="checkbox" name="in_stock" value="true" class="form-checkbox" checked={@filters["in_stock"] == "true"}>
-          <span class="ml-2">In Stock Only</span>
-        </label>
-      </div>
-    </div>
-    <div class="mt-4 flex gap-2">
-      <.button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Apply Filters
-      </.button>
-      <.link href={~p"/products"} class="ml-2 text-gray-600 hover:text-gray-900 mt-2">
-        Reset Filters
+<div class="container mx-auto p-4">
+  <.header>
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Products Inventory</h1>
+    <:actions>
+      <.link href={~p"/products/new"}>
+        <.button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+          New Product
+        </.button>
       </.link>
-    </div>
-  </.form>
+    </:actions>
+  </.header>
+
+  <div class="bg-white p-6 rounded-lg shadow-sm my-4">
+    <h2 class="text-lg font-semibold mb-4">Filter Products</h2>
+    <.form :let={f} for={%{}} action={~p"/products"} method="get">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <.input field={f[:category]} type="select" label="Category" options={@categories} value={@filters["category"]} />
+        </div>
+        <div>
+          <.input field={f[:min_price]} type="number" min="0.00" step="0.01" label="Min Price" value={@filters["min_price"]} />
+        </div>
+        <div>
+          <.input field={f[:max_price]} type="number" min="0.00" step="0.01" label="Max Price" value={@filters["max_price"]} />
+        </div>
+        <div class="flex items-center mt-6">
+          <label class="inline-flex items-center">
+            <input type="checkbox" name="in_stock" value="true" class="form-checkbox" checked={@filters["in_stock"] == "true"}>
+            <span class="ml-2">In Stock Only</span>
+          </label>
+        </div>
+      </div>
+      <div class="mt-4 flex gap-2">
+        <.button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Apply Filters
+        </.button>
+        <.link href={~p"/products"} class="ml-2 text-gray-600 hover:text-gray-900 mt-2">
+          Reset Filters
+        </.link>
+      </div>
+    </.form>
+  </div>
 </div>
 
 <.table id="products" rows={@products} row_click={&JS.navigate(~p"/products/#{&1}")}>

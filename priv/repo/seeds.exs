@@ -4,6 +4,7 @@ alias ClothingStore.Repo
 alias ClothingStore.Transactions.Transaction
 alias ClothingStore.Products.ProductTransaction
 alias ClothingStore.Products
+alias ClothingStore.Users
 
 products = [
   %{
@@ -160,3 +161,6 @@ for _ <- 1..10 do
   |> Ecto.Changeset.change(total_price: total_price)
   |> Repo.update!()
 end
+
+# Generate admin user
+Users.register_user(%{email: "admin@eshop.com", password: "Qwerty123456", role: "admin"})

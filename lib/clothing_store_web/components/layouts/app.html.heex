@@ -11,21 +11,60 @@
       </a>
     </div>
 
-    <div class="flex items-center gap-6 font-semibold">
-      <.link href={~p"/products"} class="hover:text-zinc-300">
-        Inventory
-      </.link>
-      <.link href={~p"/transactions"} class="hover:text-zinc-300">
-        Transactions
-      </.link>
-      <.link href={~p"/statistics"} class="hover:text-zinc-300">
-        Statistics
-      </.link>
+    <div class="hidden">
+      <%= current_path = "/" %>
     </div>
+
+    <ul class="flex items-center gap-6 font-semibold">
+      <%= if @current_user do %>
+        <li>
+          <.link 
+            href={~p"/products"} 
+            class={if current_path == "/products", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            Inventory
+          </.link>
+        </li>
+        <li>
+          <.link 
+            href={~p"/transactions"} 
+            class={if current_path == "/transactions", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            Transactions
+          </.link>
+        </li>
+        <li>
+          <.link 
+            href={~p"/statistics"} 
+            class={if current_path == "/statistics", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            Statistics
+          </.link>
+        </li>
+        <li>
+          <.link 
+            href={~p"/users/settings"} 
+            class={if current_path == "/users/settings", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            Settings
+          </.link>
+        </li>
+        <li>
+          <.link 
+            href={~p"/users/log_out"} 
+            method="delete" 
+            class="hover:text-zinc-400">
+            Log out
+          </.link>
+        </li>
+      <% else %>
+        <li>
+          <.link href={~p"/users/log_in"} class="hover:text-zinc-400">
+            Log in
+          </.link>
+        </li>
+      <% end %>
+    </ul>
   </div>
 </header>
 
-<main class="min-h-screen px-4 py-14 sm:px-6 lg:px-8">
+<main class="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
     <.flash_group flash={@flash} /> {@inner_content}
   </div>

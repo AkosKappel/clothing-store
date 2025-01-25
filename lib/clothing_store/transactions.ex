@@ -31,7 +31,7 @@ defmodule ClothingStore.Transactions do
   end
 
   def list_bestsellers_per_month(n, month) do
-    [year, month, _] = String.split(month, "-")
+    [year, month, _day] = String.split(month, "-")
     start_date = Date.new!(String.to_integer(year), String.to_integer(month), 1)
     end_date = Date.end_of_month(start_date)
 
