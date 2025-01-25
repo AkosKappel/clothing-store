@@ -10,6 +10,9 @@ defmodule ClothingStore.Products.Product do
     field :price, :decimal
     field :stock, :integer
 
+    has_many :products_transactions, ClothingStore.Products.ProductTransaction
+    has_many :transactions, through: [:products_transactions, :transaction]
+
     timestamps(type: :utc_datetime)
   end
 

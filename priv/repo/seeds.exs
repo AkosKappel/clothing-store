@@ -1,5 +1,10 @@
 # Script for populating the database. You can run it as: `mix run priv/repo/seeds.exs`
 
+alias ClothingStore.Repo
+alias ClothingStore.Transactions.Transaction
+alias ClothingStore.Products.ProductTransaction
+alias ClothingStore.Products
+
 products = [
   %{
     title: "T-Shirt",
@@ -90,23 +95,56 @@ products = [
   },
 ]
 
+# Insert the products into the database
 for product <- products do
-  ClothingStore.Products.create_product(product)
+  Products.create_product(product)
 end
 
-transactions = [
-  %{ product_id: 1, quantity: 1, inserted_at: ~U[2023-02-06 14:30:00Z] },
-  %{ product_id: 2, quantity: 1, inserted_at: ~U[2023-02-06 14:31:00Z] },
-  %{ product_id: 3, quantity: 1, inserted_at: ~U[2023-02-06 14:32:00Z] },
-  %{ product_id: 1, quantity: 5, inserted_at: ~U[2023-02-06 14:33:00Z] },
-  %{ product_id: 5, quantity: 1, inserted_at: ~U[2023-02-06 14:34:00Z] },
-  %{ product_id: 8, quantity: 2, inserted_at: ~U[2023-02-06 14:35:00Z] },
-  %{ product_id: 9, quantity: 2, inserted_at: ~U[2023-02-06 14:36:00Z] },
-  %{ product_id: 10, quantity: 1, inserted_at: ~U[2023-02-06 14:37:00Z] },
-  %{ product_id: 8, quantity: 6, inserted_at: ~U[2023-02-06 14:38:00Z] },
-  %{ product_id: 3, quantity: 1, inserted_at: ~U[2023-02-06 14:39:00Z] },
-]
+# Fetch newly created products
+products = Products.list_products()
 
-# for transaction <- transactions do
-#   ClothingStore.Transactions.create_transaction(transaction)
-# end
+create_product_transactions_and_total = fn products, transaction_id ->
+  product_transactions =
+    Enum.take_random(products, Enum.random(1..5)) # Select randomly N products
+    |> Enum.map(fn product ->
+      quantity = Enum.random(1..3) # Take a random quantity
+      %ProductTransaction{
+        product_id: product.id,
+        transaction_id: transaction_id,
+        quantity: quantity
+      }
+    end)
+
+  total_price =
+    # Calculate the total price of the transaction items
+    Enum.reduce(product_transactions, Decimal.new(0), fn pt, acc ->
+      product = Enum.find(products, &(&1.id == pt.product_id))
+      Decimal.add(acc, Decimal.mult(product.price, Decimal.new(pt.quantity)))
+    end)
+
+  {product_transactions, total_price}
+end
+
+for _ <- 1..10 do
+  # Create a new transaction with a total price of 0 (which will be updated later)
+  transaction =
+    %Transaction{
+      total_price: Decimal.new(0),
+      inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
+    }
+    |> Repo.insert!()
+
+  # Create a number of product transactions with random quantities and calculate the total price
+  {product_transactions, total_price} = create_product_transactions_and_total.(products, transaction.id)
+
+  # Insert each product transaction into the database
+  for product_transaction <- product_transactions do
+    Repo.insert!(product_transaction)
+  end
+
+  # Update the transaction with the calculated total price
+  transaction
+  |> Ecto.Changeset.change(total_price: total_price)
+  |> Repo.update!()
+end

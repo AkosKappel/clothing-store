@@ -18,6 +18,7 @@ defmodule ClothingStoreWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/transactions", PageController, :transactions
     get "/statistics", PageController, :statistics
 
     resources "/products", ProductController

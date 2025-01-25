@@ -3,8 +3,7 @@ defmodule ClothingStore.Repo.Migrations.CreateTransactions do
 
   def change do
     create table(:transactions) do
-      add :quantity, :integer
-      add :product_id, references(:products, on_delete: :nothing)
+      add :total_price, :decimal
 
       timestamps(type: :utc_datetime)
     end
