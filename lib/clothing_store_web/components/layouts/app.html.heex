@@ -12,21 +12,15 @@
     </div>
 
     <div class="flex items-center gap-6 font-semibold">
-      <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-300">
-        @elixirphoenix
-      </a>
-      <a
-        href="https://github.com/phoenixframework/phoenix"
-        class="hover:text-zinc-300"
-      >
-        GitHub
-      </a>
-      <a
-        href="https://hexdocs.pm/phoenix/overview.html"
-        class="rounded-lg bg-zinc-100 px-2 py-1 text-zinc-900 hover:bg-zinc-200/80"
-      >
-        Get Started <span aria-hidden="true">&rarr;</span>
-      </a>
+      <.link href={~p"/products"} class="hover:text-zinc-300">
+        Inventory
+      </.link>
+      <.link href={~p"/transactions"} class="hover:text-zinc-300">
+        Transactions
+      </.link>
+      <.link href={~p"/statistics"} class="hover:text-zinc-300">
+        Statistics
+      </.link>
     </div>
   </div>
 </header>

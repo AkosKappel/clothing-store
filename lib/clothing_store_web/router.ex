@@ -18,7 +18,10 @@ defmodule ClothingStoreWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/statistics", PageController, :statistics
+
     resources "/products", ProductController
+    # resources "/transactions", TransactionController
   end
 
   # Other scopes may use custom stacks.

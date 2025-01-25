@@ -6,4 +6,8 @@ defmodule ClothingStoreWeb.PageController do
     # so skip the default app layout.
     render(conn, :home)
   end
+
+  def statistics(conn, _params) do
+    render(conn, :statistics)
+  end
 end

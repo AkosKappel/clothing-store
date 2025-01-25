@@ -473,7 +473,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       end
 
     ~H"""
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto mt-6">
       <table class="min-w-full border-collapse border border-gray-200 rounded-lg shadow-sm">
         <thead class="bg-gray-100">
           <tr>

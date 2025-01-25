@@ -77,7 +77,7 @@ products = [
     description: "Stylish dress for a special occasion",
     category: "Clothing",
     photo: "https://images.pexels.com/photos/4352249/pexels-photo-4352249.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    price: Decimal.new("100"),
+    price: Decimal.new("100.00"),
     stock: 9,
   },
   %{
@@ -93,3 +93,20 @@ products = [
 for product <- products do
   ClothingStore.Products.create_product(product)
 end
+
+transactions = [
+  %{ product_id: 1, quantity: 1, inserted_at: ~U[2023-02-06 14:30:00Z] },
+  %{ product_id: 2, quantity: 1, inserted_at: ~U[2023-02-06 14:31:00Z] },
+  %{ product_id: 3, quantity: 1, inserted_at: ~U[2023-02-06 14:32:00Z] },
+  %{ product_id: 1, quantity: 5, inserted_at: ~U[2023-02-06 14:33:00Z] },
+  %{ product_id: 5, quantity: 1, inserted_at: ~U[2023-02-06 14:34:00Z] },
+  %{ product_id: 8, quantity: 2, inserted_at: ~U[2023-02-06 14:35:00Z] },
+  %{ product_id: 9, quantity: 2, inserted_at: ~U[2023-02-06 14:36:00Z] },
+  %{ product_id: 10, quantity: 1, inserted_at: ~U[2023-02-06 14:37:00Z] },
+  %{ product_id: 8, quantity: 6, inserted_at: ~U[2023-02-06 14:38:00Z] },
+  %{ product_id: 3, quantity: 1, inserted_at: ~U[2023-02-06 14:39:00Z] },
+]
+
+# for transaction <- transactions do
+#   ClothingStore.Transactions.create_transaction(transaction)
+# end
