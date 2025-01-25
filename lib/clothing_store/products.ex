@@ -18,28 +18,53 @@ defmodule ClothingStore.Products do
 
   """
   def list_products(filters \\ %{}) do
-    Product
-    |> apply_filters(filters)
-    |> Repo.all()
+    query = apply_filters(Product, filters)
+    Repo.all(query)
   end
 
-  defp apply_filters(query, %{"category" => category}) when category != "" do
-    from(p in query, where: p.category == ^category)
+  defp apply_filters(query, filters) when map_size(filters) > 0 do
+    query =
+      if filters["category"] != "All" and filters["category"] != "",
+        do: from(p in query, where: p.category == ^filters["category"]),
+        else: query
+
+    query =
+      case Float.parse(filters["min_price"]) do
+        {value, _} -> from(p in query, where: p.price >= ^value)
+        _ -> query
+      end
+
+    query =
+      case Float.parse(filters["max_price"]) do
+        {value, _} -> from(p in query, where: p.price <= ^value)
+        _ -> query
+      end
+
+    query =
+      if filters["in_stock"] == "true",
+        do: from(p in query, where: p.stock > 0),
+        else: query
+
+    query
   end
 
-  defp apply_filters(query, %{"min_price" => min_price}) when min_price != "" do
-    from(p in query, where: p.price >= ^String.to_float(min_price))
-  end
+  defp apply_filters(query, _filters), do: query
 
-  defp apply_filters(query, %{"max_price" => max_price}) when max_price != "" do
-    from(p in query, where: p.price <= ^String.to_float(max_price))
-  end
+  @doc """
+  Returns the list of unique categories.
 
-  defp apply_filters(query, %{"in_stock" => "true"}) do
-    from(p in query, where: p.stock > 0)
-  end
+  ## Examples
 
-  defp apply_filters(query, _), do: query
+      iex> list_categories()
+      ["Clothing", "Electronics", ...]
+
+  """
+  def list_categories do
+    ["All" | Product
+    |> select([p], p.category)
+    |> distinct(true)
+    |> Repo.all()]
+  end
 
   @doc """
   Gets a single product.

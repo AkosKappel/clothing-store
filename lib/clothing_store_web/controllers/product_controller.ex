@@ -6,7 +6,8 @@ defmodule ClothingStoreWeb.ProductController do
 
   def index(conn, params) do
     products = Products.list_products(params)
-    render(conn, :index, products: products, filters: params)
+    categories = Products.list_categories()
+    render(conn, :index, products: products, filters: params, categories: categories)
   end
 
   def new(conn, _params) do
