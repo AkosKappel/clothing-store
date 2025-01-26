@@ -2,7 +2,7 @@
 
 Author: **Ákos Kappel**
 
-Live Demo: **To be added**
+Live Demo: **[Modern Clothing Store](https://130.61.106.56/users/log_in)**
 
 ## Running the app
 
