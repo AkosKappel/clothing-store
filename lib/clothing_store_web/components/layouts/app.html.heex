@@ -10,7 +10,13 @@
     </div>
 
     <div class="hidden">
-      <%= current_path = "/" %>
+      <%= current_path = cond do
+        # For LiveView pages
+        assigns[:live_action] -> "/" <> Atom.to_string(assigns.live_action)
+        # For regular controller pages
+        assigns[:conn] -> assigns.conn.request_path
+        true -> "/"
+      end %>
     </div>
 
     <div class="block lg:hidden">
@@ -44,28 +50,28 @@
         <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/products"} 
-            class={if current_path == "/products", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            class={if current_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}>
             Inventory
           </.link>
         </li>
         <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/transactions"} 
-            class={if current_path == "/transactions", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            class={if current_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"}>
             Transactions
           </.link>
         </li>
         <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/statistics"} 
-            class={if current_path == "/statistics", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            class={if current_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"}>
             Statistics
           </.link>
         </li>
         <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/users/settings"} 
-            class={if current_path == "/users/settings", do: "text-orange-500", else: "hover:text-zinc-400"}>
+            class={if current_path == "/edit", do: "text-red-400", else: "hover:text-zinc-400"}>
             Settings
           </.link>
         </li>
