@@ -81,7 +81,8 @@ User login screen
 
 For the login functionality I used the `mix phx.gen.auth` library.
 This auto-generated all the necessary files for the user authentication, as well as the registration and login forms.
-I customized these forms and disabled registration for new users, because the seeder automatically creates the admin, and new users are not allowed to register.
+The library also provides a settings page for the user to change their email or password.
+I customized the generated forms and disabled registration for new users, because the seeder automatically creates the admin, and new users are not allowed to register.
 For demonstration purposes, the login form is automatically filled with the admin credentials, because all the dashboard routes are protected.
 
 ## Task 4 (optional)
