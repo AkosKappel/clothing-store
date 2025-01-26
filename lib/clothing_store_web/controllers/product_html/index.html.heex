@@ -63,8 +63,8 @@
     {product.title}
   </:col>
   <:col :let={product} label="Description">
-    <%= if String.length(product.description) > 30 do %>
-      <%= String.slice(product.description, 0, 30) <> "..." %>
+    <%= if String.length(product.description) > 16 do %>
+      <%= String.slice(product.description, 0, 16) <> "..." %>
     <% else %>
       <%= product.description %>
     <% end %>
@@ -82,7 +82,7 @@
     <% end %>
   </:col>
   <:col :let={product} label="Price">
-    ${product.price}
+    {product.price} €
   </:col>
   <:col :let={product} label="Stock">
     {product.stock}

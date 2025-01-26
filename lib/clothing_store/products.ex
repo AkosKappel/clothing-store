@@ -18,7 +18,7 @@ defmodule ClothingStore.Products do
 
   """
   def list_products(filters \\ %{}) do
-    query = apply_filters(Product, filters)
+    query = from(p in apply_filters(Product, filters), order_by: [desc: p.inserted_at])
     Repo.all(query)
   end
 

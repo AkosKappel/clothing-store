@@ -15,25 +15,31 @@
     <img src={@product.photo} alt={@product.title} class="h-80 w-80 object-cover border-4 border-gray-200 rounded-lg m-4"/>
     <div class="flex-1 space-y-6">
       <.list>
+        <:item title="ID">
+          <p class="text-lg text-gray-700 font-bold">{@product.id}</p>
+        </:item>
         <:item title="Title">
-          <p class="text-xl font-bold text-gray-900">{@product.title}</p>
+          <p class="text-lg font-bold text-gray-900">{@product.title}</p>
         </:item>
         <:item title="Description">
-          <p class="text-gray-700">{@product.description}</p>
+          <p class="text-gray-700 font-bold">{@product.description}</p>
         </:item>
         <:item title="Category">
-          <p class="text-gray-700">{@product.category}</p>
+          <p class="text-lg text-gray-700 font-bold">{@product.category}</p>
         </:item>
         <:item title="Tags">
-          <span :for={tag <- @product.tags} class="inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+          <span :if={Enum.empty?(@product.tags)}>
+            -
+          </span>
+          <span :for={tag <- @product.tags} class="inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-1 mr-2">
             <%= tag %>
           </span>
         </:item>
         <:item title="Price">
-          <p class="text-lg font-semibold text-gray-800">${@product.price}</p>
+          <p class="text-lg font-semibold text-gray-800">{@product.price} €</p>
         </:item>
-        <:item title="Stock">
-          <p class="text-sm font-medium text-gray-700">{@product.stock}</p>
+        <:item title="In Stock">
+          <p class="text-lg font-medium text-gray-700">{@product.stock}</p>
         </:item>
       </.list>
     </div>

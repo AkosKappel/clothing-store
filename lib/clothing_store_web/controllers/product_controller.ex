@@ -8,8 +8,7 @@ defmodule ClothingStoreWeb.ProductController do
     # Convert tags parameter from string to list if present
     params = case params["tags"] do
       nil -> params
-      tags when is_list(tags) -> params
-      tags when is_binary(tags) -> Map.put(params, "tags", String.split(tags, ","))
+      tags -> Map.put(params, "tags", parse_tags(tags))
     end
 
     products = Products.list_products(params)
@@ -19,12 +18,23 @@ defmodule ClothingStoreWeb.ProductController do
     render(conn, :index, products: products, filters: params, categories: categories, tags: tags)
   end
 
+  defp parse_tags(tags) do
+    case tags do
+      nil -> []
+      tags when is_list(tags) -> tags |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
+      tags when is_binary(tags) -> tags |> String.split(",") |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
+    end
+  end
+
   def new(conn, _params) do
     changeset = Products.change_product(%Product{})
     render(conn, :new, changeset: changeset)
   end
 
   def create(conn, %{"product" => product_params}) do
+    tags = parse_tags(product_params["tags"])
+    product_params = Map.put(product_params, "tags", tags)
+
     case Products.create_product(product_params) do
       {:ok, product} ->
         conn
@@ -49,6 +59,9 @@ defmodule ClothingStoreWeb.ProductController do
 
   def update(conn, %{"id" => id, "product" => product_params}) do
     product = Products.get_product!(id)
+
+    tags = parse_tags(product_params["tags"])
+    product_params = Map.put(product_params, "tags", tags)
 
     case Products.update_product(product, product_params) do
       {:ok, product} ->

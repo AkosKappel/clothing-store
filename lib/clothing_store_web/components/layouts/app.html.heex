@@ -1,7 +1,5 @@
-<header class="px-4 sm:px-6 lg:px-8 bg-gray-800 text-white">
-  <div
-    class="mx-auto max-w-7xl flex items-center justify-between py-3 text-sm"
-  >
+<header class="px-4 sm:px-6 lg:px-8 bg-gray-800 text-white h-24 pt-2">
+  <div class="mx-auto max-w-7xl flex items-center justify-between py-3 text-sm">
     <div class="flex items-center gap-4">
       <a href="/" class="flex items-center">
         <img src={~p"/images/logo.svg"} width="48" alt="Clothing Store Logo" />
@@ -15,37 +13,63 @@
       <%= current_path = "/" %>
     </div>
 
-    <ul class="flex items-center gap-6 font-semibold">
+    <div class="block lg:hidden">
+      <button
+        id="menu-toggle"
+        class="text-white hover:text-gray-400 focus:outline-none"
+        aria-label="Toggle Menu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4 6h16M4 12h16m-7 6h7"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <ul
+      id="menu"
+      class="hidden lg:flex items-center font-semibold bg-gray-800 lg:bg-transparent lg:static absolute top-24 left-0 w-full lg:w-auto lg:py-0 pb-4 lg:px-0 px-8 z-50 gap-x-8"
+    >
       <%= if @current_user do %>
-        <li>
+        <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/products"} 
             class={if current_path == "/products", do: "text-orange-500", else: "hover:text-zinc-400"}>
             Inventory
           </.link>
         </li>
-        <li>
+        <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/transactions"} 
             class={if current_path == "/transactions", do: "text-orange-500", else: "hover:text-zinc-400"}>
             Transactions
           </.link>
         </li>
-        <li>
+        <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/statistics"} 
             class={if current_path == "/statistics", do: "text-orange-500", else: "hover:text-zinc-400"}>
             Statistics
           </.link>
         </li>
-        <li>
+        <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/users/settings"} 
             class={if current_path == "/users/settings", do: "text-orange-500", else: "hover:text-zinc-400"}>
             Settings
           </.link>
         </li>
-        <li>
+        <li class="flex items-center justify-end my-2">
           <.link 
             href={~p"/users/log_out"} 
             method="delete" 
@@ -54,7 +78,7 @@
           </.link>
         </li>
       <% else %>
-        <li>
+        <li class="flex items-center justify-end">
           <.link href={~p"/users/log_in"} class="hover:text-zinc-400">
             Log in
           </.link>
@@ -63,6 +87,14 @@
     </ul>
   </div>
 </header>
+
+<script>
+  // JavaScript to toggle the dropdown menu
+  document.getElementById("menu-toggle").addEventListener("click", function () {
+    const menu = document.getElementById("menu");
+    menu.classList.toggle("hidden");
+  });
+</script>
 
 <main class="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
