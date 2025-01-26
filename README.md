@@ -2,7 +2,27 @@
 
 Author: **Ákos Kappel**
 
-Live Demo: **[Modern Clothing Store](https://130.61.106.56/users/log_in)**
+Live Demo: **[Modern Fashion Store](https://130.61.106.56/users/log_in)**
+
+# Table of Contents
+
+- [Running the app](#running-the-app)
+- [Screenshots](#screenshots)
+  - [Login Page](#login-page)
+  - [Home](#home)
+  - [Product Detail](#product-detail)
+  - [Product Form](#product-form)
+  - [Inventory with Filters](#inventory-with-filters)
+  - [Transactions with Month Filter](#transactions-with-month-filter)
+  - [Bestsellers](#bestsellers)
+- [Task 1](#task-1-required)
+- [Task 2](#task-2-required)
+- [Task 3](#task-3-optional)
+- [Task 4](#task-4-optional)
+- [Task 5](#task-5-optional)
+- [Task 6](#task-6-optional)
+- [Bonus](#bonus)
+
 
 ## Running the app
 
