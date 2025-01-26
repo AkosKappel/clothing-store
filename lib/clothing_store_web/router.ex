@@ -56,7 +56,8 @@ defmodule ClothingStoreWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{ClothingStoreWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", UserRegistrationLive, :new
+      # Disable refistration (only the admin can create users)
+      # live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit

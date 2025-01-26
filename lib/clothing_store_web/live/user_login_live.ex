@@ -5,19 +5,20 @@ defmodule ClothingStoreWeb.UserLoginLive do
     ~H"""
     <div class="mx-auto max-w-sm mt-16">
       <.header class="text-center">
-        Log in to account
-        <:subtitle>
+        Log in to your account
+        <%!-- <:subtitle>
           Don't have an account?
           <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">
             Sign up
           </.link>
           for an account now.
-        </:subtitle>
+        </:subtitle> --%>
       </.header>
 
       <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
+        <%!-- NOTE: The email and password is prefilled for the demo (in real production we wouldn't do this) --%>
+        <.input field={@form[:email]} type="email" label="Email" value="admin@eshop.com" required />
+        <.input field={@form[:password]} type="password" label="Password" value="Qwerty123456" required />
 
         <:actions>
           <.input field={@form[:remember_me]} type="checkbox" label="Keep me logged in" />

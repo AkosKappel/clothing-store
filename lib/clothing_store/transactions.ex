@@ -5,7 +5,9 @@ defmodule ClothingStore.Transactions do
   alias ClothingStore.Transactions.Transaction
 
   def list_transactions do
-    Repo.all(Transaction)
+    Transaction
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
     |> Repo.preload(products_transactions: [:product])
   end
 
@@ -15,6 +17,7 @@ defmodule ClothingStore.Transactions do
   def list_transactions_by_date_range(start_date, end_date) do
     Transaction
     |> where([t], t.inserted_at >= ^start_date and t.inserted_at <= ^end_date)
+    |> order_by([t], desc: t.inserted_at)
     |> preload(products_transactions: [:product])
     |> Repo.all()
   end
