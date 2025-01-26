@@ -17,6 +17,9 @@ defmodule ClothingStoreWeb.Helpers do
     |> String.slice(0..18)
   end
 
+  def image_link(nil), do: nil
+  def image_link(image_path), do: image_path || "https://placehold.co/600x400"
+
   def current_path(assigns) do
     cond do
       assigns[:live_action] -> "/" <> Atom.to_string(assigns.live_action)  # For LiveView pages

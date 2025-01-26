@@ -1,6 +1,6 @@
 <div class="container mx-auto p-4">
   <.header>
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Products Inventory</h1>
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Inventory Overview</h1>
     <:actions>
       <.link href={~p"/products/new"}>
         <.button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
@@ -57,7 +57,7 @@
 
 <.table id="products" rows={@products} row_click={&JS.navigate(~p"/products/#{&1}")}>
   <:col :let={product} label="Photo">
-    <img src={product.photo} alt={product.title} class="h-24 w-24 object-cover rounded"/>
+    <img src={image_link(product.photo)} alt={product.title} class="h-24 w-24 object-cover rounded"/>
   </:col>
   <:col :let={product} label="Title">
     {product.title}

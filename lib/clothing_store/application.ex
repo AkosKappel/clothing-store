@@ -12,7 +12,6 @@ defmodule ClothingStore.Application do
       ClothingStore.Repo,
       {DNSCluster, query: Application.get_env(:clothing_store, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ClothingStore.PubSub},
-      ClothingStore.Products.ProductNotifier,
       # Start the Finch HTTP client for sending emails
       {Finch, name: ClothingStore.Finch},
       # Start a worker by calling: ClothingStore.Worker.start_link(arg)

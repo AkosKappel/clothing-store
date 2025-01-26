@@ -20,7 +20,8 @@ defmodule ClothingStoreWeb.Router do
   scope "/", ClothingStoreWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/", PageController, :home
+    live "/", ProductLive.Index, :index
+
     get "/transactions", PageController, :transactions
     get "/statistics", PageController, :statistics
 

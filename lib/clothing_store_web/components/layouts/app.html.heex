@@ -32,58 +32,50 @@
       </button>
     </div>
 
+    <div class="hidden">
+      <%= active_path = ClothingStoreWeb.Helpers.current_path(assigns) %>
+    </div>
+
     <ul
       id="menu"
       class="hidden lg:flex items-center font-semibold bg-gray-800 lg:bg-transparent lg:static absolute top-24 left-0 w-full lg:w-auto lg:py-0 pb-4 lg:px-0 px-8 z-50 gap-x-8"
     >
-      <div class="hidden">
-        <%= active_path = ClothingStoreWeb.Helpers.current_path(assigns) %>
-      </div>
-
-      <%= if @current_user do %>
-        <li class="flex items-center justify-end my-2">
-          <.link 
-            href={~p"/products"} 
-            class={if active_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}>
-            Inventory
-          </.link>
-        </li>
-        <li class="flex items-center justify-end my-2">
-          <.link 
-            href={~p"/transactions"} 
-            class={if active_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"}>
-            Transactions
-          </.link>
-        </li>
-        <li class="flex items-center justify-end my-2">
-          <.link 
-            href={~p"/statistics"} 
-            class={if active_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"}>
-            Statistics
-          </.link>
-        </li>
-        <li class="flex items-center justify-end my-2">
-          <.link 
-            href={~p"/users/settings"} 
-            class={if active_path == "/edit", do: "text-red-400", else: "hover:text-zinc-400"}>
-            Settings
-          </.link>
-        </li>
-        <li class="flex items-center justify-end my-2">
-          <.link 
-            href={~p"/users/log_out"} 
-            method="delete" 
-            class="hover:text-zinc-200 bg-red-500 px-4 py-2 rounded">
-            Log out
-          </.link>
-        </li>
-      <% else %>
-        <li class="flex items-center justify-end">
-          <.link href={~p"/users/log_in"} class="hover:text-zinc-400">
-            Log in
-          </.link>
-        </li>
-      <% end %>
+      <li class="flex items-center justify-end my-2">
+        <.link 
+          href={~p"/products"} 
+          class={if active_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}>
+          Inventory
+        </.link>
+      </li>
+      <li class="flex items-center justify-end my-2">
+        <.link 
+          href={~p"/transactions"} 
+          class={if active_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"}>
+          Transactions
+        </.link>
+      </li>
+      <li class="flex items-center justify-end my-2">
+        <.link 
+          href={~p"/statistics"} 
+          class={if active_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"}>
+          Statistics
+        </.link>
+      </li>
+      <li class="flex items-center justify-end my-2">
+        <.link 
+          href={~p"/users/settings"} 
+          class={if active_path == "/edit", do: "text-red-400", else: "hover:text-zinc-400"}>
+          Settings
+        </.link>
+      </li>
+      <li class="flex items-center justify-end my-2">
+        <.link 
+          href={~p"/users/log_out"} 
+          method="delete" 
+          class="hover:text-zinc-200 bg-red-500 px-4 py-2 rounded">
+          Log out
+        </.link>
+      </li>
     </ul>
   </div>
 </header>

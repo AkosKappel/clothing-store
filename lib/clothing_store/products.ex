@@ -5,9 +5,7 @@ defmodule ClothingStore.Products do
 
   import Ecto.Query, warn: false
   alias ClothingStore.Repo
-
   alias ClothingStore.Products.Product
-  alias ClothingStore.PubSub
 
   @doc """
   Returns the list of products.
@@ -120,13 +118,7 @@ defmodule ClothingStore.Products do
     %Product{}
     |> Product.changeset(attrs)
     |> Repo.insert()
-    |> case do
-      {:ok, created_product} ->
-        Phoenix.PubSub.broadcast(PubSub, "products", {:product_created, created_product})
-        {:ok, created_product}
-
-      {:error, changeset} -> {:error, changeset}
-    end
+    |> notify_subscribers(:product_created)
   end
 
   @doc """
@@ -142,15 +134,10 @@ defmodule ClothingStore.Products do
 
   """
   def update_product(%Product{} = product, attrs) do
-    case product
-         |> Product.changeset(attrs)
-         |> Repo.update() do
-      {:ok, updated_product} ->
-        Phoenix.PubSub.broadcast(PubSub, "products", {:product_updated, updated_product})
-        {:ok, updated_product}
-
-      {:error, changeset} -> {:error, changeset}
-    end
+    product
+    |> Product.changeset(attrs)
+    |> Repo.update()
+    |> notify_subscribers(:product_updated)
   end
 
   @doc """
@@ -166,13 +153,8 @@ defmodule ClothingStore.Products do
 
   """
   def delete_product(%Product{} = product) do
-    case Repo.delete(product) do
-      {:ok, deleted_product} ->
-        Phoenix.PubSub.broadcast(PubSub, "products", {:product_deleted, deleted_product})
-        {:ok, deleted_product}
-
-      error -> error
-    end
+    Repo.delete(product)
+    |> notify_subscribers(:product_deleted)
   end
 
   @doc """
@@ -187,4 +169,11 @@ defmodule ClothingStore.Products do
   def change_product(%Product{} = product, attrs \\ %{}) do
     Product.changeset(product, attrs)
   end
+
+  defp notify_subscribers({:ok, product}, event) do
+    Phoenix.PubSub.broadcast(ClothingStore.PubSub, "products", {event, product})
+    {:ok, product}
+  end
+
+  defp notify_subscribers(error, _event), do: error
 end

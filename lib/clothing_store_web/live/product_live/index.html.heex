@@ -1,0 +1,45 @@
+<div class="max-w-7xl mx-auto p-6 bg-gray-50">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Product Dashboard</h1>
+    <p class="text-gray-500 italic">Browse our latest products</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <%= for product <- @products do %>
+      <.link href={~p"/products/#{product.id}"} class="block">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105">
+          <div class="relative">
+            <img src={image_link(product.photo)} alt={product.title} class="w-full h-64 object-cover"/>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2 font-bold">
+              <h2 class="text-xl text-gray-900"><%= product.title %></h2>
+              <span class="text-lg text-gray-600"><%= format_price(product.price) %></span>
+            </div>
+            
+            <p class="text-gray-600 mb-4 line-clamp-2"><%= product.description %></p>
+            
+            <div class="mb-4">
+              <span class="text-sm text-gray-500 mr-2">Category:</span>
+              <span class="text-sm font-medium text-gray-700"><%= product.category %></span>
+            </div>
+            
+            <div class="mb-4">
+              <span class="text-sm text-gray-500 mr-2">Stock:</span>
+              <span class={["text-sm font-medium", if(product.stock > 0, do: "text-green-600", else: "text-red-600")]}>
+                <%= product.stock %> available
+              </span>
+            </div>
+            
+            <div class="flex flex-wrap gap-2">
+              <span :for={tag <- product.tags} class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700">
+                <%= tag %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </.link>
+    <% end %>
+  </div>
+</div>

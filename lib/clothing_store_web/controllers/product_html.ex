@@ -1,6 +1,6 @@
 defmodule ClothingStoreWeb.ProductHTML do
   use ClothingStoreWeb, :html
-  import ClothingStoreWeb.Helpers, only: [format_price: 1]
+  import ClothingStoreWeb.Helpers
 
   embed_templates "product_html/*"
 
