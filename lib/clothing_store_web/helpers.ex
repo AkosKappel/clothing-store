@@ -16,4 +16,12 @@ defmodule ClothingStoreWeb.Helpers do
     |> String.replace("T", " ")
     |> String.slice(0..18)
   end
+
+  def current_path(assigns) do
+    cond do
+      assigns[:live_action] -> "/" <> Atom.to_string(assigns.live_action)  # For LiveView pages
+      assigns[:conn] -> assigns.conn.request_path  # For regular controller pages
+      true -> "/"
+    end
+  end
 end
