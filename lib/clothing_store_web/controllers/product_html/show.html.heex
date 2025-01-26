@@ -24,6 +24,11 @@
         <:item title="Category">
           <p class="text-gray-700">{@product.category}</p>
         </:item>
+        <:item title="Tags">
+          <span :for={tag <- @product.tags} class="inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+            <%= tag %>
+          </span>
+        </:item>
         <:item title="Price">
           <p class="text-lg font-semibold text-gray-800">${@product.price}</p>
         </:item>

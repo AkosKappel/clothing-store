@@ -9,6 +9,7 @@ defmodule ClothingStore.Products.Product do
     field :photo, :string
     field :price, :decimal
     field :stock, :integer
+    field :tags, {:array, :string}, default: []
 
     has_many :products_transactions, ClothingStore.Products.ProductTransaction
     has_many :transactions, through: [:products_transactions, :transaction]
@@ -19,7 +20,7 @@ defmodule ClothingStore.Products.Product do
   @doc false
   def changeset(product, attrs) do
     product
-    |> cast(attrs, [:photo, :title, :description, :category, :price, :stock])
+    |> cast(attrs, [:photo, :title, :description, :category, :price, :stock, :tags])
     |> validate_required([:photo, :title, :description, :category, :price, :stock])
   end
 end

@@ -5,9 +5,18 @@ defmodule ClothingStoreWeb.ProductController do
   alias ClothingStore.Products.Product
 
   def index(conn, params) do
+    # Convert tags parameter from string to list if present
+    params = case params["tags"] do
+      nil -> params
+      tags when is_list(tags) -> params
+      tags when is_binary(tags) -> Map.put(params, "tags", String.split(tags, ","))
+    end
+
     products = Products.list_products(params)
     categories = Products.list_categories()
-    render(conn, :index, products: products, filters: params, categories: categories)
+    tags = Products.list_tags()
+
+    render(conn, :index, products: products, filters: params, categories: categories, tags: tags)
   end
 
   def new(conn, _params) do

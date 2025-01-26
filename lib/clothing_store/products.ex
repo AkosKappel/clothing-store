@@ -45,6 +45,11 @@ defmodule ClothingStore.Products do
         do: from(p in query, where: p.stock > 0),
         else: query
 
+    query =
+      if tags = filters["tags"],
+        do: from(p in query, where: fragment("? && ?", p.tags, ^tags)),
+        else: query
+
     query
   end
 
@@ -64,6 +69,22 @@ defmodule ClothingStore.Products do
     |> select([p], p.category)
     |> distinct(true)
     |> Repo.all()]
+  end
+
+  @doc """
+  Returns the list of unique tags across all products.
+
+  ## Examples
+
+      iex> list_tags()
+      ["Summer", "Winter", "Sale", ...]
+
+  """
+  def list_tags do
+    Product
+    |> select([p], fragment("DISTINCT unnest(tags)"))
+    |> Repo.all()
+    |> Enum.sort()
   end
 
   @doc """

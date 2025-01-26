@@ -17,6 +17,7 @@ products = [
     photo: "https://images.pexels.com/photos/325876/pexels-photo-325876.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("19.99"),
     stock: 10,
+    tags: ["new", "popular", "sale"],
   },
   %{
     title: "Jeans",
@@ -25,6 +26,7 @@ products = [
     photo: "https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("1049.99"),
     stock: 5,
+    tags: ["new"],
   },
   %{
     title: "Sweater",
@@ -35,6 +37,7 @@ products = [
     photo: "https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("29.99"),
     stock: 0,
+    tags: ["popular"],
   },
   %{
     title: "Shoes",
@@ -43,6 +46,7 @@ products = [
     photo: "https://images.pexels.com/photos/2081332/pexels-photo-2081332.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("159.99"),
     stock: 2,
+    tags: ["sale"],
   },
   %{
     title: "Jacket",
@@ -51,6 +55,7 @@ products = [
     photo: "https://images.pexels.com/photos/2249249/pexels-photo-2249249.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("5.99"),
     stock: 7,
+    tags: ["new", "sale"],
   },
   %{
     title: "Boots",
@@ -59,6 +64,7 @@ products = [
     photo: "https://images.pexels.com/photos/3315286/pexels-photo-3315286.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("50.59"),
     stock: 20,
+    tags: [],
   },
   %{
     title: "Sneakers",
@@ -67,6 +73,7 @@ products = [
     photo: "https://images.pexels.com/photos/3353621/pexels-photo-3353621.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("529.99"),
     stock: 0,
+    tags: ["eco-friendly", "new"],
   },
   %{
     title: "Pants",
@@ -77,6 +84,7 @@ products = [
     photo: "https://images.pexels.com/photos/4066290/pexels-photo-4066290.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("9.99"),
     stock: 61,
+    tags: ["eco-friendly"],
   },
   %{
     title: "Dress",
@@ -85,6 +93,7 @@ products = [
     photo: "https://images.pexels.com/photos/4352249/pexels-photo-4352249.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("100.00"),
     stock: 9,
+    tags: ["modern"],
   },
   %{
     title: "Sunglasses",
@@ -93,6 +102,7 @@ products = [
     photo: "https://images.pexels.com/photos/1578997/pexels-photo-1578997.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     price: Decimal.new("4.99"),
     stock: 4,
+    tags: ["popular", "modern", "sale"],
   },
 ]
 
