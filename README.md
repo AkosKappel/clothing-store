@@ -8,8 +8,8 @@ Live Demo: **[Modern Clothing Store](https://130.61.106.56/users/log_in)**
 
 To start your Phoenix server:
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+- Run `mix setup` to install and setup dependencies
+- Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
@@ -91,7 +91,10 @@ LiveFeed for multiple users - Using the PubSub module
 
 ### Solution
 
-(not implemented yet)
+To implement this, I used the `Phoenix.PubSub` module.
+I created a channel called `products` in the `lib\clothing_store_web\live\product_live\index.ex` file.
+The channel is used to broadcast events, such as when a product is added, modified or deleted.
+When a event is broadcasted, all the connected clients are notified, and their homepage with the products is update accordingly, without having to reload the page.
 
 ## Task 5 (optional)
 
@@ -112,4 +115,3 @@ For this task, I used the new `tags` field that I added in the previous task.
 I added checkboxes for each tag in the filter form, and the user can now select any number of tags.
 The results are then filtered, so that only products that contain at least one of the selected tags are shown.
 Also, any of the filters can be combined together, for example, you can select a tag and a min price filter, and the products will be filtered by these conditions.
-
