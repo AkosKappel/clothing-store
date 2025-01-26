@@ -1,18 +1,4 @@
 defmodule ClothingStoreWeb.Helpers do
-  def active_class(conn, route_name) do
-    if current_route(conn) == route_name do
-      "active"
-    else
-      ""
-    end
-  end
-
-  defp current_route(conn) do
-    conn.path_info
-    |> Enum.join("/")
-    |> String.to_atom()
-  end
-
   def format_price(price) when is_nil(price), do: "0,00 €"
   def format_price(price) do
     price
