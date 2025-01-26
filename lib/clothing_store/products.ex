@@ -7,6 +7,7 @@ defmodule ClothingStore.Products do
   alias ClothingStore.Repo
 
   alias ClothingStore.Products.Product
+  alias ClothingStore.PubSub
 
   @doc """
   Returns the list of products.
@@ -119,6 +120,13 @@ defmodule ClothingStore.Products do
     %Product{}
     |> Product.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, created_product} ->
+        Phoenix.PubSub.broadcast(PubSub, "products", {:product_created, created_product})
+        {:ok, created_product}
+
+      {:error, changeset} -> {:error, changeset}
+    end
   end
 
   @doc """
@@ -134,9 +142,15 @@ defmodule ClothingStore.Products do
 
   """
   def update_product(%Product{} = product, attrs) do
-    product
-    |> Product.changeset(attrs)
-    |> Repo.update()
+    case product
+         |> Product.changeset(attrs)
+         |> Repo.update() do
+      {:ok, updated_product} ->
+        Phoenix.PubSub.broadcast(PubSub, "products", {:product_updated, updated_product})
+        {:ok, updated_product}
+
+      {:error, changeset} -> {:error, changeset}
+    end
   end
 
   @doc """
@@ -152,7 +166,13 @@ defmodule ClothingStore.Products do
 
   """
   def delete_product(%Product{} = product) do
-    Repo.delete(product)
+    case Repo.delete(product) do
+      {:ok, deleted_product} ->
+        Phoenix.PubSub.broadcast(PubSub, "products", {:product_deleted, deleted_product})
+        {:ok, deleted_product}
+
+      error -> error
+    end
   end
 
   @doc """
