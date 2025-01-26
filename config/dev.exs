@@ -1,5 +1,15 @@
 import Config
 
+# Load environment variables from .env file
+if File.exists?(".env") do
+  File.stream!(".env")
+  |> Stream.map(&String.trim/1)
+  |> Enum.each(fn line ->
+    [key, value] = String.split(line, "=")
+    System.put_env(key, value)
+  end)
+end
+
 # Configure your database
 config :clothing_store, ClothingStore.Repo,
   username: System.get_env("DB_USERNAME") || "postgres",
