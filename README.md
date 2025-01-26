@@ -9,9 +9,41 @@ Live Demo: **[Modern Clothing Store](https://130.61.106.56/users/log_in)**
 To start your Phoenix server:
 
 - Run `mix setup` to install and setup dependencies
+- Apply database migrations with `mix ecto.migrate`
+- Seed the database with `mix run priv/repo/seeds.exs`
 - Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+## Screenshots
+
+### Login Page
+
+![Login page](screenshots/LoginPage.png)
+
+### Home
+
+![Home page](screenshots/HomePage.png)
+
+### Product Detail
+
+![Product detail page](screenshots/ProductDetailPage.png)
+
+### Product Form
+
+![Product form page](screenshots/ProductForm.png)
+
+### Inventory with Filters
+
+![Inventory page](screenshots/InventoryPage.png)
+
+### Transactions with Month Filter
+
+![Transactions page](screenshots/TransactionsPage.png)
+
+### Bestsellers
+
+![Statistics page](screenshots/StatisticsPage.png)
 
 ## Task 1 (required)
 
@@ -36,9 +68,9 @@ Specifications:
 ### Solution
 
 I installed Elixir with Phoenix framework and setup PostgreSQL.
-In the `priv/repo/seeds.exs` I generated 10 products whose images I took randomly from the internet and the prices are made up.
+In the [`priv/repo/seeds.exs`](priv/repo/seeds.exs) I generated 10 products whose images I took randomly from the internet and the prices are made up.
 The structure of the products is defined in the migration file (it has all the required fields).
-CRUD operations are defined in the `lib/clothing_store_web/controllers/product_controller.ex` file and the corresponding SQL ORM queries are defined in the `lib/clothing_store/products.ex` file.
+CRUD operations are defined in the [`lib/clothing_store_web/controllers/product_controller.ex`](lib/clothing_store_web/controllers/product_controller.ex) file and the corresponding SQL ORM queries are defined in the [`lib/clothing_store/products.ex`](lib/clothing_store/products.ex) file.
 The admin has the option to view, add, edit and delete the products.
 For the user interface I used Tailwind to customize the design, and I made sure to make most of the components responsive.
 Finally, I implemented the filter over the products.
@@ -92,9 +124,9 @@ LiveFeed for multiple users - Using the PubSub module
 ### Solution
 
 To implement this, I used the `Phoenix.PubSub` module.
-I created a channel called `products` in the `lib\clothing_store_web\live\product_live\index.ex` file.
-The channel is used to broadcast events, such as when a product is added, modified or deleted.
-When a event is broadcasted, all the connected clients are notified, and their homepage with the products is update accordingly, without having to reload the page.
+I created a channel called `products` in the [`lib/clothing_store_web/live/product_live/index.ex`](lib/clothing_store_web/live/product_live/index.ex) file.
+The channel is used to broadcast events, such as when a product is added, modified, or deleted.
+When an event is broadcasted, all the connected clients are notified, and their homepage with the products is updated accordingly, without having to reload the page.
 
 ## Task 5 (optional)
 
@@ -115,3 +147,8 @@ For this task, I used the new `tags` field that I added in the previous task.
 I added checkboxes for each tag in the filter form, and the user can now select any number of tags.
 The results are then filtered, so that only products that contain at least one of the selected tags are shown.
 Also, any of the filters can be combined together, for example, you can select a tag and a min price filter, and the products will be filtered by these conditions.
+
+## Bonus
+
+After finishing the project, I deployed it my own server, where I configured Nginx to serve the app.
+You can find the link to the app [here](https://130.61.106.56/users/log_in).
