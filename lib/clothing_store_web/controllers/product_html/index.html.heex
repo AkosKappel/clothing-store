@@ -82,7 +82,7 @@
     <% end %>
   </:col>
   <:col :let={product} label="Price">
-    {product.price} €
+    <%= format_price(product.price) %>
   </:col>
   <:col :let={product} label="Stock">
     {product.stock}

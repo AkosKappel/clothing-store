@@ -36,7 +36,7 @@
           </span>
         </:item>
         <:item title="Price">
-          <p class="text-lg font-semibold text-gray-800">{@product.price} €</p>
+          <p class="text-lg font-semibold text-gray-800"><%= format_price(@product.price) %></p>
         </:item>
         <:item title="In Stock">
           <p class="text-lg font-medium text-gray-700">{@product.stock}</p>

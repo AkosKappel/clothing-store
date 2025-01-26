@@ -48,11 +48,10 @@
       <tr class="hover:bg-gray-50">
         <td class="border border-gray-300 px-4 py-2 font-semibold"><%= transaction.id %></td>
         <td class="border border-gray-300 px-4 py-2">
-          <%= transaction.inserted_at |> Timex.format!("{0D}/{0M}/{YYYY}
-          {h24}:{m}:{s}") %>
+          <%= format_date(transaction.inserted_at) %>
         </td>
         <td class="border border-gray-300 px-4 py-2">
-          <%= transaction.total_price %> €
+          <%= format_price(transaction.total_price) %>
         </td>
         <td class="border border-gray-300 px-4 py-2">
           <ul>

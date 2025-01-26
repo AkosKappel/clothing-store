@@ -1,4 +1,6 @@
 defmodule ClothingStoreWeb.PageHTML do
+  import ClothingStoreWeb.Helpers, only: [format_price: 1, format_date: 1]
+
   @moduledoc """
   This module contains pages rendered by PageController.
 
