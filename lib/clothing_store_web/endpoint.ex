@@ -13,7 +13,8 @@ defmodule ClothingStoreWeb.Endpoint do
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
-    websocket: [connect_info: [session: @session_options]],
+    # LiveView messages are small; the adapter default (10 MB) lets one client hog memory
+    websocket: [connect_info: [session: @session_options], max_frame_size: 1_000_000],
     longpoll: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
