@@ -2,12 +2,10 @@ defmodule ClothingStoreWeb.PageController do
   use ClothingStoreWeb, :controller
 
   def transactions(conn, params) do
-    month = params["month"]
+    {month, start_date} = parse_month(params["month"])
 
     transactions =
-      if month && month != "" do
-        [year, month] = String.split(month, "-")
-        start_date = Date.new!(String.to_integer(year), String.to_integer(month), 1)
+      if start_date do
         end_date = Date.end_of_month(start_date)
 
         start_datetime = DateTime.new!(start_date, ~T[00:00:00], "Etc/UTC")
@@ -20,6 +18,18 @@ defmodule ClothingStoreWeb.PageController do
 
     render(conn, :transactions, transactions: transactions, selected_month: month)
   end
+
+  # "YYYY-MM"; anything else shows every transaction
+  defp parse_month(month) when is_binary(month) do
+    with true <- Regex.match?(~r/^\d{4}-\d{2}$/, month),
+         {:ok, date} <- Date.from_iso8601(month <> "-01") do
+      {month, date}
+    else
+      _ -> {nil, nil}
+    end
+  end
+
+  defp parse_month(_month), do: {nil, nil}
 
   def statistics(conn, _params) do
     this_month = Date.utc_today() |> Date.to_string()

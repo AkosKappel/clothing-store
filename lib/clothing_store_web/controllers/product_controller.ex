@@ -5,31 +5,29 @@ defmodule ClothingStoreWeb.ProductController do
   alias ClothingStore.Products.Product
 
   def index(conn, params) do
-    # Convert tags parameter from string to list if present
-    params =
-      case params["tags"] do
-        nil -> params
-        tags -> Map.put(params, "tags", parse_tags(tags))
-      end
-
-    products = Products.list_products(params)
+    filters = filter_params(params)
+    products = Products.list_products(filters)
     categories = Products.list_categories()
     tags = Products.list_tags()
 
-    render(conn, :index, products: products, filters: params, categories: categories, tags: tags)
+    render(conn, :index, products: products, filters: filters, categories: categories, tags: tags)
   end
 
-  defp parse_tags(tags) do
-    case tags do
-      nil ->
-        []
+  # only string filters (and a list of tag strings) reach the query and the form
+  defp filter_params(params) do
+    params
+    |> Map.take(~w(category min_price max_price in_stock))
+    |> Map.filter(fn {_key, value} -> is_binary(value) end)
+    |> Map.put("tags", parse_tags(params["tags"]))
+  end
 
-      tags when is_list(tags) ->
-        tags |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
+  defp parse_tags(tags) when is_binary(tags), do: tags |> String.split(",") |> clean_tags()
+  defp parse_tags(tags) when is_list(tags), do: clean_tags(tags)
+  # missing, or a map from ?tags[a]=b
+  defp parse_tags(_tags), do: []
 
-      tags when is_binary(tags) ->
-        tags |> String.split(",") |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
-    end
+  defp clean_tags(tags) do
+    tags |> Enum.filter(&is_binary/1) |> Enum.map(&String.trim/1) |> Enum.reject(&(&1 == ""))
   end
 
   def new(conn, _params) do

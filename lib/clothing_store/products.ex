@@ -10,6 +10,8 @@ defmodule ClothingStore.Products do
   # the public demo resets nightly; this keeps visitors from filling the database until then
   @max_products 200
 
+  @max_id 9_223_372_036_854_775_807
+
   @doc "The most products the catalogue may hold."
   def max_products, do: @max_products
 
@@ -27,38 +29,45 @@ defmodule ClothingStore.Products do
     Repo.all(query)
   end
 
-  defp apply_filters(query, filters) when map_size(filters) > 0 do
-    query =
-      if filters["category"] != "All" and filters["category"] != "",
-        do: from(p in query, where: p.category == ^filters["category"]),
-        else: query
-
-    query =
-      case Float.parse(filters["min_price"]) do
-        {value, _} -> from(p in query, where: p.price >= ^value)
-        _ -> query
-      end
-
-    query =
-      case Float.parse(filters["max_price"]) do
-        {value, _} -> from(p in query, where: p.price <= ^value)
-        _ -> query
-      end
-
-    query =
-      if filters["in_stock"] == "true",
-        do: from(p in query, where: p.stock > 0),
-        else: query
-
-    query =
-      if tags = filters["tags"],
-        do: from(p in query, where: fragment("? && ?", p.tags, ^tags)),
-        else: query
-
+  # Filters come straight from query params: a missing, non-string or unparsable
+  # value leaves that filter out rather than failing the request.
+  defp apply_filters(query, filters) do
     query
+    |> filter_category(filters["category"])
+    |> filter_price(:min, parse_price(filters["min_price"]))
+    |> filter_price(:max, parse_price(filters["max_price"]))
+    |> filter_in_stock(filters["in_stock"])
+    |> filter_tags(filters["tags"])
   end
 
-  defp apply_filters(query, _filters), do: query
+  defp filter_category(query, category) when is_binary(category) and category not in ["", "All"],
+    do: from(p in query, where: p.category == ^category)
+
+  defp filter_category(query, _category), do: query
+
+  defp parse_price(price) when is_binary(price) do
+    case Float.parse(price) do
+      {value, _rest} -> value
+      :error -> nil
+    end
+  end
+
+  defp parse_price(_price), do: nil
+
+  defp filter_price(query, _bound, nil), do: query
+  defp filter_price(query, :min, value), do: from(p in query, where: p.price >= ^value)
+  defp filter_price(query, :max, value), do: from(p in query, where: p.price <= ^value)
+
+  defp filter_in_stock(query, "true"), do: from(p in query, where: p.stock > 0)
+  defp filter_in_stock(query, _in_stock), do: query
+
+  defp filter_tags(query, tags) when is_list(tags) and tags != [] do
+    if Enum.all?(tags, &is_binary/1),
+      do: from(p in query, where: fragment("? && ?", p.tags, ^tags)),
+      else: query
+  end
+
+  defp filter_tags(query, _tags), do: query
 
   @doc """
   Returns the list of unique categories.
@@ -109,7 +118,13 @@ defmodule ClothingStore.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_product!(id), do: Repo.get!(Product, id)
+  def get_product!(id) do
+    # ids from the URL beyond bigint would crash the query; no product has one
+    case Ecto.Type.cast(:id, id) do
+      {:ok, id} when id in 1..@max_id -> Repo.get!(Product, id)
+      _ -> raise Ecto.NoResultsError, queryable: Product
+    end
+  end
 
   @doc """
   Creates a product.
