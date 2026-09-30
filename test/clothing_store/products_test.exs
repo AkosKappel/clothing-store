@@ -120,7 +120,7 @@ defmodule ClothingStore.ProductsTest do
                description: String.duplicate("a", 2001)
              }).description
 
-      assert "should be at most 500 character(s)" in errors_on_attrs(%{
+      assert "should be at most 500 byte(s)" in errors_on_attrs(%{
                photo: "/images/" <> String.duplicate("a", 500)
              }).photo
 
@@ -153,6 +153,25 @@ defmodule ClothingStore.ProductsTest do
         assert msg =~ "/images/"
         assert msg =~ "images.pexels.com"
       end
+    end
+
+    test "caps text fields by bytes, not just graphemes" do
+      # one grapheme, but 1 + 2 * 50_000 bytes of combining acute accents
+      zalgo = "a" <> String.duplicate("\u0301", 50_000)
+      assert String.length(zalgo) == 1
+
+      assert %{title: [_]} = errors_on_attrs(%{title: zalgo})
+      assert %{category: [_]} = errors_on_attrs(%{category: zalgo})
+      assert %{description: [_]} = errors_on_attrs(%{description: zalgo})
+      assert %{photo: [_]} = errors_on_attrs(%{photo: "/images/" <> zalgo})
+      assert %{tags: [_]} = errors_on_attrs(%{tags: [zalgo]})
+
+      # ordinary multi-byte text within the limits still passes
+      assert errors_on_attrs(%{
+               title: String.duplicate("é", 100),
+               tags: [String.duplicate("é", 30)]
+             }) ==
+               %{}
     end
 
     test "limits tag count and tag length" do

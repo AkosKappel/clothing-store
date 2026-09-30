@@ -20,6 +20,7 @@ defmodule ClothingStore.Products.Product do
   @max_amount 100_000
   @max_tags 10
   @max_tag_length 30
+  @max_tag_bytes 120
   # remote photos must come from these hosts; the CSP img-src lists the same ones
   @photo_hosts ~w(images.pexels.com images.unsplash.com)
 
@@ -34,7 +35,12 @@ defmodule ClothingStore.Products.Product do
     |> validate_length(:title, max: 100)
     |> validate_length(:category, max: 50)
     |> validate_length(:description, max: 2000)
-    |> validate_length(:photo, max: 500)
+    # graphemes can carry any number of combining marks, so bound the stored size too
+    |> validate_length(:title, max: 400, count: :bytes)
+    |> validate_length(:category, max: 200, count: :bytes)
+    |> validate_length(:description, max: 8000, count: :bytes)
+    # photos are ASCII paths/URLs; bytes alone bound them
+    |> validate_length(:photo, max: 500, count: :bytes)
     |> validate_photo()
     |> validate_tags()
     |> validate_number(:price, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
@@ -75,6 +81,9 @@ defmodule ClothingStore.Products.Product do
 
         Enum.any?(tags, &(String.length(&1) not in 1..@max_tag_length)) ->
           [tags: "each tag should be 1 to #{@max_tag_length} characters"]
+
+        Enum.any?(tags, &(byte_size(&1) > @max_tag_bytes)) ->
+          [tags: "each tag should be at most #{@max_tag_bytes} bytes"]
 
         true ->
           []
