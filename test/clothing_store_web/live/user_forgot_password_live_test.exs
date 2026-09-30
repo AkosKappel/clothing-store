@@ -12,7 +12,7 @@ defmodule ClothingStoreWeb.UserForgotPasswordLiveTest do
       {:ok, lv, html} = live(conn, ~p"/users/reset_password")
 
       assert html =~ "Forgot your password?"
-      refute has_element?(lv, ~s|a:fl-contains("Register")|)
+      refute has_element?(lv, "a", "Register")
       assert has_element?(lv, ~s|a[href="#{~p"/users/log_in"}"]|, "Log in")
     end
 
