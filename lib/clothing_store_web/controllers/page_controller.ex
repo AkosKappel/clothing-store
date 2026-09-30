@@ -1,10 +1,6 @@
 defmodule ClothingStoreWeb.PageController do
   use ClothingStoreWeb, :controller
 
-  def home(conn, _params) do
-    redirect(conn, to: ~p"/products")
-  end
-
   def transactions(conn, params) do
     month = params["month"]
 

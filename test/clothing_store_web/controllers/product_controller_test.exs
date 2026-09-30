@@ -3,6 +3,8 @@ defmodule ClothingStoreWeb.ProductControllerTest do
 
   import ClothingStore.ProductsFixtures
 
+  setup :register_and_log_in_user
+
   @create_attrs %{description: "some description", title: "some title", category: "some category", photo: "some photo", price: "120.5", stock: 42}
   @update_attrs %{description: "some updated description", title: "some updated title", category: "some updated category", photo: "some updated photo", price: "456.7", stock: 43}
   @invalid_attrs %{description: nil, title: nil, category: nil, photo: nil, price: nil, stock: nil}
@@ -10,7 +12,7 @@ defmodule ClothingStoreWeb.ProductControllerTest do
   describe "index" do
     test "lists all products", %{conn: conn} do
       conn = get(conn, ~p"/products")
-      assert html_response(conn, 200) =~ "Listing Products"
+      assert html_response(conn, 200) =~ "Inventory Overview"
     end
   end
 
@@ -29,7 +31,9 @@ defmodule ClothingStoreWeb.ProductControllerTest do
       assert redirected_to(conn) == ~p"/products/#{id}"
 
       conn = get(conn, ~p"/products/#{id}")
-      assert html_response(conn, 200) =~ "Product #{id}"
+      response = html_response(conn, 200)
+      assert response =~ "Product Details"
+      assert response =~ "some title"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
