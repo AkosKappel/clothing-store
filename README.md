@@ -40,7 +40,7 @@ Live Demo: **[Modern Fashion Store](https://tagline.tailb52c43.ts.net)** (log in
 ### Locally
 
 1. Install Erlang and Elixir with [mise](https://mise.jdx.dev): `mise install` (versions are pinned in `mise.toml`).
-2. Create the configuration: `cp .env.example .env`, fill in `DB_PASSWORD` and `ADMIN_PASSWORD` (the password of the seeded demo account), then `chmod 600 .env`. `SECRET_KEY_BASE` is not needed for local development.
+2. Create the configuration: `cp .env.example .env`, fill in `DB_PASSWORD` (and the other database values if you changed them), then `chmod 600 .env`. Locally only the database settings are read from `.env`; `SECRET_KEY_BASE` is not needed. The seeded demo account uses the defaults `admin@eshop.com` / `Qwerty123456` (prefilled on the login page) unless you export `ADMIN_EMAIL` / `ADMIN_PASSWORD` in your shell.
 3. Start PostgreSQL: `docker compose up -d db` (listens on `127.0.0.1:5435` and creates the `tagline`, `tagline_dev` and `tagline_test` databases).
 4. Run `mix setup` to install dependencies, create and migrate the database and seed it.
 5. Start the server with `mix phx.server` (or `iex -S mix phx.server`) and visit [`localhost:4000`](http://localhost:4000).
