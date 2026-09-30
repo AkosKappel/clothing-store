@@ -207,4 +207,27 @@ defmodule ClothingStoreWeb.UserSettingsLiveTest do
       assert message == "You must log in to access this page."
     end
   end
+
+  describe "demo account" do
+    test "sees the notice and can't change the password", %{conn: conn} do
+      %{email: email, password: password} = ClothingStore.Demo.account()
+      user = user_fixture(%{email: email, password: password})
+      {:ok, lv, html} = conn |> log_in_user(user) |> live(~p"/users/settings")
+      assert html =~ "shared demo account"
+
+      result =
+        lv
+        |> form("#password_form", %{
+          "current_password" => password,
+          "user" => %{
+            "email" => email,
+            "password" => "new valid password",
+            "password_confirmation" => "new valid password"
+          }
+        })
+        |> render_submit()
+
+      assert result =~ "can&#39;t be changed for the demo account"
+    end
+  end
 end

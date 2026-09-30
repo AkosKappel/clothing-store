@@ -6,7 +6,18 @@ defmodule ClothingStore.Users do
   import Ecto.Query, warn: false
   alias ClothingStore.Repo
 
+  alias ClothingStore.Demo
   alias ClothingStore.Users.{User, UserToken, UserNotifier}
+
+  @locked_msg "can't be changed for the demo account"
+
+  defp locked_error(user, field, changeset_fun) do
+    user
+    |> changeset_fun.()
+    |> Ecto.Changeset.add_error(field, @locked_msg)
+    |> Map.put(:action, :update)
+    |> then(&{:error, &1})
+  end
 
   ## Database getters
 
@@ -122,10 +133,14 @@ defmodule ClothingStore.Users do
 
   """
   def apply_user_email(user, password, attrs) do
-    user
-    |> User.email_changeset(attrs)
-    |> User.validate_current_password(password)
-    |> Ecto.Changeset.apply_action(:update)
+    if Demo.locked?(user) do
+      locked_error(user, :email, &User.email_changeset(&1, attrs))
+    else
+      user
+      |> User.email_changeset(attrs)
+      |> User.validate_current_password(password)
+      |> Ecto.Changeset.apply_action(:update)
+    end
   end
 
   @doc """
@@ -200,18 +215,22 @@ defmodule ClothingStore.Users do
 
   """
   def update_user_password(user, password, attrs) do
-    changeset =
-      user
-      |> User.password_changeset(attrs)
-      |> User.validate_current_password(password)
+    if Demo.locked?(user) do
+      locked_error(user, :password, &User.password_changeset(&1, attrs))
+    else
+      changeset =
+        user
+        |> User.password_changeset(attrs)
+        |> User.validate_current_password(password)
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, UserToken.by_user_and_contexts_query(user, :all))
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.delete_all(:tokens, UserToken.by_user_and_contexts_query(user, :all))
+      |> Repo.transaction()
+      |> case do
+        {:ok, %{user: user}} -> {:ok, user}
+        {:error, :user, changeset, _} -> {:error, changeset}
+      end
     end
   end
 
@@ -302,9 +321,17 @@ defmodule ClothingStore.Users do
   """
   def deliver_user_reset_password_instructions(%User{} = user, reset_password_url_fun)
       when is_function(reset_password_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
-    Repo.insert!(user_token)
-    UserNotifier.deliver_reset_password_instructions(user, reset_password_url_fun.(encoded_token))
+    if Demo.locked?(user) do
+      {:error, :locked}
+    else
+      {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
+      Repo.insert!(user_token)
+
+      UserNotifier.deliver_reset_password_instructions(
+        user,
+        reset_password_url_fun.(encoded_token)
+      )
+    end
   end
 
   @doc """
@@ -341,13 +368,17 @@ defmodule ClothingStore.Users do
 
   """
   def reset_user_password(user, attrs) do
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.password_changeset(user, attrs))
-    |> Ecto.Multi.delete_all(:tokens, UserToken.by_user_and_contexts_query(user, :all))
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
+    if Demo.locked?(user) do
+      locked_error(user, :password, &User.password_changeset(&1, attrs))
+    else
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, User.password_changeset(user, attrs))
+      |> Ecto.Multi.delete_all(:tokens, UserToken.by_user_and_contexts_query(user, :all))
+      |> Repo.transaction()
+      |> case do
+        {:ok, %{user: user}} -> {:ok, user}
+        {:error, :user, changeset, _} -> {:error, changeset}
+      end
     end
   end
 end

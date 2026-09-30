@@ -10,6 +10,13 @@ defmodule ClothingStoreWeb.UserSettingsLive do
       <:subtitle>Manage your account email address and password settings</:subtitle>
     </.header>
 
+    <p
+      :if={ClothingStore.Demo.locked?(@current_user)}
+      class="rounded-md bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900"
+    >
+      This is the shared demo account, so its e-mail and password can't be changed.
+    </p>
+
     <div class="space-y-12 divide-y">
       <div>
         <.simple_form

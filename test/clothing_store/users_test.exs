@@ -505,4 +505,39 @@ defmodule ClothingStore.UsersTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "demo account" do
+    setup do
+      %{email: email, password: password} = ClothingStore.Demo.account()
+      %{user: user_fixture(%{email: email, password: password}), password: password}
+    end
+
+    test "can't change its e-mail", %{user: user, password: password} do
+      assert {:error, changeset} =
+               Users.apply_user_email(user, password, %{email: unique_user_email()})
+
+      assert "can't be changed for the demo account" in errors_on(changeset).email
+    end
+
+    test "can't change its password", %{user: user, password: password} do
+      assert {:error, changeset} =
+               Users.update_user_password(user, password, %{password: "new valid password"})
+
+      assert "can't be changed for the demo account" in errors_on(changeset).password
+    end
+
+    test "can't reset its password", %{user: user} do
+      assert {:error, changeset} =
+               Users.reset_user_password(user, %{password: "new valid password"})
+
+      assert "can't be changed for the demo account" in errors_on(changeset).password
+    end
+
+    test "gets no reset e-mail", %{user: user} do
+      assert {:error, :locked} =
+               Users.deliver_user_reset_password_instructions(user, &"[TOKEN]#{&1}")
+
+      refute Repo.get_by(ClothingStore.Users.UserToken, user_id: user.id)
+    end
+  end
 end
