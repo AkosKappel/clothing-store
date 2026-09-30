@@ -18,14 +18,25 @@ defmodule ClothingStore.Release do
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
 
-  @doc "Seeds a fresh database (first start); does nothing when products exist.
-  The seeds run in one transaction, so a failure leaves the database empty."
+  @doc """
+  True when the database has neither products nor users, i.e. it has never been seeded.
+  Visitors can delete every product, but the demo user stays, so users count too.
+  """
+  def fresh_database?(repo) do
+    not (repo.exists?(ClothingStore.Products.Product) or
+           repo.exists?(ClothingStore.Users.User))
+  end
+
+  @doc """
+  Seeds a fresh database (first start); does nothing when any product or user exists.
+  The seeds run in one transaction, so a failure leaves the database empty.
+  """
   def seed_if_empty(seeds_path \\ Application.app_dir(@app, "priv/repo/seeds.exs")) do
     load_app()
 
     {:ok, _, _} =
       Ecto.Migrator.with_repo(ClothingStore.Repo, fn repo ->
-        unless repo.exists?(ClothingStore.Products.Product) do
+        if fresh_database?(repo) do
           # The seeds broadcast on PubSub and use time zones; neither app runs in `eval`.
           {:ok, _} = Application.ensure_all_started([:phoenix_pubsub, :tzdata])
 
