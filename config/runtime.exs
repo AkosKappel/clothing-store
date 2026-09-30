@@ -37,7 +37,7 @@ demo_account =
 demo_reset =
   present.(
     enabled:
-      if(System.get_env("DEMO_RESET_ENABLED") in [nil, ""],
+      if(config_env() == :test or System.get_env("DEMO_RESET_ENABLED") in [nil, ""],
         do: nil,
         else: System.get_env("DEMO_RESET_ENABLED") in ~w(true 1)
       ),
