@@ -18,8 +18,9 @@ defmodule ClothingStore.Release do
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
 
-  @doc "Seeds a fresh database (first start); does nothing when products exist."
-  def seed_if_empty do
+  @doc "Seeds a fresh database (first start); does nothing when products exist.
+  The seeds run in one transaction, so a failure leaves the database empty."
+  def seed_if_empty(seeds_path \\ Application.app_dir(@app, "priv/repo/seeds.exs")) do
     load_app()
 
     {:ok, _, _} =
@@ -33,7 +34,9 @@ defmodule ClothingStore.Release do
               strategy: :one_for_one
             )
 
-          Code.eval_file(Application.app_dir(@app, "priv/repo/seeds.exs"))
+          # One transaction: a failing seed rolls back and raises, so the next start retries.
+          {:ok, _} =
+            repo.transaction(fn -> Code.eval_file(seeds_path) end, timeout: :timer.minutes(1))
         end
       end)
 
