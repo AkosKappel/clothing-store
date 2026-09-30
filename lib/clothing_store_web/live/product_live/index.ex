@@ -44,4 +44,9 @@ defmodule ClothingStoreWeb.ProductLive.Index do
        Enum.reject(products, &(&1.id == deleted_product.id))
      end)}
   end
+
+  @impl true
+  def handle_info(:demo_reset, socket) do
+    {:noreply, assign(socket, :products, Products.list_products())}
+  end
 end

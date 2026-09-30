@@ -7,23 +7,23 @@ defmodule ClothingStore.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      ClothingStoreWeb.Telemetry,
-      ClothingStore.Repo,
-      {DNSCluster, query: Application.get_env(:clothing_store, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: ClothingStore.PubSub},
-      # Start the Finch HTTP client for sending emails
-      {Finch, name: ClothingStore.Finch},
-      # Start a worker by calling: ClothingStore.Worker.start_link(arg)
-      # {ClothingStore.Worker, arg},
-      # Start to serve requests, typically the last entry
-      ClothingStoreWeb.Endpoint
-    ]
+    children =
+      [
+        ClothingStoreWeb.Telemetry,
+        ClothingStore.Repo,
+        {DNSCluster, query: Application.get_env(:clothing_store, :dns_cluster_query) || :ignore},
+        {Phoenix.PubSub, name: ClothingStore.PubSub},
+        {Finch, name: ClothingStore.Finch}
+      ] ++ demo_children() ++ [ClothingStoreWeb.Endpoint]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ClothingStore.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp demo_children do
+    if ClothingStore.Demo.reset_settings().enabled, do: [ClothingStore.Demo.Scheduler], else: []
   end
 
   # Tell Phoenix to update the endpoint configuration
