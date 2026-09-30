@@ -40,14 +40,17 @@ Live Demo: **[Modern Fashion Store](https://tagline.tailb52c43.ts.net)** (log in
 ### Locally
 
 1. Install Erlang and Elixir with [mise](https://mise.jdx.dev): `mise install` (versions are pinned in `mise.toml`).
-2. Create the configuration: `cp .env.example .env`, fill in `DB_PASSWORD`, `ADMIN_PASSWORD` and `SECRET_KEY_BASE` (generate it with `mix phx.gen.secret`), then `chmod 600 .env`.
+2. Create the configuration: `cp .env.example .env`, fill in `DB_PASSWORD` and `ADMIN_PASSWORD` (the password of the seeded demo account), then `chmod 600 .env`. `SECRET_KEY_BASE` is not needed for local development.
 3. Start PostgreSQL: `docker compose up -d db` (listens on `127.0.0.1:5435` and creates the `tagline`, `tagline_dev` and `tagline_test` databases).
 4. Run `mix setup` to install dependencies, create and migrate the database and seed it.
 5. Start the server with `mix phx.server` (or `iex -S mix phx.server`) and visit [`localhost:4000`](http://localhost:4000).
 
-Run `mix precommit` before committing: it compiles with warnings as errors, checks formatting and runs the tests.
+Run `mix precommit` before committing: it compiles with warnings as errors, removes unused entries from `mix.lock`, formats the code (rewriting files) and runs the tests.
 
 ### With Docker
+
+1. Create `.env` as in step 2 above (`cp .env.example .env`, `chmod 600 .env`) and fill in `DB_PASSWORD` and `ADMIN_PASSWORD`. Also set `SECRET_KEY_BASE` to a random secret, for example the output of `openssl rand -base64 48`; compose refuses to start without all three.
+2. Build and start everything:
 
 ```
 docker compose up -d --build
