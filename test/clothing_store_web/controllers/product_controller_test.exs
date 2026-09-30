@@ -9,7 +9,7 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     description: "some description",
     title: "some title",
     category: "some category",
-    photo: "some photo",
+    photo: "/images/products/t-shirt.webp",
     price: "120.5",
     stock: 42
   }
@@ -17,7 +17,7 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     description: "some updated description",
     title: "some updated title",
     category: "some updated category",
-    photo: "some updated photo",
+    photo: "https://images.pexels.com/photos/1/shirt.jpeg",
     price: "456.7",
     stock: 43
   }
@@ -41,6 +41,7 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     test "renders form", %{conn: conn} do
       conn = get(conn, ~p"/products/new")
       assert html_response(conn, 200) =~ "New Product"
+      assert html_response(conn, 200) =~ "images.pexels.com or images.unsplash.com"
     end
   end
 

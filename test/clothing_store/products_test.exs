@@ -32,7 +32,7 @@ defmodule ClothingStore.ProductsTest do
         description: "some description",
         title: "some title",
         category: "some category",
-        photo: "some photo",
+        photo: "/images/products/t-shirt.webp",
         price: "120.5",
         stock: 42
       }
@@ -41,7 +41,7 @@ defmodule ClothingStore.ProductsTest do
       assert product.description == "some description"
       assert product.title == "some title"
       assert product.category == "some category"
-      assert product.photo == "some photo"
+      assert product.photo == "/images/products/t-shirt.webp"
       assert product.price == Decimal.new("120.5")
       assert product.stock == 42
     end
@@ -57,7 +57,7 @@ defmodule ClothingStore.ProductsTest do
         description: "some updated description",
         title: "some updated title",
         category: "some updated category",
-        photo: "some updated photo",
+        photo: "https://images.pexels.com/photos/1/shirt.jpeg",
         price: "456.7",
         stock: 43
       }
@@ -66,7 +66,7 @@ defmodule ClothingStore.ProductsTest do
       assert product.description == "some updated description"
       assert product.title == "some updated title"
       assert product.category == "some updated category"
-      assert product.photo == "some updated photo"
+      assert product.photo == "https://images.pexels.com/photos/1/shirt.jpeg"
       assert product.price == Decimal.new("456.7")
       assert product.stock == 43
     end
@@ -125,6 +125,34 @@ defmodule ClothingStore.ProductsTest do
              }).photo
 
       assert errors_on_attrs(%{title: String.duplicate("a", 100)}) == %{}
+    end
+
+    test "accepts only local /images/ paths and allowlisted https image hosts" do
+      for ok <- [
+            "/images/products/t-shirt.webp",
+            "https://images.pexels.com/photos/1/a.jpeg?w=600",
+            "https://images.unsplash.com/photo-1?auto=format"
+          ] do
+        assert errors_on_attrs(%{photo: ok}) == %{}, ok
+      end
+
+      for bad <- [
+            "some photo",
+            "/images/../secret",
+            "/images/a/../../x",
+            "/uploads/x.png",
+            "//evil.example/x.png",
+            "http://images.pexels.com/x.jpeg",
+            "https://evil.example/x.png",
+            "https://images.pexels.com.evil.example/x.png",
+            "https://user@evil.example/x.png",
+            "javascript:alert(1)",
+            "data:image/png;base64,AAAA"
+          ] do
+        assert %{photo: [msg]} = errors_on_attrs(%{photo: bad}), bad
+        assert msg =~ "/images/"
+        assert msg =~ "images.pexels.com"
+      end
     end
 
     test "limits tag count and tag length" do

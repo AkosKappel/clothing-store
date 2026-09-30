@@ -20,6 +20,11 @@ defmodule ClothingStore.Products.Product do
   @max_amount 100_000
   @max_tags 10
   @max_tag_length 30
+  # remote photos must come from these hosts; the CSP img-src lists the same ones
+  @photo_hosts ~w(images.pexels.com images.unsplash.com)
+
+  @doc "Hosts that product photos may be loaded from."
+  def photo_hosts, do: @photo_hosts
 
   @doc false
   def changeset(product, attrs) do
@@ -30,10 +35,37 @@ defmodule ClothingStore.Products.Product do
     |> validate_length(:category, max: 50)
     |> validate_length(:description, max: 2000)
     |> validate_length(:photo, max: 500)
+    |> validate_photo()
     |> validate_tags()
     |> validate_number(:price, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
     |> validate_number(:stock, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
   end
+
+  defp validate_photo(changeset) do
+    validate_change(changeset, :photo, fn :photo, photo ->
+      if allowed_photo?(photo),
+        do: [],
+        else: [
+          photo: "must be a path under /images/ or an https:// URL from #{photo_hosts_text()}"
+        ]
+    end)
+  end
+
+  @doc false
+  def photo_hosts_text, do: Enum.join(@photo_hosts, " or ")
+
+  defp allowed_photo?("/images/" <> _ = path),
+    # "%2e%2e" is a dot-segment to browsers too
+    do: not String.contains?(String.downcase(path), ["..", "%2e", "\\"])
+
+  defp allowed_photo?("https://" <> _ = url) do
+    case URI.new(url) do
+      {:ok, %URI{scheme: "https", host: host, port: 443, userinfo: nil}} -> host in @photo_hosts
+      _ -> false
+    end
+  end
+
+  defp allowed_photo?(_), do: false
 
   defp validate_tags(changeset) do
     validate_change(changeset, :tags, fn :tags, tags ->

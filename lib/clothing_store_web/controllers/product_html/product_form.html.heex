@@ -9,7 +9,12 @@
   </div>
   <div class="space-y-4">
     <div>
-      <label for={f[:photo].id} class="block text-sm font-medium text-gray-700">Photo</label>
+      <label for={f[:photo].id} class="block text-sm font-medium text-gray-700">
+        Photo
+        <span class="text-xs text-gray-500 italic">
+          (a path under /images/, or an https:// URL from {ClothingStore.Products.Product.photo_hosts_text()})
+        </span>
+      </label>
       <.input
         field={f[:photo]}
         type="text"
