@@ -1,5 +1,6 @@
 defmodule ClothingStoreWeb.Helpers do
   def format_price(price) when is_nil(price), do: "0,00 €"
+
   def format_price(price) do
     price
     |> Decimal.round(2)
@@ -9,6 +10,7 @@ defmodule ClothingStoreWeb.Helpers do
   end
 
   def format_date(nil), do: "-"
+
   def format_date(%DateTime{} = datetime) do
     datetime
     |> DateTime.to_naive()
@@ -22,8 +24,10 @@ defmodule ClothingStoreWeb.Helpers do
 
   def current_path(assigns) do
     cond do
-      assigns[:live_action] -> "/" <> Atom.to_string(assigns.live_action)  # For LiveView pages
-      assigns[:conn] -> assigns.conn.request_path  # For regular controller pages
+      # For LiveView pages
+      assigns[:live_action] -> "/" <> Atom.to_string(assigns.live_action)
+      # For regular controller pages
+      assigns[:conn] -> assigns.conn.request_path
       true -> "/"
     end
   end

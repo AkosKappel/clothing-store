@@ -5,9 +5,30 @@ defmodule ClothingStoreWeb.ProductControllerTest do
 
   setup :register_and_log_in_user
 
-  @create_attrs %{description: "some description", title: "some title", category: "some category", photo: "some photo", price: "120.5", stock: 42}
-  @update_attrs %{description: "some updated description", title: "some updated title", category: "some updated category", photo: "some updated photo", price: "456.7", stock: 43}
-  @invalid_attrs %{description: nil, title: nil, category: nil, photo: nil, price: nil, stock: nil}
+  @create_attrs %{
+    description: "some description",
+    title: "some title",
+    category: "some category",
+    photo: "some photo",
+    price: "120.5",
+    stock: 42
+  }
+  @update_attrs %{
+    description: "some updated description",
+    title: "some updated title",
+    category: "some updated category",
+    photo: "some updated photo",
+    price: "456.7",
+    stock: 43
+  }
+  @invalid_attrs %{
+    description: nil,
+    title: nil,
+    category: nil,
+    photo: nil,
+    price: nil,
+    stock: nil
+  }
 
   describe "index" do
     test "lists all products", %{conn: conn} do

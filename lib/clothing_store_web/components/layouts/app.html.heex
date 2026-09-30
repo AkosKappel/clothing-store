@@ -33,7 +33,7 @@
     </div>
 
     <div class="hidden">
-      <%= active_path = ClothingStoreWeb.Helpers.current_path(assigns) %>
+      {active_path = ClothingStoreWeb.Helpers.current_path(assigns)}
     </div>
 
     <ul
@@ -41,23 +41,28 @@
       class="hidden lg:flex items-center font-semibold bg-gray-800 lg:bg-transparent lg:static absolute top-24 left-0 w-full lg:w-auto lg:py-0 pb-4 lg:px-0 px-8 z-50 gap-x-8"
     >
       <li class="flex items-center justify-end my-2">
-        <.link 
-          href={~p"/products"} 
-          class={if active_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}>
+        <.link
+          href={~p"/products"}
+          class={if active_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}
+        >
           Inventory
         </.link>
       </li>
       <li class="flex items-center justify-end my-2">
-        <.link 
-          href={~p"/transactions"} 
-          class={if active_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"}>
+        <.link
+          href={~p"/transactions"}
+          class={
+            if active_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"
+          }
+        >
           Transactions
         </.link>
       </li>
       <li class="flex items-center justify-end my-2">
-        <.link 
-          href={~p"/statistics"} 
-          class={if active_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"}>
+        <.link
+          href={~p"/statistics"}
+          class={if active_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"}
+        >
           Statistics
         </.link>
       </li>
@@ -69,10 +74,11 @@
         </.link>
       </li> --%>
       <li class="flex items-center justify-end my-2">
-        <.link 
-          href={~p"/users/log_out"} 
-          method="delete" 
-          class="hover:text-zinc-200 bg-red-500 px-4 py-2 rounded-sm">
+        <.link
+          href={~p"/users/log_out"}
+          method="delete"
+          class="hover:text-zinc-200 bg-red-500 px-4 py-2 rounded-sm"
+        >
           Log out
         </.link>
       </li>
@@ -96,6 +102,6 @@
 
 <footer class="bg-gray-800 text-white py-4 mt-12">
   <div class="max-w-7xl mx-auto text-center">
-    <p>&copy; <%= Date.utc_today.year %> Modern Fashion Store. All rights reserved.</p>
+    <p>&copy; {Date.utc_today().year} Modern Fashion Store. All rights reserved.</p>
   </div>
 </footer>

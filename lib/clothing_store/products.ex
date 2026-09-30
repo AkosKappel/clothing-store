@@ -64,10 +64,13 @@ defmodule ClothingStore.Products do
 
   """
   def list_categories do
-    ["All" | Product
-    |> select([p], p.category)
-    |> distinct(true)
-    |> Repo.all()]
+    [
+      "All"
+      | Product
+        |> select([p], p.category)
+        |> distinct(true)
+        |> Repo.all()
+    ]
   end
 
   @doc """

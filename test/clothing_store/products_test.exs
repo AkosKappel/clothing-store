@@ -8,7 +8,14 @@ defmodule ClothingStore.ProductsTest do
 
     import ClothingStore.ProductsFixtures
 
-    @invalid_attrs %{description: nil, title: nil, category: nil, photo: nil, price: nil, stock: nil}
+    @invalid_attrs %{
+      description: nil,
+      title: nil,
+      category: nil,
+      photo: nil,
+      price: nil,
+      stock: nil
+    }
 
     test "list_products/0 returns all products" do
       product = product_fixture()
@@ -21,7 +28,14 @@ defmodule ClothingStore.ProductsTest do
     end
 
     test "create_product/1 with valid data creates a product" do
-      valid_attrs = %{description: "some description", title: "some title", category: "some category", photo: "some photo", price: "120.5", stock: 42}
+      valid_attrs = %{
+        description: "some description",
+        title: "some title",
+        category: "some category",
+        photo: "some photo",
+        price: "120.5",
+        stock: 42
+      }
 
       assert {:ok, %Product{} = product} = Products.create_product(valid_attrs)
       assert product.description == "some description"
@@ -38,7 +52,15 @@ defmodule ClothingStore.ProductsTest do
 
     test "update_product/2 with valid data updates the product" do
       product = product_fixture()
-      update_attrs = %{description: "some updated description", title: "some updated title", category: "some updated category", photo: "some updated photo", price: "456.7", stock: 43}
+
+      update_attrs = %{
+        description: "some updated description",
+        title: "some updated title",
+        category: "some updated category",
+        photo: "some updated photo",
+        price: "456.7",
+        stock: 43
+      }
 
       assert {:ok, %Product{} = product} = Products.update_product(product, update_attrs)
       assert product.description == "some updated description"

@@ -6,10 +6,11 @@ defmodule ClothingStoreWeb.ProductController do
 
   def index(conn, params) do
     # Convert tags parameter from string to list if present
-    params = case params["tags"] do
-      nil -> params
-      tags -> Map.put(params, "tags", parse_tags(tags))
-    end
+    params =
+      case params["tags"] do
+        nil -> params
+        tags -> Map.put(params, "tags", parse_tags(tags))
+      end
 
     products = Products.list_products(params)
     categories = Products.list_categories()
@@ -20,9 +21,14 @@ defmodule ClothingStoreWeb.ProductController do
 
   defp parse_tags(tags) do
     case tags do
-      nil -> []
-      tags when is_list(tags) -> tags |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
-      tags when is_binary(tags) -> tags |> String.split(",") |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
+      nil ->
+        []
+
+      tags when is_list(tags) ->
+        tags |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
+
+      tags when is_binary(tags) ->
+        tags |> String.split(",") |> Enum.map(&String.trim/1) |> Enum.filter(&(&1 != ""))
     end
   end
 

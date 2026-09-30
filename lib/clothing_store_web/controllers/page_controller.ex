@@ -23,12 +23,18 @@ defmodule ClothingStoreWeb.PageController do
 
   def statistics(conn, _params) do
     this_month = Date.utc_today() |> Date.to_string()
-    last_month = Date.utc_today() |> Date.add(-1 * Date.days_in_month(Date.utc_today())) |> Date.to_string()
+
+    last_month =
+      Date.utc_today() |> Date.add(-1 * Date.days_in_month(Date.utc_today())) |> Date.to_string()
 
     bestsellers = ClothingStore.Transactions.list_bestsellers(3)
     this_month_bestsellers = ClothingStore.Transactions.list_bestsellers_per_month(3, this_month)
     last_month_bestsellers = ClothingStore.Transactions.list_bestsellers_per_month(3, last_month)
 
-    render(conn, :statistics, bestsellers: bestsellers, this_month_bestsellers: this_month_bestsellers, last_month_bestsellers: last_month_bestsellers)
+    render(conn, :statistics,
+      bestsellers: bestsellers,
+      this_month_bestsellers: this_month_bestsellers,
+      last_month_bestsellers: last_month_bestsellers
+    )
   end
 end

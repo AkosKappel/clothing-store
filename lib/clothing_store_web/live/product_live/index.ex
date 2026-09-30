@@ -28,18 +28,20 @@ defmodule ClothingStoreWeb.ProductLive.Index do
   @impl true
   def handle_info({:product_updated, updated_product}, socket) do
     # Update the product in the list
-    {:noreply, update(socket, :products, fn products ->
-      Enum.map(products, fn product ->
-        if product.id == updated_product.id, do: updated_product, else: product
-      end)
-    end)}
+    {:noreply,
+     update(socket, :products, fn products ->
+       Enum.map(products, fn product ->
+         if product.id == updated_product.id, do: updated_product, else: product
+       end)
+     end)}
   end
 
   @impl true
   def handle_info({:product_deleted, deleted_product}, socket) do
     # Remove the deleted product from the list
-    {:noreply, update(socket, :products, fn products ->
-      Enum.reject(products, &(&1.id == deleted_product.id))
-    end)}
+    {:noreply,
+     update(socket, :products, fn products ->
+       Enum.reject(products, &(&1.id == deleted_product.id))
+     end)}
   end
 end

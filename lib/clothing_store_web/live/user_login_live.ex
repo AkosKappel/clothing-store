@@ -18,7 +18,13 @@ defmodule ClothingStoreWeb.UserLoginLive do
       <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
         <%!-- NOTE: The email and password is prefilled for the demo (in real production we wouldn't do this) --%>
         <.input field={@form[:email]} type="email" label="Email" value="admin@eshop.com" required />
-        <.input field={@form[:password]} type="password" label="Password" value="Qwerty123456" required />
+        <.input
+          field={@form[:password]}
+          type="password"
+          label="Password"
+          value="Qwerty123456"
+          required
+        />
 
         <:actions>
           <.input field={@form[:remember_me]} type="checkbox" label="Keep me logged in" />

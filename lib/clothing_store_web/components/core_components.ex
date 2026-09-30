@@ -488,37 +488,42 @@ defmodule ClothingStoreWeb.CoreComponents do
             </th>
           </tr>
         </thead>
-          <tbody
-            id={@id}
-            phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-            class="divide-y divide-gray-200 bg-white">
-            <tr
-              :for={row <- @rows}
-              id={@row_id && @row_id.(row)}
-              class="group hover:bg-gray-200 transition">
-              <td
-                :for={{col, i} <- Enum.with_index(@col)}
-                phx-click={@row_click && @row_click.(row)}
-                class={[
-                  "px-6 py-4 whitespace-nowrap",
-                  @row_click && "hover:cursor-pointer",
-                  i == 0 && "font-medium text-gray-900"
-                ]}>
-                {render_slot(col, @row_item.(row))}
-              </td>
-              <td
-                :if={@action != []}
-                class="px-4 py-4 whitespace-nowrap text-right w-32">
-                <div class="flex justify-end space-x-2">
-                  <span
-                    :for={action <- @action}
-                    class="font-medium transition truncate px-2 py-1">
-                    {render_slot(action, @row_item.(row))}
-                  </span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
+        <tbody
+          id={@id}
+          phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
+          class="divide-y divide-gray-200 bg-white"
+        >
+          <tr
+            :for={row <- @rows}
+            id={@row_id && @row_id.(row)}
+            class="group hover:bg-gray-200 transition"
+          >
+            <td
+              :for={{col, i} <- Enum.with_index(@col)}
+              phx-click={@row_click && @row_click.(row)}
+              class={[
+                "px-6 py-4 whitespace-nowrap",
+                @row_click && "hover:cursor-pointer",
+                i == 0 && "font-medium text-gray-900"
+              ]}
+            >
+              {render_slot(col, @row_item.(row))}
+            </td>
+            <td
+              :if={@action != []}
+              class="px-4 py-4 whitespace-nowrap text-right w-32"
+            >
+              <div class="flex justify-end space-x-2">
+                <span
+                  :for={action <- @action}
+                  class="font-medium transition truncate px-2 py-1"
+                >
+                  {render_slot(action, @row_item.(row))}
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
     """

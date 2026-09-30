@@ -8,14 +8,22 @@
       <.link href={~p"/products/#{@product}/edit"}>
         <.button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-sm mt-4">Edit Product</.button>
       </.link>
-      <.link href={~p"/products/#{@product}"} method="delete" data-confirm="Do you want to delete this product?">
+      <.link
+        href={~p"/products/#{@product}"}
+        method="delete"
+        data-confirm="Do you want to delete this product?"
+      >
         <.button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-sm mt-4">Delete Product</.button>
       </.link>
     </:actions>
   </.header>
 
   <div class="flex gap-8 mt-6">
-    <img src={image_link(@product.photo)} alt={@product.title} class="h-80 w-80 object-cover border-4 border-gray-200 rounded-lg m-4"/>
+    <img
+      src={image_link(@product.photo)}
+      alt={@product.title}
+      class="h-80 w-80 object-cover border-4 border-gray-200 rounded-lg m-4"
+    />
     <div class="flex-1 space-y-6">
       <.list>
         <:item title="ID">
@@ -34,12 +42,15 @@
           <span :if={Enum.empty?(@product.tags)}>
             -
           </span>
-          <span :for={tag <- @product.tags} class="inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-1 mr-2">
-            <%= tag %>
+          <span
+            :for={tag <- @product.tags}
+            class="inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-1 mr-2"
+          >
+            {tag}
           </span>
         </:item>
         <:item title="Price">
-          <p class="text-lg font-semibold text-gray-800"><%= format_price(@product.price) %></p>
+          <p class="text-lg font-semibold text-gray-800">{format_price(@product.price)}</p>
         </:item>
         <:item title="In Stock">
           <p class="text-lg font-medium text-gray-700">{@product.stock}</p>
@@ -52,4 +63,3 @@
     Back to products
   </.back>
 </div>
-
