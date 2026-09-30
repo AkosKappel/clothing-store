@@ -6,6 +6,7 @@ alias ClothingStore.Products.ProductTransaction
 alias ClothingStore.Products
 alias ClothingStore.Users
 
+# Photos: Pexels (pexels.com/license), downloaded and resized to WebP.
 products = [
   %{
     title: "T-Shirt",
@@ -14,8 +15,7 @@ products = [
     It is a popular casual wear item that is often worn for recreational activities.
     """,
     category: "Shirt",
-    photo:
-      "https://images.pexels.com/photos/325876/pexels-photo-325876.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/t-shirt.webp",
     price: Decimal.new("19.99"),
     stock: 10,
     tags: ["new", "popular", "sale"]
@@ -24,8 +24,7 @@ products = [
     title: "Jeans",
     description: "A pair of Jeans",
     category: "Clothing",
-    photo:
-      "https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/jeans.webp",
     price: Decimal.new("1049.99"),
     stock: 5,
     tags: ["new"]
@@ -36,8 +35,7 @@ products = [
     This is a sweater. It is a piece of clothing that is typically made of thick, warm fabric such as wool, and is often worn over a shirt or other top for warmth. It can be long or short, and can be worn for casual or dressy occasions. This sweater is a great choice for anyone looking for a cozy and comfortable piece of clothing.
     """,
     category: "Clothing",
-    photo:
-      "https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/sweater.webp",
     price: Decimal.new("29.99"),
     stock: 0,
     tags: ["popular"]
@@ -46,8 +44,7 @@ products = [
     title: "Shoes",
     description: "A very nice pair of shoes with a unique design",
     category: "Footwear",
-    photo:
-      "https://images.pexels.com/photos/2081332/pexels-photo-2081332.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/shoes.webp",
     price: Decimal.new("159.99"),
     stock: 2,
     tags: ["sale"]
@@ -56,8 +53,7 @@ products = [
     title: "Jacket",
     description: "A jacket for the cold weather",
     category: "Clothing",
-    photo:
-      "https://images.pexels.com/photos/2249249/pexels-photo-2249249.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/jacket.webp",
     price: Decimal.new("5.99"),
     stock: 7,
     tags: ["new", "sale"]
@@ -66,8 +62,7 @@ products = [
     title: "Boots",
     description: "New boots",
     category: "Footwear",
-    photo:
-      "https://images.pexels.com/photos/3315286/pexels-photo-3315286.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/boots.webp",
     price: Decimal.new("50.59"),
     stock: 20,
     tags: []
@@ -76,8 +71,7 @@ products = [
     title: "Sneakers",
     description: "A pair of white sneakers for the street",
     category: "Footwear",
-    photo:
-      "https://images.pexels.com/photos/3353621/pexels-photo-3353621.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/sneakers.webp",
     price: Decimal.new("529.99"),
     stock: 0,
     tags: ["eco-friendly", "new"]
@@ -88,8 +82,7 @@ products = [
     These are casual pants for everyday use. They are perfect for lounging around the house, running errands, or going out with friends. They are made of a comfortable material and have a relaxed fit.
     """,
     category: "Clothing",
-    photo:
-      "https://images.pexels.com/photos/4066290/pexels-photo-4066290.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/pants.webp",
     price: Decimal.new("9.99"),
     stock: 61,
     tags: ["eco-friendly"]
@@ -98,8 +91,7 @@ products = [
     title: "Dress",
     description: "Stylish dress for a special occasion",
     category: "Clothing",
-    photo:
-      "https://images.pexels.com/photos/4352249/pexels-photo-4352249.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/dress.webp",
     price: Decimal.new("100.00"),
     stock: 9,
     tags: ["modern"]
@@ -108,8 +100,7 @@ products = [
     title: "Sunglasses",
     description: "A pair of black sunglasses",
     category: "Accessories",
-    photo:
-      "https://images.pexels.com/photos/1578997/pexels-photo-1578997.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    photo: "/images/products/sunglasses.webp",
     price: Decimal.new("4.99"),
     stock: 4,
     tags: ["popular", "modern", "sale"]
