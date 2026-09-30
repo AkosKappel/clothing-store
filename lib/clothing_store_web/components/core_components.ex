@@ -318,7 +318,7 @@ defmodule ClothingStoreWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+          class="rounded-sm border-zinc-300 text-zinc-900 focus:ring-0"
           {@rest}
         />
         {@label}
@@ -335,7 +335,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
+        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-xs focus:border-zinc-400 focus:ring-0 sm:text-sm"
         multiple={@multiple}
         {@rest}
       >
@@ -355,7 +355,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 min-h-[6rem]",
+          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 min-h-24",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
@@ -474,7 +474,7 @@ defmodule ClothingStoreWeb.CoreComponents do
 
     ~H"""
     <div class="overflow-x-auto mt-6">
-      <table class="min-w-full border-collapse border border-gray-200 rounded-lg shadow-sm">
+      <table class="min-w-full border-collapse border border-gray-200 rounded-lg shadow-xs">
         <thead class="bg-gray-100">
           <tr>
             <th
@@ -566,7 +566,7 @@ defmodule ClothingStoreWeb.CoreComponents do
     <div class="mt-8">
       <.link
         navigate={@navigate}
-        class="inline-flex items-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2"
+        class="inline-flex items-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-xs hover:bg-zinc-50 focus:outline-hidden focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2"
       >
         <.icon name="hero-arrow-left-solid" class="h-5 w-5" />
         {render_slot(@inner_block)}
@@ -586,7 +586,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   width, height, and background color classes.
 
   Icons are extracted from the `deps/heroicons` directory and bundled within
-  your compiled app.css by the plugin in your `assets/tailwind.config.js`.
+  your compiled app.css by the plugin in your `assets/vendor/heroicons.js`.
 
   ## Examples
 
