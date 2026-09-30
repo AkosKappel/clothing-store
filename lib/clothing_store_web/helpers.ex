@@ -19,8 +19,8 @@ defmodule ClothingStoreWeb.Helpers do
     |> String.slice(0..18)
   end
 
-  def image_link(nil), do: nil
-  def image_link(image_path), do: image_path || "https://placehold.co/600x400"
+  # photo is required and validated (local /images/ path or allowlisted host)
+  def image_link(image_path), do: image_path
 
   def current_path(assigns) do
     cond do
