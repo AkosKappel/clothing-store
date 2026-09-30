@@ -1,0 +1,19 @@
+# Secrets and local folders must not end up in image layers.
+.env
+.env.*
+!.env.example
+docker/tailscale/ts.env
+.git
+_build
+deps
+cover
+tmp
+priv/static/assets
+priv/static/cache_manifest.json
+assets/node_modules
+docs/superpowers
+.superpowers
+BACKLOG.md
+OPERATIONS.md
+screenshots
+erl_crash.dump

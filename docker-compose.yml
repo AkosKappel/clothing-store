@@ -32,6 +32,53 @@ services:
     networks:
       - app-network
 
+  app:
+    build: .
+    image: tagline-app
+    container_name: ${CONTAINER_PREFIX:-tagline}-app
+    restart: unless-stopped
+    logging: *logging
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      DATABASE_URL: ecto://${DB_USERNAME:-tagline}:${DB_PASSWORD}@db/${DB_DATABASE:-tagline}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:?set SECRET_KEY_BASE in .env}
+      PHX_HOST: ${PHX_HOST:-tagline.tailb52c43.ts.net}
+      PORT: "4000"
+      POOL_SIZE: "5"
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@eshop.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+      DEMO_RESET_ENABLED: ${DEMO_RESET_ENABLED:-true}
+      DEMO_RESET_TIME: ${DEMO_RESET_TIME:-03:00}
+      DEMO_RESET_TIMEZONE: ${DEMO_RESET_TIMEZONE:-Europe/Bratislava}
+      # the BEAM's schedulers see all host CPUs; keep them modest next to other apps
+      ERL_FLAGS: "+S 2:2"
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.30-alpine
+    container_name: ${CONTAINER_PREFIX:-tagline}-nginx
+    restart: unless-stopped
+    logging: *logging
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+    ports:
+      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-8083}:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - app-network
+    depends_on:
+      - app
+
 networks:
   app-network:
     driver: bridge
