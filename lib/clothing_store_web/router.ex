@@ -3,13 +3,32 @@ defmodule ClothingStoreWeb.Router do
 
   import ClothingStoreWeb.UserAuth
 
+  # photos may come from the image hosts in ClothingStore.Products.Product.photo_hosts/0;
+  # 'unsafe-inline' styles are for topbar, which styles its canvas from JS
+  @csp Enum.join(
+         [
+           "default-src 'self'",
+           "script-src 'self'",
+           "style-src 'self' 'unsafe-inline'",
+           "img-src 'self' data: " <>
+             Enum.map_join(ClothingStore.Products.Product.photo_hosts(), " ", &"https://#{&1}"),
+           "font-src 'self' data:",
+           "connect-src 'self'",
+           "object-src 'none'",
+           "base-uri 'self'",
+           "form-action 'self'",
+           "frame-ancestors 'self'"
+         ],
+         "; "
+       )
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {ClothingStoreWeb.Layouts, :root}
     plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug :put_secure_browser_headers, %{"content-security-policy" => @csp}
     plug :fetch_current_user
   end
 
