@@ -6,22 +6,49 @@ defmodule ClothingStoreWeb.MalformedParamsTest do
   setup :register_and_log_in_user
 
   describe "transactions month filter" do
+    setup do
+      sale_in("January sale", ~U[2024-01-15 10:00:00Z])
+      sale_in("March sale", ~U[2024-03-15 10:00:00Z])
+      :ok
+    end
+
+    defp sale_in(title, at) do
+      product = product_fixture(%{title: title})
+
+      transaction =
+        ClothingStore.Repo.insert!(%ClothingStore.Transactions.Transaction{
+          total_price: Decimal.new(1),
+          inserted_at: at,
+          updated_at: at
+        })
+
+      ClothingStore.Repo.insert!(%ClothingStore.Products.ProductTransaction{
+        product_id: product.id,
+        transaction_id: transaction.id,
+        quantity: 1
+      })
+    end
+
+    test "a valid month shows only that month", %{conn: conn} do
+      html = conn |> get(~p"/transactions?month=2024-01") |> html_response(200)
+      assert html =~ "January sale"
+      refute html =~ "March sale"
+    end
+
     for month <- ["abc", "2024-13", "2024-1", "2024-01-01", "-01"] do
-      test "ignores month=#{inspect(month)}", %{conn: conn} do
-        assert conn |> get(~p"/transactions?#{[month: unquote(month)]}") |> html_response(200)
+      test "month=#{inspect(month)} is ignored and shows every transaction", %{conn: conn} do
+        html = conn |> get(~p"/transactions?#{[month: unquote(month)]}") |> html_response(200)
+        assert html =~ "January sale"
+        assert html =~ "March sale"
       end
     end
 
-    test "ignores a list-shaped month", %{conn: conn} do
-      assert conn |> get("/transactions?month[]=x") |> html_response(200)
-    end
-
-    test "ignores a map-shaped month", %{conn: conn} do
-      assert conn |> get("/transactions?month[a]=x") |> html_response(200)
-    end
-
-    test "still filters by a valid month", %{conn: conn} do
-      assert conn |> get(~p"/transactions?month=2024-02") |> html_response(200)
+    for query <- ["month[]=x", "month[a]=x"] do
+      test "?#{query} is ignored and shows every transaction", %{conn: conn} do
+        html = conn |> get("/transactions?" <> unquote(query)) |> html_response(200)
+        assert html =~ "January sale"
+        assert html =~ "March sale"
+      end
     end
   end
 
@@ -78,6 +105,7 @@ defmodule ClothingStoreWeb.MalformedParamsTest do
         }
       )
 
-    assert conn.status in [200, 302]
+    assert %{id: id} = redirected_params(conn)
+    assert ClothingStore.Products.get_product!(id).tags == []
   end
 end
