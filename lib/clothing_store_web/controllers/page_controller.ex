@@ -29,10 +29,6 @@ defmodule ClothingStoreWeb.PageController do
     this_month_bestsellers = ClothingStore.Transactions.list_bestsellers_per_month(3, this_month)
     last_month_bestsellers = ClothingStore.Transactions.list_bestsellers_per_month(3, last_month)
 
-    IO.inspect(bestsellers, label: "bestsellers")
-    IO.inspect(this_month_bestsellers, label: "this_month_bestsellers")
-    IO.inspect(last_month_bestsellers, label: "last_month_bestsellers")
-
     render(conn, :statistics, bestsellers: bestsellers, this_month_bestsellers: this_month_bestsellers, last_month_bestsellers: last_month_bestsellers)
   end
 end

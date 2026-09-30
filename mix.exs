@@ -63,6 +63,10 @@ defmodule ClothingStore.MixProject do
     ]
   end
 
+  def cli do
+    [preferred_envs: [precommit: :test]]
+  end
+
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to install project dependencies and perform other setup tasks, run:
   #
@@ -81,7 +85,8 @@ defmodule ClothingStore.MixProject do
         "tailwind clothing_store --minify",
         "esbuild clothing_store --minify",
         "phx.digest"
-      ]
+      ],
+      precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
 end
