@@ -180,4 +180,6 @@ end
 
 # Demo account (ADMIN_EMAIL / ADMIN_PASSWORD); the login page prefills it
 %{email: email, password: password} = ClothingStore.Demo.account()
-{:ok, _} = Users.register_user(%{email: email, password: password})
+{:ok, user} = Users.register_user(%{email: email, password: password})
+# confirmed, so /users/confirm answers "already confirmed" instead of minting tokens
+user |> Users.User.confirm_changeset() |> Repo.update!()

@@ -22,6 +22,18 @@ defmodule ClothingStore.Demo.ResetTest do
     assert_receive :demo_reset
   end
 
+  test "seeds a confirmed demo account, so confirmation requests insert no tokens" do
+    assert :ok = Demo.Reset.run()
+
+    user = Users.get_user_by_email(Demo.account().email)
+    assert user.confirmed_at
+
+    assert {:error, :already_confirmed} =
+             Users.deliver_user_confirmation_instructions(user, &"/users/confirm/#{&1}")
+
+    assert Repo.aggregate(ClothingStore.Users.UserToken, :count) == 0
+  end
+
   test "disconnects live sessions" do
     token = Users.generate_user_session_token(user_fixture())
     ClothingStoreWeb.Endpoint.subscribe("users_sessions:" <> Base.url_encode64(token))
