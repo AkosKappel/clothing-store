@@ -23,8 +23,10 @@ defmodule ClothingStoreWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :clothing_store,
-    gzip: false,
-    only: ClothingStoreWeb.static_paths()
+    gzip: not code_reloading?,
+    only: ClothingStoreWeb.static_paths(),
+    # digested favicons (favicon-<hash>.svg) don't match the exact names in static_paths
+    only_matching: ~w(favicon)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
