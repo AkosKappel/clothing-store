@@ -15,6 +15,9 @@ config :clothing_store,
 config :clothing_store, ClothingStoreWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
+  # LiveView messages are small; browsers fragment large ones, so the socket's
+  # max_frame_size alone doesn't bound them (merged with each env's ip/port)
+  http: [websocket_options: [max_fragmented_message_size: 1_000_000]],
   render_errors: [
     formats: [html: ClothingStoreWeb.ErrorHTML, json: ClothingStoreWeb.ErrorJSON],
     layout: false
