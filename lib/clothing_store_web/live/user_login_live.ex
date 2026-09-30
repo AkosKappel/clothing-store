@@ -16,13 +16,16 @@ defmodule ClothingStoreWeb.UserLoginLive do
       </.header>
 
       <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
-        <%!-- NOTE: The email and password is prefilled for the demo (in real production we wouldn't do this) --%>
-        <.input field={@form[:email]} type="email" label="Email" value="admin@eshop.com" required />
+        <p class="rounded-md bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900">
+          <strong>Demo account</strong>: just press <em>Log in</em>. Feel free to add, edit and delete
+          products; the data resets every night.
+        </p>
+        <.input field={@form[:email]} type="email" label="Email" value={@demo.email} required />
         <.input
           field={@form[:password]}
           type="password"
           label="Password"
-          value="Qwerty123456"
+          value={@demo.password}
           required
         />
 
@@ -45,6 +48,8 @@ defmodule ClothingStoreWeb.UserLoginLive do
   def mount(_params, _session, socket) do
     email = Phoenix.Flash.get(socket.assigns.flash, :email)
     form = to_form(%{"email" => email}, as: "user")
-    {:ok, assign(socket, form: form), temporary_assigns: [form: form]}
+
+    {:ok, assign(socket, form: form, demo: ClothingStore.Demo.account()),
+     temporary_assigns: [form: form]}
   end
 end

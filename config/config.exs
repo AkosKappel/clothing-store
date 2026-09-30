@@ -60,6 +60,13 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :clothing_store, :demo,
+  account: [email: "admin@eshop.com", password: "Qwerty123456"],
+  reset: [enabled: false, time: "03:00", timezone: "Europe/Bratislava"]
+
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+config :tzdata, :autoupdate, :disabled
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

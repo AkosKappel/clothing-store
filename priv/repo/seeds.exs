@@ -178,5 +178,6 @@ for _ <- 1..10 do
   |> Repo.update!()
 end
 
-# Generate admin user
-Users.register_user(%{email: "admin@eshop.com", password: "Qwerty123456", role: "admin"})
+# Demo account (ADMIN_EMAIL / ADMIN_PASSWORD); the login page prefills it
+%{email: email, password: password} = ClothingStore.Demo.account()
+{:ok, _} = Users.register_user(%{email: email, password: password})

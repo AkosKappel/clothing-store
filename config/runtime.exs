@@ -20,6 +20,33 @@ if System.get_env("PHX_SERVER") do
   config :clothing_store, ClothingStoreWeb.Endpoint, server: true
 end
 
+# Demo settings: only override the defaults from config.exs with env vars that are set
+# (Config deep-merges keyword lists).
+present = fn list -> Enum.reject(list, fn {_, v} -> v in [nil, ""] end) end
+
+if config_env() == :prod and System.get_env("ADMIN_PASSWORD") in [nil, ""] do
+  raise "environment variable ADMIN_PASSWORD is missing"
+end
+
+demo_account =
+  present.(
+    email: System.get_env("ADMIN_EMAIL"),
+    password: System.get_env("ADMIN_PASSWORD")
+  )
+
+demo_reset =
+  present.(
+    enabled:
+      if(System.get_env("DEMO_RESET_ENABLED") in [nil, ""],
+        do: nil,
+        else: System.get_env("DEMO_RESET_ENABLED") in ~w(true 1)
+      ),
+    time: System.get_env("DEMO_RESET_TIME"),
+    timezone: System.get_env("DEMO_RESET_TIMEZONE")
+  )
+
+config :clothing_store, :demo, account: demo_account, reset: demo_reset
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

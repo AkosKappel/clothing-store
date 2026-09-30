@@ -5,6 +5,13 @@ defmodule ClothingStoreWeb.UserLoginLiveTest do
   import ClothingStore.UsersFixtures
 
   describe "Log in page" do
+    test "prefills the demo account and explains it", %{conn: conn} do
+      {:ok, _lv, html} = live(conn, ~p"/users/log_in")
+      assert html =~ ClothingStore.Demo.account().email
+      assert html =~ "Demo account"
+      assert html =~ "resets every night"
+    end
+
     test "renders log in page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/users/log_in")
 

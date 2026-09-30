@@ -34,6 +34,7 @@ defmodule ClothingStore.MixProject do
   defp deps do
     [
       {:pbkdf2_elixir, "~> 2.3"},
+      {:tzdata, "~> 1.1"},
       {:phoenix, "~> 1.8"},
       {:phoenix_ecto, "~> 4.7"},
       {:ecto_sql, "~> 3.14"},
