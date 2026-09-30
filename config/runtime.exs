@@ -92,6 +92,9 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  # Nothing is sent: e-mails (e.g. change-email links) are written to the log.
+  config :clothing_store, ClothingStore.Mailer, adapter: Swoosh.Adapters.Logger, level: :info
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
