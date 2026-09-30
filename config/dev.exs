@@ -1,22 +1,16 @@
 import Config
 
-# Load environment variables from .env file
-if File.exists?(".env") do
-  File.stream!(".env")
-  |> Stream.map(&String.trim/1)
-  |> Enum.each(fn line ->
-    [key, value] = String.split(line, "=")
-    System.put_env(key, value)
-  end)
-end
+unless Code.ensure_loaded?(ClothingStore.DotEnv), do: Code.require_file("dotenv.exs", __DIR__)
 
-# Configure your database
+# Settings come from .env (same file docker compose reads). Real env vars win.
+env = ClothingStore.DotEnv.load(Path.expand("../.env", __DIR__))
+
 config :clothing_store, ClothingStore.Repo,
-  username: System.get_env("DB_USERNAME") || "postgres",
-  password: System.get_env("DB_PASSWORD") || "postgres",
-  hostname: System.get_env("DB_HOSTNAME") || "localhost",
-  database: System.get_env("DB_NAME") || "clothing_store_dev",
-  port: String.to_integer(System.get_env("DB_PORT") || "5432"),
+  username: env.("DB_USERNAME", "tagline"),
+  password: env.("DB_PASSWORD", "postgres"),
+  hostname: env.("DB_HOST", "127.0.0.1"),
+  port: String.to_integer(env.("DB_PORT", "5435")),
+  database: "tagline_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

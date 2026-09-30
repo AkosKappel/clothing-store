@@ -1,5 +1,7 @@
 import Config
 
+unless Code.ensure_loaded?(ClothingStore.DotEnv), do: Code.require_file("dotenv.exs", __DIR__)
+
 # Only in tests, remove the complexity from the password hashing algorithm
 config :pbkdf2_elixir, :rounds, 1
 
@@ -8,11 +10,14 @@ config :pbkdf2_elixir, :rounds, 1
 # The MIX_TEST_PARTITION environment variable can be used
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
+env = ClothingStore.DotEnv.load(Path.expand("../.env", __DIR__))
+
 config :clothing_store, ClothingStore.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "clothing_store_test#{System.get_env("MIX_TEST_PARTITION")}",
+  username: env.("DB_USERNAME", "tagline"),
+  password: env.("DB_PASSWORD", "postgres"),
+  hostname: env.("DB_HOST", "127.0.0.1"),
+  port: String.to_integer(env.("DB_PORT", "5435")),
+  database: "tagline_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 
