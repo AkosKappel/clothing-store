@@ -61,6 +61,32 @@ defmodule ClothingStoreWeb.ProductControllerTest do
       conn = post(conn, ~p"/products", product: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Product"
     end
+
+    test "rejects an over-long title", %{conn: conn} do
+      conn =
+        post(conn, ~p"/products", product: %{@create_attrs | title: String.duplicate("a", 101)})
+
+      assert html_response(conn, 200) =~ "should be at most 100 character(s)"
+    end
+
+    test "shows the catalogue limit", %{conn: conn} do
+      now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+      rows =
+        for i <- 1..ClothingStore.Products.max_products() do
+          Map.merge(@create_attrs, %{
+            title: "p#{i}",
+            price: Decimal.new(1),
+            inserted_at: now,
+            updated_at: now
+          })
+        end
+
+      ClothingStore.Repo.insert_all(ClothingStore.Products.Product, rows)
+
+      conn = post(conn, ~p"/products", product: @create_attrs)
+      assert html_response(conn, 200) =~ "The demo is limited to 200 products"
+    end
   end
 
   describe "edit product" do

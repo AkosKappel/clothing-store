@@ -7,6 +7,12 @@ defmodule ClothingStore.Products do
   alias ClothingStore.Repo
   alias ClothingStore.Products.Product
 
+  # the public demo resets nightly; this keeps visitors from filling the database until then
+  @max_products 200
+
+  @doc "The most products the catalogue may hold."
+  def max_products, do: @max_products
+
   @doc """
   Returns the list of products.
 
@@ -120,8 +126,21 @@ defmodule ClothingStore.Products do
   def create_product(attrs \\ %{}) do
     %Product{}
     |> Product.changeset(attrs)
+    |> check_catalogue_limit()
     |> Repo.insert()
     |> notify_subscribers(:product_created)
+  end
+
+  defp check_catalogue_limit(changeset) do
+    if Repo.aggregate(Product, :count) >= @max_products do
+      Ecto.Changeset.add_error(
+        changeset,
+        :base,
+        "The demo is limited to #{@max_products} products"
+      )
+    else
+      changeset
+    end
   end
 
   @doc """

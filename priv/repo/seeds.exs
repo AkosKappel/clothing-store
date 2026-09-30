@@ -109,7 +109,7 @@ products = [
 
 # Insert the products into the database
 for product <- products do
-  Products.create_product(product)
+  {:ok, _} = Products.create_product(product)
 end
 
 # Fetch newly created products

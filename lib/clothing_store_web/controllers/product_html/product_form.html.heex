@@ -4,6 +4,9 @@
   action={@action}
   class="space-y-6 bg-white my-4 py-4 px-8 rounded-lg shadow-lg"
 >
+  <div :if={@changeset.action} class="-mt-4">
+    <.error :for={msg <- translate_errors(@changeset.errors, :base)}>{msg}</.error>
+  </div>
   <div class="space-y-4">
     <div>
       <label for={f[:photo].id} class="block text-sm font-medium text-gray-700">Photo</label>
