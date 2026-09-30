@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+cd -P -- "$(dirname -- "$0")"
+./clothing_store eval 'ClothingStore.Release.migrate()'
+./clothing_store eval 'ClothingStore.Release.seed_if_empty()'
+PHX_SERVER=true exec ./clothing_store start

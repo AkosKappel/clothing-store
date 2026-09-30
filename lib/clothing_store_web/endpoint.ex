@@ -8,7 +8,8 @@ defmodule ClothingStoreWeb.Endpoint do
     store: :cookie,
     key: "_clothing_store_key",
     signing_salt: "N+R+6l9N",
-    same_site: "Lax"
+    same_site: "Lax",
+    secure: Application.compile_env(:clothing_store, :secure_cookies, false)
   ]
 
   socket "/live", Phoenix.LiveView.Socket,

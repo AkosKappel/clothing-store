@@ -8,6 +8,9 @@ import Config
 config :clothing_store, ClothingStoreWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
+# Session cookie only over HTTPS (browsers also accept it on http://127.0.0.1)
+config :clothing_store, :secure_cookies, true
+
 # Configures Swoosh API Client
 config :swoosh, :api_client, false
 
