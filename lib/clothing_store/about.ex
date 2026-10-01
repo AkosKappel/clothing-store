@@ -39,11 +39,42 @@ defmodule ClothingStore.About do
     ]
   end
 
+  @version_key {__MODULE__, :database_version}
+  @retry_after_ms 60_000
+
   @doc """
   The PostgreSQL server's version ("18.0"), or nil when the database can't be
   asked, so the page still renders without it.
+
+  The About page is public, so the database is asked once and the answer kept in
+  :persistent_term. A failure is remembered too and asked again after a minute.
   """
   def database_version do
+    case :persistent_term.get(@version_key, nil) do
+      {:ok, version} ->
+        version
+
+      {:error, at} ->
+        if now() - at < @retry_after_ms, do: nil, else: lookup_database_version()
+
+      nil ->
+        lookup_database_version()
+    end
+  end
+
+  defp lookup_database_version do
+    case query_database_version() do
+      nil ->
+        :persistent_term.put(@version_key, {:error, now()})
+        nil
+
+      version ->
+        :persistent_term.put(@version_key, {:ok, version})
+        version
+    end
+  end
+
+  defp query_database_version do
     case Repo.query("SELECT current_setting('server_version')", [], timeout: 2_000) do
       {:ok, %{rows: [[version]]}} -> version |> String.split() |> List.first()
       _ -> nil
@@ -53,6 +84,8 @@ defmodule ClothingStore.About do
   catch
     :exit, _ -> nil
   end
+
+  defp now, do: System.monotonic_time(:millisecond)
 
   @doc ~S'Where product photos may come from, by name: ["Pexels", "Unsplash"].'
   def photo_sources do
