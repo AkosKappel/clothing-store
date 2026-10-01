@@ -53,12 +53,14 @@ demo_links =
     portfolio: System.get_env("DEMO_PORTFOLIO_URL")
   )
 
-config :clothing_store, :demo,
-  account: demo_account,
-  reset: demo_reset,
-  links: demo_links
-
-config :clothing_store, :demo, present.(author: System.get_env("DEMO_AUTHOR"))
+config :clothing_store,
+       :demo,
+       present.(
+         account: demo_account,
+         reset: demo_reset,
+         links: demo_links,
+         author: System.get_env("DEMO_AUTHOR")
+       )
 
 if config_env() == :prod do
   database_url =
