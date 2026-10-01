@@ -1,6 +1,7 @@
 defmodule ClothingStore.Demo do
   @moduledoc """
-  Settings of the public demo: the shared demo account and the nightly reset.
+  Settings of the public demo: the shared demo account, the nightly reset and the
+  author's details shown on the About page.
   """
 
   alias ClothingStore.Users.User
@@ -22,5 +23,17 @@ defmodule ClothingStore.Demo do
       time: Time.from_iso8601!(Keyword.fetch!(config, :time) <> ":00"),
       timezone: Keyword.fetch!(config, :timezone)
     }
+  end
+
+  @doc "The name of the project's author."
+  def author, do: Application.fetch_env!(:clothing_store, :demo)[:author]
+
+  @link_order [:github, :linkedin, :portfolio, :repository]
+
+  @doc "The configured profile links, in a fixed order; empty ones are left out."
+  def links do
+    links = Application.fetch_env!(:clothing_store, :demo)[:links] || []
+
+    for key <- @link_order, url = links[key], url not in [nil, ""], do: {key, url}
   end
 end

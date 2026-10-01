@@ -19,4 +19,8 @@ defmodule ClothingStore.DemoTest do
     assert %{enabled: enabled, time: %Time{}, timezone: tz} = Demo.reset_settings()
     assert is_boolean(enabled) and is_binary(tz)
   end
+
+  test "author/0 is the configured author's name" do
+    assert is_binary(Demo.author()) and Demo.author() != ""
+  end
 end

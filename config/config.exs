@@ -65,7 +65,15 @@ config :phoenix, :json_library, Jason
 
 config :clothing_store, :demo,
   account: [email: "admin@eshop.com", password: "Qwerty123456"],
-  reset: [enabled: false, time: "03:00", timezone: "Europe/Bratislava"]
+  reset: [enabled: false, time: "03:00", timezone: "Europe/Bratislava"],
+  # shown on the About page; empty links are left out
+  author: "Ákos Kappel",
+  links: [
+    github: "https://github.com/AkosKappel",
+    repository: "https://github.com/AkosKappel/clothing-store",
+    linkedin: "https://www.linkedin.com/in/%C3%A1kos-kappel-b53344220/",
+    portfolio: nil
+  ]
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 config :tzdata, :autoupdate, :disabled

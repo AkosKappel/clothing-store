@@ -45,7 +45,20 @@ demo_reset =
     timezone: System.get_env("DEMO_RESET_TIMEZONE")
   )
 
-config :clothing_store, :demo, account: demo_account, reset: demo_reset
+demo_links =
+  present.(
+    github: System.get_env("DEMO_GITHUB_URL"),
+    repository: System.get_env("DEMO_REPOSITORY_URL"),
+    linkedin: System.get_env("DEMO_LINKEDIN_URL"),
+    portfolio: System.get_env("DEMO_PORTFOLIO_URL")
+  )
+
+config :clothing_store, :demo,
+  account: demo_account,
+  reset: demo_reset,
+  links: demo_links
+
+config :clothing_store, :demo, present.(author: System.get_env("DEMO_AUTHOR"))
 
 if config_env() == :prod do
   database_url =

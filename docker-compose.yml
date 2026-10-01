@@ -53,6 +53,12 @@ services:
       DEMO_RESET_ENABLED: ${DEMO_RESET_ENABLED:-true}
       DEMO_RESET_TIME: ${DEMO_RESET_TIME:-03:00}
       DEMO_RESET_TIMEZONE: ${DEMO_RESET_TIMEZONE:-Europe/Bratislava}
+      # About page; empty values keep the defaults from config/config.exs
+      DEMO_AUTHOR: ${DEMO_AUTHOR:-}
+      DEMO_GITHUB_URL: ${DEMO_GITHUB_URL:-}
+      DEMO_REPOSITORY_URL: ${DEMO_REPOSITORY_URL:-}
+      DEMO_LINKEDIN_URL: ${DEMO_LINKEDIN_URL:-}
+      DEMO_PORTFOLIO_URL: ${DEMO_PORTFOLIO_URL:-}
       # the BEAM's schedulers see all host CPUs; keep them modest next to other apps
       ERL_FLAGS: "+S 2:2"
     networks:
