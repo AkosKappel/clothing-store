@@ -41,6 +41,12 @@ defmodule ClothingStoreWeb.UserLoginLive do
           </.button>
         </:actions>
       </.simple_form>
+
+      <p class="mt-8 text-center text-sm">
+        <.link href={~p"/about"} class="font-semibold text-gray-800 underline underline-offset-4">
+          What is this? About the project
+        </.link>
+      </p>
     </div>
     """
   end

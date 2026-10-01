@@ -39,7 +39,10 @@ defmodule ClothingStoreWeb.Router do
   scope "/", ClothingStoreWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live "/", ProductLive.Index, :index
+    # on_mount assigns current_user, which the app layout's nav needs
+    live_session :dashboard, on_mount: [{ClothingStoreWeb.UserAuth, :ensure_authenticated}] do
+      live "/", ProductLive.Index, :index
+    end
 
     get "/transactions", PageController, :transactions
     get "/statistics", PageController, :statistics
@@ -99,6 +102,7 @@ defmodule ClothingStoreWeb.Router do
   scope "/", ClothingStoreWeb do
     pipe_through [:browser]
 
+    get "/about", PageController, :about
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,

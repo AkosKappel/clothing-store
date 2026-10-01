@@ -1,0 +1,234 @@
+<article class="about mx-auto max-w-6xl text-gray-700">
+  <section
+    aria-labelledby="about-title"
+    class="grid items-center gap-10 pt-4 pb-14 md:grid-cols-[minmax(0,1fr)_14rem] md:gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:pt-8 lg:pb-20"
+  >
+    <div>
+      <h1 id="about-title" class="about-hero-title font-display text-gray-800">
+        A stock dashboard for a clothing shop, built while learning its stack
+      </h1>
+      <p class="mt-6 max-w-[62ch] text-lg leading-[1.65]">
+        Modern Fashion Store is a demo for a shop manager: keep the catalogue up to date, see what sells, and watch changes made by other people appear without reloading. It's a portfolio project, so the products, prices and sales are made up.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <.link
+          :if={!@current_user}
+          href={~p"/users/log_in"}
+          class="about-button about-button-primary"
+        >
+          Try the demo
+        </.link>
+        <.link :if={@current_user} href={~p"/"} class="about-button about-button-primary">
+          Open the dashboard
+        </.link>
+        <a
+          :if={@repository}
+          href={@repository}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="about-button about-button-secondary"
+        >
+          View source code <.icon name="hero-arrow-top-right-on-square-mini" class="size-4" />
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>
+      </div>
+    </div>
+
+    <svg
+      class="hang-tag mx-auto -mt-4 w-40 sm:w-48 md:mt-0 md:w-full"
+      viewBox="0 0 260 480"
+      role="img"
+      aria-labelledby="hang-tag-label"
+    >
+      <title id="hang-tag-label">
+        A red hang tag: Modern Fashion Store, manager dashboard, a demo that resets nightly at {reset_time(
+          @reset
+        )} {@reset.timezone} time.
+      </title>
+      <g class="hang-tag-swing">
+        <path
+          class="fill-red-600"
+          fill-rule="evenodd"
+          d="M130 62 232 164V452a8 8 0 0 1-8 8H36a8 8 0 0 1-8-8V164ZM130 98a13 13 0 1 0 0 26 13 13 0 0 0 0-26Z"
+        />
+        <circle
+          cx="130"
+          cy="111"
+          r="20"
+          fill="none"
+          stroke="#fff"
+          stroke-opacity=".45"
+          stroke-width="2"
+        />
+        <path
+          d="M130 78 220 168V444H40V168Z"
+          fill="none"
+          stroke="#fff"
+          stroke-opacity=".55"
+          stroke-width="1.5"
+          stroke-dasharray="6 5"
+        />
+        <g class="font-display" fill="#fff" text-anchor="middle">
+          <text class="hang-tag-name" x="130" y="204">Modern</text>
+          <text class="hang-tag-name" x="130" y="238">Fashion</text>
+          <text class="hang-tag-name" x="130" y="272">Store</text>
+        </g>
+        <path d="M58 296H202" stroke="#fff" stroke-opacity=".6" stroke-width="1.5" />
+        <g fill="#fff" text-anchor="middle">
+          <text class="hang-tag-line hang-tag-strong" x="130" y="326">Manager dashboard</text>
+          <text class="hang-tag-line" x="130" y="352">Demo</text>
+          <text class="hang-tag-line" x="130" y="372">
+            Resets nightly at {reset_time(@reset)}
+          </text>
+          <text class="hang-tag-line" x="130" y="392">{@reset.timezone} time</text>
+        </g>
+        <g fill="#fff" fill-opacity=".85">
+          <rect x="74" y="408" width="3" height="22" />
+          <rect x="80" y="408" width="1.5" height="22" />
+          <rect x="84" y="408" width="4" height="22" />
+          <rect x="91" y="408" width="1.5" height="22" />
+          <rect x="95" y="408" width="2.5" height="22" />
+          <rect x="101" y="408" width="1.5" height="22" />
+          <rect x="105" y="408" width="4" height="22" />
+          <rect x="112" y="408" width="2" height="22" />
+          <rect x="117" y="408" width="1.5" height="22" />
+          <rect x="121" y="408" width="3" height="22" />
+          <rect x="127" y="408" width="1.5" height="22" />
+          <rect x="131" y="408" width="4" height="22" />
+          <rect x="138" y="408" width="1.5" height="22" />
+          <rect x="142" y="408" width="2.5" height="22" />
+          <rect x="148" y="408" width="1.5" height="22" />
+          <rect x="152" y="408" width="4" height="22" />
+          <rect x="159" y="408" width="2" height="22" />
+          <rect x="164" y="408" width="1.5" height="22" />
+          <rect x="168" y="408" width="3" height="22" />
+          <rect x="174" y="408" width="1.5" height="22" />
+          <rect x="178" y="408" width="4" height="22" />
+          <rect x="185" y="408" width="1.5" height="22" />
+        </g>
+      </g>
+      <path
+        d="M130 111C116 86 104 58 120 34S156 10 150 0"
+        fill="none"
+        stroke="#9ca3af"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
+    </svg>
+  </section>
+
+  <section aria-labelledby="about-origin" class="about-section">
+    <h2 id="about-origin" class="about-heading">Where it comes from</h2>
+    <ol class="about-timeline">
+      <li>
+        <p class="about-date"><time datetime="2025-01">January 2025</time></p>
+        <h3 class="about-subheading">A take-home task</h3>
+        <p class="about-text">
+          This started as a take-home assignment in a job application. The brief asked for a manager dashboard in Elixir with the Phoenix framework, Tailwind and PostgreSQL, a stack I had never worked with. I learned Phoenix and LiveView while building it, completed both required tasks and all four optional ones, and deployed it to my own server as a bonus. The point was to show how quickly I can get productive in an unfamiliar stack while keeping the code clean.
+        </p>
+      </li>
+      <li>
+        <p class="about-date"><time datetime="2026">2026</time></p>
+        <h3 class="about-subheading">Upgrade and self-hosting</h3>
+        <p class="about-text">
+          I brought it up to date with the latest Elixir, Phoenix, LiveView and Tailwind, packaged it as a Docker release, hardened it for public visitors and moved it to my home server, where it runs next to my other demo projects.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="about-assignment" class="about-section">
+    <h2 id="about-assignment" class="about-heading">The assignment</h2>
+    <ol class="about-tasks">
+      <li :for={{task, number} <- Enum.with_index(assignment_tasks(), 1)}>
+        <span class="about-task-number" aria-hidden="true">{number}</span>
+        <div>
+          <h3 class="about-subheading">
+            <span class="sr-only">Task {number}:</span>
+            {task.name}
+            <span class={["about-kind", task.required && "about-kind-required"]}>
+              {if task.required, do: "Required", else: "Optional"}
+            </span>
+          </h3>
+          <p class="about-text mt-1">{task.text}</p>
+        </div>
+        <.link href={task.path} class="about-link about-task-link">
+          See it<span class="sr-only">: {task.name}</span>
+        </.link>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="about-try" class="about-section">
+    <h2 id="about-try" class="about-heading">Things to try</h2>
+    <ol class="about-steps">
+      <li>
+        Open the dashboard in two browser windows, change a product in one and watch the other update.
+      </li>
+      <li>Combine the tag, price and availability filters on the inventory.</li>
+      <li>Pick a month on Transactions, then see what sold best on Statistics.</li>
+      <li>Add a product of your own, with a photo from {or_list(@photo_sources)}.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="about-demo" class="about-section">
+    <h2 id="about-demo" class="about-heading">How this demo works</h2>
+    <div class="care-label">
+      <ul class="care-label-inner">
+        <li>
+          <span class="care-symbol"><.icon name="hero-users" class="size-5" /></span>
+          Everyone uses the same demo account.
+        </li>
+        <li>
+          <span class="care-symbol"><.icon name="hero-arrow-path" class="size-5" /></span>
+          All changes are wiped every night at {reset_time(@reset)} ({@reset.timezone} time).
+        </li>
+        <li>
+          <span class="care-symbol"><.icon name="hero-lock-closed" class="size-5" /></span>
+          The account's e-mail and password can't be changed.
+        </li>
+        <li>
+          <span class="care-symbol"><.icon name="hero-envelope" class="size-5" /></span>
+          No e-mails are sent.
+        </li>
+        <li>
+          <span class="care-symbol"><.icon name="hero-photo" class="size-5" /></span>
+          Photos can only come from {or_list(@photo_sources ++ ["the built-in images"])}.
+        </li>
+        <li>
+          <span class="care-symbol"><.icon name="hero-shield-check" class="size-5" /></span>
+          Please don't enter anything personal.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="about-stack" class="about-section">
+    <h2 id="about-stack" class="about-heading">Built with</h2>
+    <dl class="about-stack">
+      <div :for={group <- @stack}>
+        <dt class="about-subheading">{group.label}</dt>
+        <dd :for={item <- group.items} class="about-text">{item}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section aria-labelledby="about-author" class="about-section">
+    <h2 id="about-author" class="about-heading">Made by</h2>
+    <div>
+      <p class="font-display text-2xl font-bold text-gray-800 about-wide">{@author}</p>
+      <p class="about-text mt-2">
+        I build web applications end to end, from the database to the deployment.
+      </p>
+      <ul :if={@links != []} class="mt-5 flex flex-wrap gap-x-6 gap-y-3">
+        <li :for={{key, url} <- @links}>
+          <a href={url} target="_blank" rel="noopener noreferrer" class="about-link">
+            {link_label(key)}
+            <.icon name="hero-arrow-top-right-on-square-mini" class="size-4" />
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</article>

@@ -12,6 +12,11 @@ defmodule ClothingStoreWeb.UserLoginLiveTest do
       assert html =~ "resets every night"
     end
 
+    test "links to the About page", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/log_in")
+      assert has_element?(lv, ~s|main a[href="/about"]|, "What is this? About the project")
+    end
+
     test "renders log in page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/users/log_in")
 

@@ -1,6 +1,22 @@
 defmodule ClothingStoreWeb.PageController do
   use ClothingStoreWeb, :controller
 
+  alias ClothingStore.{About, Demo}
+
+  def about(conn, _params) do
+    links = Demo.links()
+
+    render(conn, :about,
+      page_title: "About",
+      author: Demo.author(),
+      links: links,
+      repository: links[:repository],
+      reset: Demo.reset_settings(),
+      photo_sources: About.photo_sources(),
+      stack: About.stack()
+    )
+  end
+
   def transactions(conn, params) do
     {month, start_date} = parse_month(params["month"])
 

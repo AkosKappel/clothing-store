@@ -12,7 +12,7 @@
     <div class="block lg:hidden">
       <button
         id="menu-toggle"
-        class="text-white hover:text-gray-400 focus:outline-hidden"
+        class="text-white hover:text-gray-400 focus:outline-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white rounded-xs"
         aria-label="Toggle Menu"
       >
         <svg
@@ -40,46 +40,67 @@
       id="menu"
       class="hidden lg:flex items-center font-semibold bg-gray-800 lg:bg-transparent lg:static absolute top-24 left-0 w-full lg:w-auto lg:py-0 pb-4 lg:px-0 px-8 z-50 gap-x-8"
     >
+      <%= if assigns[:current_user] do %>
+        <li class="flex items-center justify-end my-2">
+          <.link
+            href={~p"/products"}
+            class={if active_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}
+          >
+            Inventory
+          </.link>
+        </li>
+        <li class="flex items-center justify-end my-2">
+          <.link
+            href={~p"/transactions"}
+            class={
+              if active_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"
+            }
+          >
+            Transactions
+          </.link>
+        </li>
+        <li class="flex items-center justify-end my-2">
+          <.link
+            href={~p"/statistics"}
+            class={
+              if active_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"
+            }
+          >
+            Statistics
+          </.link>
+        </li>
+        <%!-- <li class="flex items-center justify-end my-2">
+          <.link
+            href={~p"/users/settings"}
+            class={if active_path == "/edit", do: "text-red-400", else: "hover:text-zinc-400"}>
+            Settings
+          </.link>
+        </li> --%>
+      <% end %>
       <li class="flex items-center justify-end my-2">
         <.link
-          href={~p"/products"}
-          class={if active_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}
+          href={~p"/about"}
+          class={if active_path == "/about", do: "text-red-400", else: "hover:text-zinc-400"}
+          aria-current={if active_path == "/about", do: "page"}
         >
-          Inventory
+          About
         </.link>
       </li>
-      <li class="flex items-center justify-end my-2">
-        <.link
-          href={~p"/transactions"}
-          class={
-            if active_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"
-          }
-        >
-          Transactions
-        </.link>
-      </li>
-      <li class="flex items-center justify-end my-2">
-        <.link
-          href={~p"/statistics"}
-          class={if active_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"}
-        >
-          Statistics
-        </.link>
-      </li>
-      <%!-- <li class="flex items-center justify-end my-2">
-        <.link 
-          href={~p"/users/settings"} 
-          class={if active_path == "/edit", do: "text-red-400", else: "hover:text-zinc-400"}>
-          Settings
-        </.link>
-      </li> --%>
-      <li class="flex items-center justify-end my-2">
+      <li :if={assigns[:current_user]} class="flex items-center justify-end my-2">
         <.link
           href={~p"/users/log_out"}
           method="delete"
-          class="hover:text-zinc-200 bg-red-500 px-4 py-2 rounded-sm"
+          class="hover:text-zinc-200 bg-red-600 px-4 py-2 rounded-sm"
         >
           Log out
+        </.link>
+      </li>
+      <li :if={!assigns[:current_user]} class="flex items-center justify-end my-2">
+        <.link
+          href={~p"/users/log_in"}
+          class="hover:text-zinc-200 bg-red-600 px-4 py-2 rounded-sm"
+        >
+          Log in
         </.link>
       </li>
     </ul>
@@ -95,5 +116,10 @@
 <footer class="bg-gray-800 text-white py-4 mt-12">
   <div class="max-w-7xl mx-auto text-center">
     <p>&copy; {Date.utc_today().year} Modern Fashion Store. All rights reserved.</p>
+    <p class="mt-1 text-sm">
+      <.link href={~p"/about"} class="underline underline-offset-4 hover:text-zinc-300">
+        About this project
+      </.link>
+    </p>
   </div>
 </footer>
