@@ -36,7 +36,15 @@ defmodule ClothingStore.DemoLinksTest do
     assert Demo.links() == [github: "https://github.example.com/me"]
   end
 
-  test "the default config has GitHub, LinkedIn and the repository but no portfolio" do
+  # read from the config files rather than the running app, whose links DEMO_*_URL
+  # variables in the shell may have overridden
+  test "the default config has GitHub, LinkedIn and the repository but no portfolio", %{
+    original: original
+  } do
+    defaults = Config.Reader.read!("config/config.exs", env: :test)[:clothing_store][:demo]
+    put_links(original, defaults[:links])
+
     assert Keyword.keys(Demo.links()) == [:github, :linkedin, :repository]
+    assert defaults[:author] == "Ákos Kappel"
   end
 end
