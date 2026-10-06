@@ -12,6 +12,23 @@ defmodule ClothingStore.Products do
 
   @max_id 9_223_372_036_854_775_807
 
+  # a product with this many or fewer left counts as low on stock
+  @low_stock 5
+
+  @doc "The stock level at or below which a product is low on stock."
+  def low_stock, do: @low_stock
+
+  @doc "How many products are out of stock and how many are low (but not out)."
+  def stock_alerts do
+    from(p in Product,
+      select: %{
+        out: filter(count(p.id), p.stock == 0),
+        low: filter(count(p.id), p.stock > 0 and p.stock <= ^@low_stock)
+      }
+    )
+    |> Repo.one()
+  end
+
   @doc "The most products the catalogue may hold."
   def max_products, do: @max_products
 

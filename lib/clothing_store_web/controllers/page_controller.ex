@@ -1,7 +1,7 @@
 defmodule ClothingStoreWeb.PageController do
   use ClothingStoreWeb, :controller
 
-  alias ClothingStore.{About, Demo, Transactions}
+  alias ClothingStore.{About, Demo, Products, Transactions}
 
   def about(conn, _params) do
     links = Demo.links()
@@ -57,11 +57,16 @@ defmodule ClothingStoreWeb.PageController do
   def statistics(conn, _params) do
     this_month = Date.utc_today() |> Date.beginning_of_month()
     last_month = this_month |> Date.add(-1) |> Date.beginning_of_month()
+    monthly = Transactions.monthly_sales(12)
+    since = monthly |> hd() |> Map.fetch!(:month) |> DateTime.new!(~T[00:00:00], "Etc/UTC")
 
     render(conn, :statistics,
       page_title: "Statistics",
       this_month: this_month,
       last_month: last_month,
+      monthly: monthly,
+      categories: Transactions.revenue_by_category(since),
+      stock_alerts: Products.stock_alerts(),
       bestsellers: Transactions.list_bestsellers(3),
       this_month_bestsellers:
         Transactions.list_bestsellers_per_month(3, Date.to_string(this_month)),

@@ -75,6 +75,73 @@ defmodule ClothingStoreWeb.PageHTML do
 
   def reset_time(%{time: time}), do: Calendar.strftime(time, "%H:%M")
 
+  @doc "A euro amount rounded for chart axes: 850 €, 1.5k €, 12k €."
+  def short_euro(value) do
+    value = to_float(value)
+
+    if value >= 1000 do
+      thousands = Float.round(value / 1000, 1)
+      text = if thousands == trunc(thousands), do: trunc(thousands), else: thousands
+      "#{text}k €"
+    else
+      "#{round(value)} €"
+    end
+  end
+
+  @doc "Revenue per month as bars for `ChartComponents.bar_chart/1`."
+  def revenue_bars(monthly) do
+    for %{month: month, revenue: revenue, count: count} <- monthly do
+      %{
+        label: Calendar.strftime(month, "%b"),
+        value: to_float(revenue),
+        tooltip:
+          "#{Calendar.strftime(month, "%B %Y")}: #{format_price(revenue)} from #{ngettext("1 sale", "%{count} sales", count)}"
+      }
+    end
+  end
+
+  @doc """
+  Category revenue as donut segments: the six largest, the rest folded into
+  "Other" so no colour has to be invented.
+  """
+  def category_segments(categories) do
+    {top, rest} = Enum.split(categories, 6)
+
+    segments =
+      for {category, revenue} <- top do
+        %{
+          label: category,
+          value: to_float(revenue),
+          color: category_color(category),
+          text: format_price(revenue)
+        }
+      end
+
+    case rest do
+      [] ->
+        segments
+
+      rest ->
+        revenue = rest |> Enum.map(&elem(&1, 1)) |> Enum.reduce(&Decimal.add/2)
+
+        segments ++
+          [
+            %{
+              label: "Other",
+              value: to_float(revenue),
+              color: other_color(),
+              text: format_price(revenue)
+            }
+          ]
+    end
+  end
+
+  def sum_revenue(categories),
+    do: categories |> Enum.map(&elem(&1, 1)) |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
+
+  defp to_float(%Decimal{} = value), do: Decimal.to_float(value)
+  defp to_float(value), do: value / 1
+
   @doc "A ranked table of `{product, quantity_sold}` rows, or an empty state."
   attr :id, :string, required: true
   attr :title, :string, required: true

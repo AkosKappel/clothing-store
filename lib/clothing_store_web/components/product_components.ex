@@ -4,17 +4,28 @@ defmodule ClothingStoreWeb.ProductComponents do
 
   import ClothingStoreWeb.CoreComponents
 
-  @low_stock 5
+  @low_stock ClothingStore.Products.low_stock()
 
-  # literal class strings so Tailwind can see them
-  @category_colors [
-    "bg-sky-50 text-sky-800 ring-sky-600/20",
-    "bg-violet-50 text-violet-800 ring-violet-600/20",
-    "bg-amber-50 text-amber-800 ring-amber-600/20",
-    "bg-teal-50 text-teal-800 ring-teal-600/20",
-    "bg-pink-50 text-pink-800 ring-pink-600/20",
-    "bg-indigo-50 text-indigo-800 ring-indigo-600/20"
-  ]
+  # One colour per seed category, in the order of the validated default chart
+  # palette (dataviz skill); any other category is "other" gray. The same colour
+  # marks the category in badges and charts.
+  @category_colors %{
+    "Shirts & Tops" => "#2a78d6",
+    "Trousers" => "#eb6834",
+    "Dresses & Skirts" => "#1baf7a",
+    "Knitwear" => "#eda100",
+    "Jackets & Coats" => "#e87ba4",
+    "Shoes" => "#008300",
+    "Accessories" => "#4a3aa7",
+    "Sportswear" => "#e34948"
+  }
+  @other_color "#8b8b86"
+
+  @doc "The chart colour of a category (gray for categories outside the seed set)."
+  def category_color(category), do: Map.get(@category_colors, category, @other_color)
+
+  @doc "The colour for grouped, smaller categories in charts."
+  def other_color, do: @other_color
 
   @doc "Stock as a coloured badge: in stock, low (#{@low_stock} or fewer) or out of stock."
   attr :stock, :integer, required: true
@@ -25,12 +36,17 @@ defmodule ClothingStoreWeb.ProductComponents do
     """
   end
 
-  @doc "A category badge whose colour is stable for the same category name."
+  @doc "A category badge with the category's chart colour as a dot."
   attr :category, :string, required: true
 
   def category_badge(assigns) do
     ~H"""
-    <.badge class={category_class(@category)}>{@category}</.badge>
+    <.badge>
+      <svg class="mr-1.5 size-2" viewBox="0 0 8 8" aria-hidden="true">
+        <circle cx="4" cy="4" r="4" fill={category_color(@category)} />
+      </svg>
+      {@category}
+    </.badge>
     """
   end
 
@@ -113,7 +129,4 @@ defmodule ClothingStoreWeb.ProductComponents do
     do: "bg-amber-50 text-amber-800 ring-amber-600/20"
 
   defp stock_class(_stock), do: "bg-emerald-50 text-emerald-800 ring-emerald-600/20"
-
-  defp category_class(category),
-    do: Enum.at(@category_colors, :erlang.phash2(category, length(@category_colors)))
 end

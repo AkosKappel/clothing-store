@@ -115,5 +115,18 @@ defmodule ClothingStoreWeb.UIStatesTest do
       assert html =~ "Last month (#{Calendar.strftime(last_month, "%B %Y")})"
       assert html =~ "No sales recorded yet."
     end
+
+    test "statistics show summary tiles and charts with a table view", %{conn: conn} do
+      product = product_fixture(%{category: "Shoes", price: "50.00", stock: 0})
+      ClothingStore.TransactionsFixtures.sale_fixture([{product, 2}])
+
+      html = conn |> get(~p"/statistics") |> html_response(200)
+      assert html =~ "Revenue this month"
+      assert html =~ "1 product"
+      assert html =~ ~s(id="revenue-chart")
+      assert html =~ ~s(id="category-chart")
+      assert html =~ "Show as table"
+      assert html =~ "100,00 €"
+    end
   end
 end
