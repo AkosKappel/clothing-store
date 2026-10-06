@@ -66,6 +66,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    # GET /health is 200 once Phoenix is up and can query the database; the first
+    # start also migrates and seeds, hence the long start period
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--max-time", "3", "http://127.0.0.1:4000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+      start_interval: 2s
 
   nginx:
     image: nginx:1.30-alpine
@@ -83,7 +92,8 @@ services:
     networks:
       - app-network
     depends_on:
-      - app
+      app:
+        condition: service_healthy
 
 networks:
   app-network:

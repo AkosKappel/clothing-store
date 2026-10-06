@@ -43,7 +43,7 @@ defmodule ClothingStoreWeb.Endpoint do
     cookie_key: "request_logger"
 
   plug Plug.RequestId
-  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
+  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint], log: {__MODULE__, :log_level, []}
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -54,4 +54,9 @@ defmodule ClothingStoreWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug ClothingStoreWeb.Router
+
+  # the Docker health check calls /health every 30 s; keep it out of the info log
+  @doc false
+  def log_level(%{path_info: ["health"]}), do: :debug
+  def log_level(_conn), do: :info
 end

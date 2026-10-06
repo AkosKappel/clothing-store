@@ -53,10 +53,11 @@ defmodule ClothingStoreWeb.Router do
     resources "/products", ProductController, except: [:new, :edit]
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ClothingStoreWeb do
-  #   pipe_through :api
-  # end
+  scope "/", ClothingStoreWeb do
+    pipe_through :api
+
+    get "/health", HealthController, :show, log: false
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:clothing_store, :dev_routes) do
