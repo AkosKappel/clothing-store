@@ -5,6 +5,9 @@ defmodule ClothingStoreWeb.ProductLive.Index do
 
   alias ClothingStore.Products
 
+  # how long a product changed by someone else stays highlighted (matches .live-highlight)
+  @highlight_ms 2_500
+
   @impl true
   def mount(_params, _session, socket) do
     # Fetch the initial list of products
@@ -15,38 +18,59 @@ defmodule ClothingStoreWeb.ProductLive.Index do
       Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
     end
 
-    # Assign the products to the socket
-    {:ok, assign(socket, products: products, page_title: "Dashboard")}
+    {:ok,
+     assign(socket,
+       products: products,
+       highlighted: MapSet.new(),
+       announcement: nil,
+       page_title: "Dashboard"
+     )}
   end
 
   @impl true
   def handle_info({:product_created, product}, socket) do
     # Add the new product to the list
-    {:noreply, update(socket, :products, fn products -> [product | products] end)}
+    socket = update(socket, :products, fn products -> [product | products] end)
+    {:noreply, highlight(socket, product, "New product: #{product.title}")}
   end
 
   @impl true
   def handle_info({:product_updated, updated_product}, socket) do
     # Update the product in the list
-    {:noreply,
-     update(socket, :products, fn products ->
-       Enum.map(products, fn product ->
-         if product.id == updated_product.id, do: updated_product, else: product
-       end)
-     end)}
+    socket =
+      update(socket, :products, fn products ->
+        Enum.map(products, fn product ->
+          if product.id == updated_product.id, do: updated_product, else: product
+        end)
+      end)
+
+    {:noreply, highlight(socket, updated_product, "#{updated_product.title} was updated")}
   end
 
   @impl true
   def handle_info({:product_deleted, deleted_product}, socket) do
     # Remove the deleted product from the list
     {:noreply,
-     update(socket, :products, fn products ->
-       Enum.reject(products, &(&1.id == deleted_product.id))
-     end)}
+     socket
+     |> update(:products, fn products -> Enum.reject(products, &(&1.id == deleted_product.id)) end)
+     |> assign(:announcement, "#{deleted_product.title} was deleted")}
+  end
+
+  @impl true
+  def handle_info({:unhighlight, id}, socket) do
+    {:noreply, update(socket, :highlighted, &MapSet.delete(&1, id))}
   end
 
   @impl true
   def handle_info(:demo_reset, socket) do
     {:noreply, assign(socket, :products, Products.list_products())}
+  end
+
+  defp highlight(socket, product, announcement) do
+    Process.send_after(self(), {:unhighlight, product.id}, @highlight_ms)
+
+    socket
+    |> update(:highlighted, &MapSet.put(&1, product.id))
+    |> assign(:announcement, announcement)
   end
 end

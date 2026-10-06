@@ -35,8 +35,41 @@
   }
 }
 
+/* cross-document page transitions: a short cross-fade, the header stays put */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 150ms; }
+}
+
 @layer components {
+  /* info toasts fade out after 6 s; hovering or focusing one keeps it */
+  .toast-auto-dismiss { animation: toast-out 300ms ease-in 6s forwards; }
+  .toast-auto-dismiss:is(:hover, :focus-within) { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    .toast-auto-dismiss { animation-name: toast-hide; animation-duration: 1ms; }
+  }
+
+  /* a product that just changed in another session */
+  .live-highlight { animation: live-highlight 2.5s ease-out; }
+  @media (prefers-reduced-motion: reduce) {
+    .live-highlight { animation: none; @apply ring-2 ring-red-400; }
+  }
+
   .card { @apply rounded-lg bg-white shadow-xs ring-1 ring-gray-200; }
+
+  /* phones and tablets: one card per row, the first cell as its heading, the rest labelled */
+  @media (width < 64rem) {
+    .responsive-table thead { @apply sr-only; }
+    .responsive-table :is(tbody, tr, td) { display: block; }
+    .responsive-table td { @apply flex items-center justify-between gap-4 px-0 py-1 text-right; }
+    .responsive-table tr { @apply px-4 py-3; }
+    .responsive-table td:first-child { @apply block pb-2 text-left; }
+    .responsive-table td:not(:first-child)[data-label]::before {
+      content: attr(data-label);
+      @apply text-left font-medium text-gray-500;
+    }
+    .responsive-table td:last-child:not([data-label]) { @apply justify-end pt-3; }
+  }
 }
 
 /* About page: garment-label look. Ink gray-800, body gray-700, tag red-600, thread gray-400. */
@@ -146,6 +179,16 @@
   @media (prefers-reduced-motion: reduce) {
     .hang-tag-swing { animation: none; }
   }
+}
+
+@keyframes toast-out {
+  to { opacity: 0; translate: 0 0.5rem; visibility: hidden; }
+}
+@keyframes toast-hide {
+  to { visibility: hidden; }
+}
+@keyframes live-highlight {
+  from { box-shadow: 0 0 0 3px var(--color-red-400); background-color: var(--color-red-50); }
 }
 
 @keyframes hang-tag-swing {

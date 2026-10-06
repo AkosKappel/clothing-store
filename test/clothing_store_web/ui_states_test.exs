@@ -58,6 +58,15 @@ defmodule ClothingStoreWeb.UIStatesTest do
       assert html =~ ~r|<input name="_method"[^>]*value="delete"|
     end
 
+    test "success messages fade out on their own, errors stay", %{conn: conn} do
+      product = product_fixture()
+      conn = put(conn, ~p"/products/#{product}", product: %{stock: 3})
+
+      html = conn |> get(redirected_to(conn)) |> html_response(200)
+      assert html =~ ~r|<div id="flash-info-\d+"[^>]*class="[^"]*toast-auto-dismiss|
+      refute html =~ ~r|id="client-error"[^>]*toast-auto-dismiss|
+    end
+
     test "transactions explain an empty month", %{conn: conn} do
       html = conn |> get(~p"/transactions?month=2024-01") |> html_response(200)
       assert html =~ "No transactions in January 2024"

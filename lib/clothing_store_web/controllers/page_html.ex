@@ -86,8 +86,8 @@ defmodule ClothingStoreWeb.PageHTML do
     <section aria-labelledby={"#{@id}-title"}>
       <h2 id={"#{@id}-title"} class="mb-3 text-lg font-semibold text-gray-900">{@title}</h2>
       <.table id={@id} rows={Enum.with_index(@rows, 1)}>
-        <:col :let={{_row, rank}} label="#" class="w-12 font-semibold text-gray-900">{rank}</:col>
-        <:col :let={{{product, _sold}, _rank}} label="Product">
+        <:col :let={{{product, _sold}, rank}} label="Product">
+          <span class="mr-2 inline-block w-5 font-semibold text-gray-500">{rank}.</span>
           <.link
             href={~p"/products/#{product}"}
             class="font-medium text-gray-900 hover:text-red-700 hover:underline"

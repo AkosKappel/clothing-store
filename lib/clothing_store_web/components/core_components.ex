@@ -27,6 +27,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
   attr :title, :string, default: nil
   attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
+  attr :auto_dismiss, :boolean, default: false, doc: "fade out after a few seconds (see app.css)"
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
   slot :inner_block, doc: "the optional inner block that renders the flash message"
@@ -37,11 +38,13 @@ defmodule ClothingStoreWeb.CoreComponents do
     ~H"""
     <div
       :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
-      id={@id}
-      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
+      id={if @auto_dismiss, do: "#{@id}-#{:erlang.phash2(msg)}", else: @id}
+      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide({:closest, "[role=alert]"})}
       role="alert"
       class={[
         "fixed right-4 bottom-4 z-50 flex w-[calc(100%-2rem)] gap-3 rounded-lg p-4 shadow-lg ring-1 sm:w-96",
+        "motion-safe:transition motion-safe:starting:translate-y-2 motion-safe:starting:opacity-0",
+        @auto_dismiss && "toast-auto-dismiss",
         @kind == :info && "bg-emerald-50 text-emerald-900 ring-emerald-600/30",
         @kind == :error && "bg-rose-50 text-rose-900 ring-rose-600/30"
       ]}
@@ -84,7 +87,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   def flash_group(assigns) do
     ~H"""
     <div id={@id} aria-live="polite">
-      <.flash kind={:info} flash={@flash} />
+      <.flash kind={:info} flash={@flash} auto_dismiss />
       <.flash kind={:error} flash={@flash} />
       <.flash
         id="client-error"
@@ -446,6 +449,9 @@ defmodule ClothingStoreWeb.CoreComponents do
   @doc ~S"""
   Renders a table, or the `:empty` slot when there are no rows.
 
+  Below the `lg` breakpoint each row becomes a card: the first column is its heading and the
+  other cells are listed with their column label (see `.responsive-table`).
+
   ## Examples
 
       <.table id="users" rows={@users}>
@@ -474,7 +480,7 @@ defmodule ClothingStoreWeb.CoreComponents do
     ~H"""
     <div :if={@rows == [] && @empty != []}>{render_slot(@empty)}</div>
     <div :if={@rows != [] || @empty == []} class="card overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 text-sm">
+      <table class="responsive-table min-w-full divide-y divide-gray-200 text-sm">
         <thead class="bg-gray-50 text-left">
           <tr>
             <th
@@ -493,6 +499,7 @@ defmodule ClothingStoreWeb.CoreComponents do
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="hover:bg-gray-50">
             <td
               :for={col <- @col}
+              data-label={col[:label]}
               class={["px-4 py-3 align-middle text-gray-700", col[:class]]}
             >
               {render_slot(col, @row_item.(row))}
@@ -625,7 +632,10 @@ defmodule ClothingStoreWeb.CoreComponents do
       aria-labelledby={"#{@id}-title"}
       aria-describedby={"#{@id}-description"}
       closedby="any"
-      class="m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-white p-6 text-left shadow-xl backdrop:bg-gray-900/50"
+      class={[
+        "m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-white p-6 text-left shadow-xl backdrop:bg-gray-900/50",
+        "motion-safe:transition-[opacity,scale] motion-safe:duration-150 motion-safe:starting:open:scale-95 motion-safe:starting:open:opacity-0"
+      ]}
     >
       <div class="flex gap-4">
         <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-100">

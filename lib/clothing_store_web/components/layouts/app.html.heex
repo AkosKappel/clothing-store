@@ -1,5 +1,5 @@
 <% current_path = ClothingStoreWeb.Helpers.current_path(assigns) %>
-<header class="relative bg-gray-800 text-white">
+<header class="relative bg-gray-800 text-white [view-transition-name:site-header]">
   <nav
     class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8"
     aria-label="Main"
@@ -9,7 +9,7 @@
       class="flex items-center gap-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
     >
       <img src={~p"/images/logo.svg"} width="40" height="40" alt="" />
-      <span class="font-display text-xl font-bold text-red-400 italic sm:text-2xl">
+      <span class="font-display text-xl font-bold whitespace-nowrap text-red-400 italic sm:text-2xl">
         Modern Fashion Store
       </span>
     </a>
@@ -28,7 +28,7 @@
 
     <ul
       id="menu"
-      class="absolute top-full left-0 z-40 hidden w-full space-y-1 bg-gray-800 px-4 pb-4 shadow-lg lg:static lg:flex lg:w-auto lg:items-center lg:gap-1 lg:space-y-0 lg:p-0 lg:shadow-none"
+      class="absolute top-full left-0 z-40 hidden w-full space-y-1 bg-gray-800 px-4 pb-4 shadow-lg max-lg:motion-safe:transition-[opacity,translate] max-lg:motion-safe:starting:-translate-y-2 max-lg:motion-safe:starting:opacity-0 lg:static lg:flex lg:w-auto lg:items-center lg:gap-1 lg:space-y-0 lg:p-0 lg:shadow-none"
     >
       <%= if assigns[:current_user] do %>
         <.nav_link href={~p"/"} current_path={current_path} icon="hero-squares-2x2">Dashboard</.nav_link>
@@ -41,7 +41,7 @@
         <.link
           href={~p"/users/log_out"}
           method="delete"
-          class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+          class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold whitespace-nowrap text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
         >
           <.icon name="hero-arrow-right-start-on-rectangle-mini" /> Log out
         </.link>

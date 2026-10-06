@@ -86,7 +86,7 @@
 
 <.table id="products" rows={@products} row_id={&"product-#{&1.id}"}>
   <:col :let={product} label="Product">
-    <div class="flex min-w-64 items-center gap-4">
+    <div class="flex items-center gap-4 sm:min-w-64">
       <img
         src={image_link(product.photo)}
         alt=""
