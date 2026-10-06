@@ -15,10 +15,16 @@ defmodule ClothingStore.Demo.ResetTest do
 
     titles = Enum.map(Products.list_products(), & &1.title)
     refute "Visitor product" in titles
-    assert "T-Shirt" in titles
-    assert length(titles) == 10
+    assert "Organic Cotton T-Shirt" in titles
+    assert length(titles) >= 20
     assert Users.get_user_by_email(Demo.account().email)
-    assert Repo.aggregate(ClothingStore.Transactions.Transaction, :count) > 0
+
+    # a year of sales, including this month and last month
+    this_month = Date.utc_today() |> Date.beginning_of_month() |> Date.to_string()
+    last_month = Date.utc_today() |> Date.beginning_of_month() |> Date.add(-1) |> Date.to_string()
+    assert Repo.aggregate(ClothingStore.Transactions.Transaction, :count) > 150
+    assert ClothingStore.Transactions.list_bestsellers_per_month(3, this_month) != []
+    assert ClothingStore.Transactions.list_bestsellers_per_month(3, last_month) != []
     assert_receive :demo_reset
   end
 

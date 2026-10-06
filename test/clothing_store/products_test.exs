@@ -32,7 +32,7 @@ defmodule ClothingStore.ProductsTest do
         description: "some description",
         title: "some title",
         category: "some category",
-        photo: "/images/products/t-shirt.webp",
+        photo: "/images/products/white-t-shirt.webp",
         price: "120.5",
         stock: 42
       }
@@ -41,7 +41,7 @@ defmodule ClothingStore.ProductsTest do
       assert product.description == "some description"
       assert product.title == "some title"
       assert product.category == "some category"
-      assert product.photo == "/images/products/t-shirt.webp"
+      assert product.photo == "/images/products/white-t-shirt.webp"
       assert product.price == Decimal.new("120.5")
       assert product.stock == 42
     end
@@ -98,7 +98,7 @@ defmodule ClothingStore.ProductsTest do
       description: "d",
       title: "t",
       category: "c",
-      photo: "/images/products/t-shirt.webp",
+      photo: "/images/products/white-t-shirt.webp",
       price: "10",
       stock: 1,
       tags: ["a"]
@@ -129,7 +129,7 @@ defmodule ClothingStore.ProductsTest do
 
     test "accepts only local /images/ paths and allowlisted https image hosts" do
       for ok <- [
-            "/images/products/t-shirt.webp",
+            "/images/products/white-t-shirt.webp",
             "https://images.pexels.com/photos/1/a.jpeg?w=600",
             "https://images.unsplash.com/photo-1?auto=format"
           ] do

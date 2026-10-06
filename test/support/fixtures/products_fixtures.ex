@@ -13,7 +13,7 @@ defmodule ClothingStore.ProductsFixtures do
       |> Enum.into(%{
         category: "some category",
         description: "some description",
-        photo: "/images/products/t-shirt.webp",
+        photo: "/images/products/white-t-shirt.webp",
         price: "120.5",
         stock: 42,
         title: "some title"

@@ -10,7 +10,7 @@ defmodule ClothingStoreWeb.ProductFormLiveTest do
     title: "Linen shirt",
     description: "Light and breezy",
     category: "Shirts",
-    photo: "/images/products/t-shirt.webp",
+    photo: "/images/products/white-t-shirt.webp",
     price: "39.90",
     stock: "12",
     tags: "summer, linen"

@@ -72,7 +72,7 @@ defmodule ClothingStoreWeb.ProductComponents do
         field={@form[:photo]}
         type="text"
         label="Photo"
-        placeholder="/images/products/t-shirt.webp"
+        placeholder="/images/products/white-t-shirt.webp"
         hint={"A path under /images/, or an https:// URL from #{ClothingStore.Products.Product.photo_hosts_text()}."}
         required
       />

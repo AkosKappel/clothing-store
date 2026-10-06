@@ -9,7 +9,7 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     description: "some description",
     title: "some title",
     category: "some category",
-    photo: "/images/products/t-shirt.webp",
+    photo: "/images/products/white-t-shirt.webp",
     price: "120.5",
     stock: 42
   }
