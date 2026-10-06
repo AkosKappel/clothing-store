@@ -1,4 +1,6 @@
 defmodule ClothingStore.Transactions do
+  @moduledoc "Sales: transactions, their line items and the figures built from them."
+
   import Ecto.Query, warn: false
   alias ClothingStore.Repo
 

@@ -4,8 +4,8 @@ defmodule ClothingStore.Products do
   """
 
   import Ecto.Query, warn: false
-  alias ClothingStore.Repo
   alias ClothingStore.Products.Product
+  alias ClothingStore.Repo
 
   # the public demo resets nightly; this keeps visitors from filling the database until then
   @max_products 200

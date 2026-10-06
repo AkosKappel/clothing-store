@@ -18,7 +18,7 @@ defmodule ClothingStore.Demo.Scheduler do
   @impl true
   def handle_info(:reset, settings) do
     try do
-      ClothingStore.Demo.Reset.run()
+      Demo.Reset.run()
     rescue
       e -> Logger.error("Demo reset failed: " <> Exception.format(:error, e, __STACKTRACE__))
     end

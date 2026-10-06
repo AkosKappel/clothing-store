@@ -60,7 +60,9 @@ defmodule ClothingStore.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.4"},
       {:dns_cluster, "~> 0.3"},
-      {:bandit, "~> 1.12"}
+      {:bandit, "~> 1.12"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.14", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -87,7 +89,14 @@ defmodule ClothingStore.MixProject do
         "esbuild clothing_store --minify",
         "phx.digest"
       ],
-      precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
+      precommit: [
+        "compile --warnings-as-errors",
+        "deps.unlock --unused",
+        "format",
+        "credo --strict",
+        "sobelow --config",
+        "test"
+      ]
     ]
   end
 end

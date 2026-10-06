@@ -7,7 +7,7 @@ defmodule ClothingStore.Users do
   alias ClothingStore.Repo
 
   alias ClothingStore.Demo
-  alias ClothingStore.Users.{User, UserToken, UserNotifier}
+  alias ClothingStore.Users.{User, UserNotifier, UserToken}
 
   @locked_msg "can't be changed for the demo account"
 

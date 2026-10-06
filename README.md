@@ -45,7 +45,7 @@ Live Demo: **[Modern Fashion Store](https://tagline.tailb52c43.ts.net)** (press 
 4. Run `mix setup` to install dependencies, create and migrate the database and seed it.
 5. Start the server with `mix phx.server` (or `iex -S mix phx.server`) and visit [`localhost:4000`](http://localhost:4000).
 
-Run `mix precommit` before committing: it compiles with warnings as errors, removes unused entries from `mix.lock`, formats the code (rewriting files) and runs the tests.
+Run `mix precommit` before committing: it compiles with warnings as errors, removes unused entries from `mix.lock`, formats the code (rewriting files), runs Credo (`--strict`) and Sobelow (Phoenix security scanner, exceptions explained in `.sobelow-conf`), then the tests.
 
 ### With Docker
 

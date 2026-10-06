@@ -4,8 +4,8 @@ defmodule ClothingStoreWeb.UserConfirmationInstructionsLiveTest do
   import Phoenix.LiveViewTest
   import ClothingStore.UsersFixtures
 
-  alias ClothingStore.Users
   alias ClothingStore.Repo
+  alias ClothingStore.Users
 
   setup do
     %{user: user_fixture()}

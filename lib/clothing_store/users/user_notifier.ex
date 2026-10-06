@@ -1,4 +1,6 @@
 defmodule ClothingStore.Users.UserNotifier do
+  @moduledoc "Account e-mails: confirmation, password reset and e-mail change instructions."
+
   import Swoosh.Email
 
   alias ClothingStore.Mailer

@@ -1,0 +1,21 @@
+# Sobelow (Phoenix security scanner) settings for `mix sobelow` and `mix precommit`.
+# Ignored checks, each a false positive for this app:
+#   Config.HTTPS - TLS ends at the Tailscale sidecar; Phoenix sits behind nginx on plain HTTP.
+#   Config.CSWH  - check_origin is set at runtime (config/runtime.exs), which Sobelow can't see.
+#   Config.CSP   - the router sends a strict CSP through put_secure_browser_headers/2.
+#   Vuln         - Sobelow's own list of vulnerable dependency versions is dated, and parsing
+#                  mix.lock floods the output with warnings on Elixir 1.20; dependency audits
+#                  belong in CI (`mix hex.audit`, see BACKLOG T-01) and T-05's monthly updates.
+[
+  verbose: false,
+  private: false,
+  skip: true,
+  router: nil,
+  exit: "low",
+  format: "txt",
+  out: nil,
+  threshold: "low",
+  ignore: ["Config.HTTPS", "Config.CSWH", "Config.CSP", "Vuln"],
+  ignore_files: [],
+  version: false
+]

@@ -1,4 +1,8 @@
 defmodule ClothingStoreWeb.Helpers do
+  @moduledoc "Formatting helpers shared by templates: prices, dates and password rules."
+
+  alias ClothingStore.Users.User
+
   def format_price(price) when is_nil(price), do: "0,00 €"
 
   def format_price(price) do
@@ -40,7 +44,7 @@ defmodule ClothingStoreWeb.Helpers do
   @doc "The password rules as `{label, met?}` pairs, for `CoreComponents.requirements/1`."
   def password_requirements(password, confirmation) do
     password = password || ""
-    min_length = ClothingStore.Users.User.password_min_length()
+    min_length = User.password_min_length()
 
     [
       {"At least #{min_length} characters", String.length(password) >= min_length},

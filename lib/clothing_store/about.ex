@@ -4,6 +4,7 @@ defmodule ClothingStore.About do
   actually running.
   """
 
+  alias ClothingStore.Products.Product
   alias ClothingStore.Repo
 
   @doc "The technology stack, grouped under a few headings."
@@ -89,7 +90,7 @@ defmodule ClothingStore.About do
 
   @doc ~S'Where product photos may come from, by name: ["Pexels", "Unsplash"].'
   def photo_sources do
-    for host <- ClothingStore.Products.Product.photo_hosts() do
+    for host <- Product.photo_hosts() do
       host |> String.split(".") |> Enum.at(-2) |> String.capitalize()
     end
   end

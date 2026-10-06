@@ -5,6 +5,8 @@ defmodule ClothingStore.Release do
   """
   @app :clothing_store
 
+  alias ClothingStore.Demo.Reset
+
   def migrate do
     load_app()
 
@@ -36,26 +38,30 @@ defmodule ClothingStore.Release do
 
     {:ok, _, _} =
       Ecto.Migrator.with_repo(ClothingStore.Repo, fn repo ->
-        if fresh_database?(repo) do
-          # The seeds broadcast on PubSub and use time zones; neither app runs in `eval`.
-          {:ok, _} = Application.ensure_all_started([:phoenix_pubsub, :tzdata])
-
-          {:ok, _} =
-            Supervisor.start_link([{Phoenix.PubSub, name: ClothingStore.PubSub}],
-              strategy: :one_for_one
-            )
-
-          # One transaction: a failing seed rolls back and raises, so the next start retries.
-          {:ok, _} =
-            repo.transaction(fn -> Code.eval_file(seeds_path) end, timeout: :timer.minutes(1))
-        end
+        if fresh_database?(repo), do: seed(repo, seeds_path)
       end)
 
     :ok
   end
 
+  # seeds_path is the release's own priv/repo/seeds.exs (or a test's file), never user input
+  # sobelow_skip ["RCE.CodeModule"]
+  defp seed(repo, seeds_path) do
+    # The seeds broadcast on PubSub and use time zones; neither app runs in `eval`.
+    {:ok, _} = Application.ensure_all_started([:phoenix_pubsub, :tzdata])
+
+    {:ok, _} =
+      Supervisor.start_link([{Phoenix.PubSub, name: ClothingStore.PubSub}],
+        strategy: :one_for_one
+      )
+
+    # One transaction: a failing seed rolls back and raises, so the next start retries.
+    {:ok, _} =
+      repo.transaction(fn -> Code.eval_file(seeds_path) end, timeout: :timer.minutes(1))
+  end
+
   @doc "Manual reset from the shell: bin/clothing_store rpc 'ClothingStore.Release.reset_demo()'"
-  def reset_demo, do: ClothingStore.Demo.Reset.run()
+  def reset_demo, do: Reset.run()
 
   defp repos do
     Application.fetch_env!(@app, :ecto_repos)

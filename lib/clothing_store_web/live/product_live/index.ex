@@ -37,12 +37,7 @@ defmodule ClothingStoreWeb.ProductLive.Index do
   @impl true
   def handle_info({:product_updated, updated_product}, socket) do
     # Update the product in the list
-    socket =
-      update(socket, :products, fn products ->
-        Enum.map(products, fn product ->
-          if product.id == updated_product.id, do: updated_product, else: product
-        end)
-      end)
+    socket = update(socket, :products, &Enum.map(&1, fn p -> replace(p, updated_product) end))
 
     {:noreply, highlight(socket, updated_product, "#{updated_product.title} was updated")}
   end
@@ -65,6 +60,9 @@ defmodule ClothingStoreWeb.ProductLive.Index do
   def handle_info(:demo_reset, socket) do
     {:noreply, assign(socket, :products, Products.list_products())}
   end
+
+  defp replace(%{id: id}, %{id: id} = updated), do: updated
+  defp replace(product, _updated), do: product
 
   defp highlight(socket, product, announcement) do
     Process.send_after(self(), {:unhighlight, product.id}, @highlight_ms)

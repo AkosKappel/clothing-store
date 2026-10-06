@@ -1,4 +1,6 @@
 defmodule ClothingStoreWeb.UserAuth do
+  @moduledoc "Session and remember-me cookie handling, plus the plugs and `on_mount` hooks that guard pages."
+
   use ClothingStoreWeb, :verified_routes
 
   import Plug.Conn

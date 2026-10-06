@@ -1,9 +1,9 @@
 defmodule ClothingStoreWeb.UserAuthTest do
   use ClothingStoreWeb.ConnCase, async: true
 
-  alias Phoenix.LiveView
   alias ClothingStore.Users
   alias ClothingStoreWeb.UserAuth
+  alias Phoenix.LiveView
   import ClothingStore.UsersFixtures
 
   @remember_me_cookie "_clothing_store_web_user_remember_me"

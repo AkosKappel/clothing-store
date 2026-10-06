@@ -3,6 +3,7 @@ defmodule ClothingStore.AboutTest do
   use ClothingStore.DataCase, async: false
 
   alias ClothingStore.About
+  alias Ecto.Adapters.SQL.Sandbox
 
   @version_key {ClothingStore.About, :database_version}
 
@@ -16,7 +17,7 @@ defmodule ClothingStore.AboutTest do
   # A process outside the SQL sandbox can't use the database, as if it were down.
   # Sync tests share their connection with every process, so switch that off first.
   defp without_database(fun) do
-    Ecto.Adapters.SQL.Sandbox.mode(ClothingStore.Repo, :manual)
+    Sandbox.mode(ClothingStore.Repo, :manual)
     parent = self()
     spawn(fn -> send(parent, {:result, fun.()}) end)
     assert_receive {:result, result}, 5_000

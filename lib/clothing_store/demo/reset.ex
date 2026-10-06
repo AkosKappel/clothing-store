@@ -13,6 +13,8 @@ defmodule ClothingStore.Demo.Reset do
   Resets the demo. TRUNCATE and the seeds share one transaction, so a failing
   seed rolls everything back and raises; the old data stays in place.
   """
+  # seeds_path is the release's own priv/repo/seeds.exs (or a test's file), never user input
+  # sobelow_skip ["RCE.CodeModule"]
   def run(seeds_path \\ default_seeds_path()) do
     Logger.info("Demo reset started")
     disconnect_live_sessions()

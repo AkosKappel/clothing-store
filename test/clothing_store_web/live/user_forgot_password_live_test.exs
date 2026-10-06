@@ -4,8 +4,8 @@ defmodule ClothingStoreWeb.UserForgotPasswordLiveTest do
   import Phoenix.LiveViewTest
   import ClothingStore.UsersFixtures
 
-  alias ClothingStore.Users
   alias ClothingStore.Repo
+  alias ClothingStore.Users
 
   describe "Forgot password page" do
     test "renders email page", %{conn: conn} do

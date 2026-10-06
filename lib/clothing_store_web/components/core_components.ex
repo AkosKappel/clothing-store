@@ -11,6 +11,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   use Phoenix.Component
   use Gettext, backend: ClothingStoreWeb.Gettext
 
+  alias Phoenix.HTML.Form
   alias Phoenix.LiveView.JS
 
   @focus_ring "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
@@ -262,7 +263,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   attr :errors, :list, default: []
   attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
   attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
-  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
+  attr :options, :list, doc: "the options to pass to Form.options_for_select/2"
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
 
   attr :rest, :global,
@@ -283,7 +284,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   def input(%{type: "checkbox"} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn ->
-        Phoenix.HTML.Form.normalize_value("checkbox", assigns[:value])
+        Form.normalize_value("checkbox", assigns[:value])
       end)
 
     ~H"""
@@ -320,7 +321,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         {@rest}
       >
         <option :if={@prompt} value="">{@prompt}</option>
-        {Phoenix.HTML.Form.options_for_select(@options, @value)}
+        {Form.options_for_select(@options, @value)}
       </select>
       <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
       <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
@@ -339,7 +340,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         aria-invalid={@errors != [] && "true"}
         aria-describedby={describedby(@id, @hint, @errors)}
         {@rest}
-      >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
+      >{Form.normalize_value("textarea", @value)}</textarea>
       <.counter :if={@counter} value={@value} max={@rest[:maxlength]} />
       <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
       <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
@@ -364,7 +365,7 @@ defmodule ClothingStoreWeb.CoreComponents do
           type="password"
           name={@name}
           id={@id}
-          value={Phoenix.HTML.Form.normalize_value("password", @value)}
+          value={Form.normalize_value("password", @value)}
           class="block w-full min-w-0 flex-1 rounded-l-md border-0 bg-transparent text-gray-900 focus:ring-0 sm:text-sm/6"
           aria-invalid={@errors != [] && "true"}
           aria-describedby={describedby(@id, @hint, @errors)}
@@ -402,7 +403,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         type={@type}
         name={@name}
         id={@id}
-        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        value={Form.normalize_value(@type, @value)}
         class={input_classes(@errors)}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={describedby(@id, @hint, @errors)}
