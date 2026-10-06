@@ -2,7 +2,7 @@
 
 Author: **Ákos Kappel**
 
-Live Demo: **[Modern Fashion Store](https://tagline.tailb52c43.ts.net)** (log in with the prefilled demo account; the data resets every night)
+Live Demo: **[Modern Fashion Store](https://tagline.tailb52c43.ts.net)** (press **Try the demo** on the login page; the data resets every night)
 
 # Table of Contents
 
@@ -40,7 +40,7 @@ Live Demo: **[Modern Fashion Store](https://tagline.tailb52c43.ts.net)** (log in
 ### Locally
 
 1. Install Erlang and Elixir with [mise](https://mise.jdx.dev): `mise install` (versions are pinned in `mise.toml`).
-2. Create the configuration: `cp .env.example .env`, fill in `DB_PASSWORD` (and the other database values if you changed them), then `chmod 600 .env`. Locally only the database settings are read from `.env`; `SECRET_KEY_BASE` is not needed. The seeded demo account uses the defaults `admin@eshop.com` / `Qwerty123456` (prefilled on the login page) unless you export `ADMIN_EMAIL` / `ADMIN_PASSWORD` in your shell.
+2. Create the configuration: `cp .env.example .env`, fill in `DB_PASSWORD` (and the other database values if you changed them), then `chmod 600 .env`. Locally only the database settings are read from `.env`; `SECRET_KEY_BASE` is not needed. The seeded demo account uses the defaults `admin@eshop.com` / `Qwerty123456` (used by **Try the demo**) unless you export `ADMIN_EMAIL` / `ADMIN_PASSWORD` in your shell.
 3. Start PostgreSQL: `docker compose up -d db` (listens on `127.0.0.1:5435` and creates the `tagline`, `tagline_dev` and `tagline_test` databases).
 4. Run `mix setup` to install dependencies, create and migrate the database and seed it.
 5. Start the server with `mix phx.server` (or `iex -S mix phx.server`) and visit [`localhost:4000`](http://localhost:4000).
@@ -194,6 +194,6 @@ Also, any of the filters can be combined together, for example, you can select a
 ## Bonus
 
 The app runs as a Docker release on a home server, behind nginx (security headers and rate limiting) and is published to the internet with a Tailscale Funnel sidecar container, at [tagline.tailb52c43.ts.net](https://tagline.tailb52c43.ts.net).
-It is a public demo: you log in with the prefilled demo account, the data resets every night (by default at 03:00 Europe/Bratislava time, configurable with the `DEMO_RESET_*` settings), the e-mail and password of the demo account can't be changed, registration is disabled, and e-mails are only logged, never sent.
+It is a public demo: **Try the demo** logs you in as the shared demo account (server-side, its password never reaches the browser), the data resets every night (by default at 03:00 Europe/Bratislava time, configurable with the `DEMO_RESET_*` settings), the e-mail and password of the demo account can't be changed, registration is disabled, and e-mails are only logged, never sent.
 The seed photos are Pexels photos served locally as WebP.
 In 2026 I upgraded the app from Phoenix 1.7, LiveView 1.0 and Tailwind 3 to the current versions listed in the [tech stack](#tech-stack).
