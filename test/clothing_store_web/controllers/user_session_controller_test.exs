@@ -93,6 +93,29 @@ defmodule ClothingStoreWeb.UserSessionControllerTest do
     end
   end
 
+  describe "POST /users/demo_log_in" do
+    test "logs in as the demo account", %{conn: conn} do
+      demo_user = user_fixture(ClothingStore.Demo.account())
+
+      conn = post(conn, ~p"/users/demo_log_in")
+
+      assert get_session(conn, :user_token)
+      assert redirected_to(conn) == ~p"/"
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Welcome to the demo"
+
+      conn = get(recycle(conn), ~p"/")
+      assert conn.assigns.current_user.id == demo_user.id
+    end
+
+    test "explains when the demo account is missing", %{conn: conn} do
+      conn = post(conn, ~p"/users/demo_log_in")
+
+      refute get_session(conn, :user_token)
+      assert redirected_to(conn) == ~p"/users/log_in"
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) =~ "isn't available"
+    end
+  end
+
   describe "DELETE /users/log_out" do
     test "logs the user out", %{conn: conn, user: user} do
       conn = conn |> log_in_user(user) |> delete(~p"/users/log_out")

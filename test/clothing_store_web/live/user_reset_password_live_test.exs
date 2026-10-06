@@ -87,6 +87,28 @@ defmodule ClothingStoreWeb.UserResetPasswordLiveTest do
     end
   end
 
+  describe "password requirements" do
+    test "are ticked off while typing", %{conn: conn, token: token} do
+      {:ok, lv, _html} = live(conn, ~p"/users/reset_password/#{token}")
+
+      lv
+      |> form("#reset_password_form", user: %{password: "short", password_confirmation: ""})
+      |> render_change()
+
+      assert has_element?(lv, "#password-requirements li", "At least 12 characters (not yet)")
+      assert has_element?(lv, "#password-requirements li", "Both passwords match (not yet)")
+
+      lv
+      |> form("#reset_password_form",
+        user: %{password: "long enough password", password_confirmation: "long enough password"}
+      )
+      |> render_change()
+
+      assert has_element?(lv, "#password-requirements li", "At least 12 characters (done)")
+      assert has_element?(lv, "#password-requirements li", "Both passwords match (done)")
+    end
+  end
+
   describe "Reset password navigation" do
     test "redirects to login page when the Log in button is clicked", %{conn: conn, token: token} do
       {:ok, lv, _html} = live(conn, ~p"/users/reset_password/#{token}")

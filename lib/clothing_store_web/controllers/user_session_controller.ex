@@ -1,7 +1,7 @@
 defmodule ClothingStoreWeb.UserSessionController do
   use ClothingStoreWeb, :controller
 
-  alias ClothingStore.Users
+  alias ClothingStore.{Demo, Users}
   alias ClothingStoreWeb.UserAuth
 
   def create(conn, %{"_action" => "registered"} = params) do
@@ -30,6 +30,19 @@ defmodule ClothingStoreWeb.UserSessionController do
       conn
       |> put_flash(:error, "Invalid email or password")
       |> put_flash(:email, String.slice(email, 0, 160))
+      |> redirect(to: ~p"/users/log_in")
+    end
+  end
+
+  @doc "Logs in as the shared demo account without its password ever reaching the browser."
+  def demo(conn, _params) do
+    if user = Users.get_user_by_email(Demo.account().email) do
+      conn
+      |> put_flash(:info, "Welcome to the demo! Data resets every night.")
+      |> UserAuth.log_in_user(user)
+    else
+      conn
+      |> put_flash(:error, "The demo account isn't available right now. Please try again later.")
       |> redirect(to: ~p"/users/log_in")
     end
   end

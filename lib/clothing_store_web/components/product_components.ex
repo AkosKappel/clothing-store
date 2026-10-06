@@ -2,7 +2,7 @@ defmodule ClothingStoreWeb.ProductComponents do
   @moduledoc "Badges for product data shared by the dashboard, inventory and statistics pages."
   use Phoenix.Component
 
-  import ClothingStoreWeb.CoreComponents, only: [badge: 1]
+  import ClothingStoreWeb.CoreComponents
 
   @low_stock 5
 
@@ -31,6 +31,75 @@ defmodule ClothingStoreWeb.ProductComponents do
   def category_badge(assigns) do
     ~H"""
     <.badge class={category_class(@category)}>{@category}</.badge>
+    """
+  end
+
+  @doc """
+  The product form. `ProductLive.Form` validates it live and then submits it to
+  `ProductController`, which also renders it when saving fails on the server.
+  """
+  attr :form, Phoenix.HTML.Form, required: true
+  attr :action, :string, required: true
+  attr :cancel_to, :string, required: true
+  attr :rest, :global, include: ~w(phx-trigger-action)
+
+  def product_form(assigns) do
+    ~H"""
+    <.simple_form for={@form} action={@action} class="card p-6 sm:p-8" {@rest}>
+      <div
+        :if={@form.source.action in [:insert, :update] && @form.errors != []}
+        role="alert"
+        class="flex gap-3 rounded-md bg-rose-50 p-4 text-sm text-rose-900 ring-1 ring-rose-600/20"
+      >
+        <.icon name="hero-exclamation-circle-mini" class="size-5 shrink-0 text-rose-600" />
+        <div>
+          <p class="font-semibold">The product couldn't be saved. Please fix the errors below.</p>
+          <p :for={msg <- translate_errors(@form.errors, :base)} class="mt-1">{msg}</p>
+        </div>
+      </div>
+
+      <.input field={@form[:title]} type="text" label="Title" maxlength="100" counter required />
+      <.input
+        field={@form[:description]}
+        type="textarea"
+        label="Description"
+        maxlength="2000"
+        rows="4"
+        counter
+        required
+      />
+      <.input
+        field={@form[:photo]}
+        type="text"
+        label="Photo"
+        placeholder="/images/products/t-shirt.webp"
+        hint={"A path under /images/, or an https:// URL from #{ClothingStore.Products.Product.photo_hosts_text()}."}
+        required
+      />
+
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <.input field={@form[:category]} type="text" label="Category" maxlength="50" required />
+        <.input field={@form[:price]} type="number" label="Price (€)" min="0" step="0.01" required />
+        <.input field={@form[:stock]} type="number" label="Stock" min="0" step="1" required />
+      </div>
+
+      <.input
+        field={@form[:tags]}
+        type="text"
+        label="Tags"
+        value={@form[:tags].value |> List.wrap() |> Enum.join(", ")}
+        hint="Comma separated, up to 10, for example: summer, sale"
+      />
+
+      <:actions>
+        <div class="ml-auto flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
+          <.button href={@cancel_to} variant="secondary">Cancel</.button>
+          <.button type="submit" icon="hero-check" phx-disable-with="Saving...">
+            Save product
+          </.button>
+        </div>
+      </:actions>
+    </.simple_form>
     """
   end
 

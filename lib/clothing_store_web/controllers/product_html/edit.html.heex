@@ -6,7 +6,7 @@
   </.header>
 
   <.product_form
-    changeset={@changeset}
+    form={to_form(@changeset)}
     action={~p"/products/#{@product}"}
     cancel_to={~p"/products/#{@product}"}
   />

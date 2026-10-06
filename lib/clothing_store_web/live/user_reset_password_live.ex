@@ -1,6 +1,8 @@
 defmodule ClothingStoreWeb.UserResetPasswordLive do
   use ClothingStoreWeb, :live_view
 
+  import ClothingStoreWeb.Helpers, only: [password_requirements: 2]
+
   alias ClothingStore.Users
 
   def render(assigns) do
@@ -31,6 +33,15 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
             label="Confirm new password"
             autocomplete="new-password"
             required
+          />
+          <.requirements
+            id="password-requirements"
+            items={
+              password_requirements(
+                @form[:password].value,
+                @form[:password_confirmation].value
+              )
+            }
           />
           <:actions>
             <.button phx-disable-with="Resetting..." icon="hero-key" class="w-full">

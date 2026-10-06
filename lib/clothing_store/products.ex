@@ -70,6 +70,24 @@ defmodule ClothingStore.Products do
   defp filter_tags(query, _tags), do: query
 
   @doc """
+  Turns tags from a form or query string ("a, b" or a list) into a clean list of strings.
+
+      iex> parse_tags(" summer, ,sale ")
+      ["summer", "sale"]
+  """
+  def parse_tags(tags) when is_binary(tags), do: tags |> String.split(",") |> clean_tags()
+  def parse_tags(tags) when is_list(tags), do: clean_tags(tags)
+  # missing, or a map from ?tags[a]=b
+  def parse_tags(_tags), do: []
+
+  defp clean_tags(tags) do
+    tags |> Enum.filter(&is_binary/1) |> Enum.map(&String.trim/1) |> Enum.reject(&(&1 == ""))
+  end
+
+  @doc "Whether the catalogue holds as many products as the demo allows."
+  def catalogue_full?, do: Repo.aggregate(Product, :count) >= @max_products
+
+  @doc """
   Returns the list of unique categories.
 
   ## Examples
@@ -147,7 +165,7 @@ defmodule ClothingStore.Products do
   end
 
   defp check_catalogue_limit(changeset) do
-    if Repo.aggregate(Product, :count) >= @max_products do
+    if catalogue_full?() do
       Ecto.Changeset.add_error(
         changeset,
         :base,

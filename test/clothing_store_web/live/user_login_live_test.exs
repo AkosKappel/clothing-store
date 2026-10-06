@@ -4,12 +4,38 @@ defmodule ClothingStoreWeb.UserLoginLiveTest do
   import Phoenix.LiveViewTest
   import ClothingStore.UsersFixtures
 
+  alias ClothingStore.Demo
+
   describe "Log in page" do
-    test "prefills the demo account and explains it", %{conn: conn} do
-      {:ok, _lv, html} = live(conn, ~p"/users/log_in")
-      assert html =~ ClothingStore.Demo.account().email
-      assert html =~ "Demo account"
+    test "offers the demo without putting its credentials in the page", %{conn: conn} do
+      user_fixture(Demo.account())
+      {:ok, lv, html} = live(conn, ~p"/users/log_in")
+
+      assert has_element?(
+               lv,
+               ~s|form[action="/users/demo_log_in"] button:not([disabled])|,
+               "Try the demo"
+             )
+
       assert html =~ "resets every night"
+      refute html =~ Demo.account().email
+      refute html =~ Demo.account().password
+    end
+
+    test "disables the demo button when the demo account is missing", %{conn: conn} do
+      {:ok, lv, html} = live(conn, ~p"/users/log_in")
+
+      assert has_element?(lv, ~s|form[action="/users/demo_log_in"] button[disabled]|)
+      assert html =~ "isn&#39;t available right now"
+    end
+
+    test "the password field can be shown and hidden", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/log_in")
+
+      assert has_element?(
+               lv,
+               ~s|#login_form button[aria-controls="user_password"][aria-pressed="false"]|
+             )
     end
 
     test "links to the About page", %{conn: conn} do

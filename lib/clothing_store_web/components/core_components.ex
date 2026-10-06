@@ -248,6 +248,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   attr :name, :any
   attr :label, :string, default: nil
   attr :hint, :string, default: nil, doc: "help text shown below the input"
+  attr :counter, :boolean, default: false, doc: "show the length against `maxlength`"
   attr :value, :any
 
   attr :type, :string,
@@ -339,13 +340,60 @@ defmodule ClothingStoreWeb.CoreComponents do
         aria-describedby={describedby(@id, @hint, @errors)}
         {@rest}
       >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
+      <.counter :if={@counter} value={@value} max={@rest[:maxlength]} />
       <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
       <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
     </div>
     """
   end
 
-  # All other inputs text, datetime-local, url, password, etc. are handled here...
+  # The show/hide toggle sits next to the text field, not on top of it, so the
+  # icons password managers put at the field's right edge never cover it.
+  def input(%{type: "password"} = assigns) do
+    ~H"""
+    <div>
+      <.label :if={@label} for={@id}>{@label}</.label>
+      <div class={[
+        "mt-1.5 flex rounded-md bg-white shadow-xs ring-1 ring-inset focus-within:ring-2",
+        if(@errors == [],
+          do: "ring-gray-300 focus-within:ring-red-600",
+          else: "ring-rose-400 focus-within:ring-rose-500"
+        )
+      ]}>
+        <input
+          type="password"
+          name={@name}
+          id={@id}
+          value={Phoenix.HTML.Form.normalize_value("password", @value)}
+          class="block w-full min-w-0 flex-1 rounded-l-md border-0 bg-transparent text-gray-900 focus:ring-0 sm:text-sm/6"
+          aria-invalid={@errors != [] && "true"}
+          aria-describedby={describedby(@id, @hint, @errors)}
+          {@rest}
+        />
+        <button
+          type="button"
+          class="flex shrink-0 items-center rounded-r-md border-l border-gray-200 px-3 text-gray-500 hover:bg-gray-50 hover:text-gray-800 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-red-600"
+          aria-label={gettext("Show password")}
+          aria-pressed="false"
+          aria-controls={@id}
+          title={gettext("Show or hide the password")}
+          phx-click={
+            JS.toggle_attribute({"type", "text", "password"}, to: "##{@id}")
+            |> JS.toggle_attribute({"aria-pressed", "true", "false"})
+            |> JS.toggle_class("hidden", to: {:inner, "[data-eye]"})
+          }
+        >
+          <.icon name="hero-eye-mini" data-eye />
+          <.icon name="hero-eye-slash-mini" class="hidden" data-eye />
+        </button>
+      </div>
+      <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
+      <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
+    </div>
+    """
+  end
+
+  # All other inputs text, datetime-local, url, etc. are handled here...
   def input(assigns) do
     ~H"""
     <div>
@@ -360,6 +408,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         aria-describedby={describedby(@id, @hint, @errors)}
         {@rest}
       />
+      <.counter :if={@counter} value={@value} max={@rest[:maxlength]} />
       <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
       <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
     </div>
@@ -374,6 +423,24 @@ defmodule ClothingStoreWeb.CoreComponents do
         else: "border-rose-400 focus:border-rose-500 focus:ring-rose-500"
       )
     ]
+  end
+
+  attr :value, :any, required: true
+  attr :max, :any, required: true
+
+  defp counter(assigns) do
+    length = assigns.value |> to_string() |> String.length()
+    max = String.to_integer(to_string(assigns.max))
+    assigns = assign(assigns, length: length, max: max)
+
+    ~H"""
+    <p class={[
+      "mt-1 text-right text-xs tabular-nums",
+      if(@length >= @max * 0.9, do: "text-amber-700", else: "text-gray-500")
+    ]}>
+      {@length}/{@max}
+    </p>
+    """
   end
 
   defp describedby(id, hint, errors) do
@@ -416,6 +483,32 @@ defmodule ClothingStoreWeb.CoreComponents do
       <.icon name="hero-exclamation-circle-mini" class="mt-px size-5 shrink-0" />
       {render_slot(@inner_block)}
     </p>
+    """
+  end
+
+  @doc """
+  Renders a list of requirements, each ticked once it is met, for example
+  the password rules while the user types.
+
+  ## Examples
+
+      <.requirements id="password-rules" items={[{"At least 12 characters", true}]} />
+  """
+  attr :id, :string, required: true
+  attr :items, :list, required: true, doc: "`{label, met?}` tuples"
+
+  def requirements(assigns) do
+    ~H"""
+    <ul id={@id} class="mt-2 space-y-1 text-sm">
+      <li
+        :for={{label, met} <- @items}
+        class={["flex items-center gap-1.5", if(met, do: "text-emerald-700", else: "text-gray-500")]}
+      >
+        <.icon name={if met, do: "hero-check-circle-mini", else: "hero-minus-circle-mini"} />
+        {label}
+        <span class="sr-only">{if met, do: gettext("(done)"), else: gettext("(not yet)")}</span>
+      </li>
+    </ul>
     """
   end
 
@@ -702,10 +795,11 @@ defmodule ClothingStoreWeb.CoreComponents do
   """
   attr :name, :string, required: true
   attr :class, :any, default: nil
+  attr :rest, :global
 
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
-    <span class={[@name, @class]} aria-hidden="true" />
+    <span class={[@name, @class]} aria-hidden="true" {@rest} />
     """
   end
 

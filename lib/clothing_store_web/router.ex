@@ -42,12 +42,15 @@ defmodule ClothingStoreWeb.Router do
     # on_mount assigns current_user, which the app layout's nav needs
     live_session :dashboard, on_mount: [{ClothingStoreWeb.UserAuth, :ensure_authenticated}] do
       live "/", ProductLive.Index, :index
+      # the forms validate live and then post to ProductController, which nginx rate-limits
+      live "/products/new", ProductLive.Form, :new
+      live "/products/:id/edit", ProductLive.Form, :edit
     end
 
     get "/transactions", PageController, :transactions
     get "/statistics", PageController, :statistics
 
-    resources "/products", ProductController
+    resources "/products", ProductController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.
@@ -87,6 +90,7 @@ defmodule ClothingStoreWeb.Router do
     end
 
     post "/users/log_in", UserSessionController, :create
+    post "/users/demo_log_in", UserSessionController, :demo
   end
 
   scope "/", ClothingStoreWeb do

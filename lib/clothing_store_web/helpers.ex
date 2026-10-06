@@ -37,6 +37,17 @@ defmodule ClothingStoreWeb.Helpers do
     end
   end
 
+  @doc "The password rules as `{label, met?}` pairs, for `CoreComponents.requirements/1`."
+  def password_requirements(password, confirmation) do
+    password = password || ""
+    min_length = ClothingStore.Users.User.password_min_length()
+
+    [
+      {"At least #{min_length} characters", String.length(password) >= min_length},
+      {"Both passwords match", password != "" and password == confirmation}
+    ]
+  end
+
   # photo is required and validated (local /images/ path or allowlisted host)
   def image_link(image_path), do: image_path
 

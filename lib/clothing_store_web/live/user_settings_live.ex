@@ -1,6 +1,8 @@
 defmodule ClothingStoreWeb.UserSettingsLive do
   use ClothingStoreWeb, :live_view
 
+  import ClothingStoreWeb.Helpers, only: [password_requirements: 2]
+
   alias ClothingStore.Users
 
   def render(assigns) do
@@ -60,7 +62,7 @@ defmodule ClothingStoreWeb.UserSettingsLive do
         <section class="card grid gap-6 p-6 sm:p-8 md:grid-cols-3" aria-labelledby="password-title">
           <div>
             <h2 id="password-title" class="font-semibold text-gray-900">Password</h2>
-            <p class="mt-1 text-sm text-gray-600">At least 12 characters.</p>
+            <p class="mt-1 text-sm text-gray-600">Changing it logs out your other sessions.</p>
           </div>
           <.simple_form
             for={@password_form}
@@ -90,6 +92,15 @@ defmodule ClothingStoreWeb.UserSettingsLive do
               type="password"
               label="Confirm new password"
               autocomplete="new-password"
+            />
+            <.requirements
+              id="password-requirements"
+              items={
+                password_requirements(
+                  @password_form[:password].value,
+                  @password_form[:password_confirmation].value
+                )
+              }
             />
             <.input
               field={@password_form[:current_password]}

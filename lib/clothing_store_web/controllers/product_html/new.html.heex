@@ -5,5 +5,5 @@
     <:subtitle>Add a product to the catalogue. All fields except tags are required.</:subtitle>
   </.header>
 
-  <.product_form changeset={@changeset} action={~p"/products"} cancel_to={~p"/products"} />
+  <.product_form form={to_form(@changeset)} action={~p"/products"} cancel_to={~p"/products"} />
 </div>
