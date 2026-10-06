@@ -1,12 +1,13 @@
-<.header>
-  <h1 class="text-2xl font-semibold text-gray-800">Edit Product {@product.id}</h1>
-  <:subtitle>
-    <p class="text-gray-600">Use this form to manage product records in your database.</p>
-  </:subtitle>
-</.header>
+<div class="mx-auto max-w-3xl">
+  <.back navigate={~p"/products/#{@product}"}>{@product.title}</.back>
+  <.header>
+    Edit Product
+    <:subtitle>Changes are shown to every visitor straight away.</:subtitle>
+  </.header>
 
-<.product_form changeset={@changeset} action={~p"/products/#{@product}"} />
-
-<.back navigate={~p"/products"}>
-  Back to products
-</.back>
+  <.product_form
+    changeset={@changeset}
+    action={~p"/products/#{@product}"}
+    cancel_to={~p"/products/#{@product}"}
+  />
+</div>

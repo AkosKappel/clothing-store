@@ -1,16 +1,10 @@
 defmodule ClothingStoreWeb.CoreComponents do
   @moduledoc """
-  Provides core UI components.
+  Provides core UI components: buttons, forms, tables, page headers,
+  empty states and the delete confirmation dialog.
 
-  At first glance, this module may seem daunting, but its goal is to provide
-  core building blocks for your application, such as modals, tables, and
-  forms. The components consist mostly of markup and are well-documented
-  with doc strings and declarative assigns. You may customize and style
-  them in any way you want, based on your application growth and needs.
-
-  The default components use Tailwind CSS, a utility-first CSS framework.
-  See the [Tailwind CSS documentation](https://tailwindcss.com) to learn
-  how to customize them or feel free to swap in another framework altogether.
+  The components use Tailwind CSS. Shared colours: gray for neutrals, red-600
+  for the brand and primary actions, rose for errors.
 
   Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
@@ -19,75 +13,7 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
 
-  @doc """
-  Renders a modal.
-
-  ## Examples
-
-      <.modal id="confirm-modal">
-        This is a modal.
-      </.modal>
-
-  JS commands may be passed to the `:on_cancel` to configure
-  the closing/cancel event, for example:
-
-      <.modal id="confirm" on_cancel={JS.navigate(~p"/posts")}>
-        This is another modal.
-      </.modal>
-
-  """
-  attr :id, :string, required: true
-  attr :show, :boolean, default: false
-  attr :on_cancel, JS, default: %JS{}
-  slot :inner_block, required: true
-
-  def modal(assigns) do
-    ~H"""
-    <div
-      id={@id}
-      phx-mounted={@show && show_modal(@id)}
-      phx-remove={hide_modal(@id)}
-      data-cancel={JS.exec(@on_cancel, "phx-remove")}
-      class="relative z-50 hidden"
-    >
-      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
-      <div
-        class="fixed inset-0 overflow-y-auto"
-        aria-labelledby={"#{@id}-title"}
-        aria-describedby={"#{@id}-description"}
-        role="dialog"
-        aria-modal="true"
-        tabindex="0"
-      >
-        <div class="flex min-h-full items-center justify-center">
-          <div class="w-full max-w-3xl p-4 sm:p-6 lg:py-8">
-            <.focus_wrap
-              id={"#{@id}-container"}
-              phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
-              phx-key="escape"
-              phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-14 shadow-lg ring-1 transition"
-            >
-              <div class="absolute top-6 right-5">
-                <button
-                  phx-click={JS.exec("data-cancel", to: "##{@id}")}
-                  type="button"
-                  class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
-                  aria-label={gettext("close")}
-                >
-                  <.icon name="hero-x-mark-solid" class="h-5 w-5" />
-                </button>
-              </div>
-              <div id={"#{@id}-content"}>
-                {render_slot(@inner_block)}
-              </div>
-            </.focus_wrap>
-          </div>
-        </div>
-      </div>
-    </div>
-    """
-  end
+  @focus_ring "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
 
   @doc """
   Renders flash notices.
@@ -115,20 +41,30 @@ defmodule ClothingStoreWeb.CoreComponents do
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
       class={[
-        "fixed bottom-4 right-2 mr-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
-        @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
-        @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
+        "fixed right-4 bottom-4 z-50 flex w-[calc(100%-2rem)] gap-3 rounded-lg p-4 shadow-lg ring-1 sm:w-96",
+        @kind == :info && "bg-emerald-50 text-emerald-900 ring-emerald-600/30",
+        @kind == :error && "bg-rose-50 text-rose-900 ring-rose-600/30"
       ]}
       {@rest}
     >
-      <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
-        <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
-        {@title}
-      </p>
-      <p class="mt-2 text-sm leading-5">{msg}</p>
-      <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
-        <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
+      <.icon
+        name={if @kind == :info, do: "hero-check-circle-mini", else: "hero-exclamation-circle-mini"}
+        class={[
+          "mt-0.5 shrink-0",
+          @kind == :info && "text-emerald-600",
+          @kind == :error && "text-rose-600"
+        ]}
+      />
+      <div class="min-w-0 flex-1 text-sm">
+        <p :if={@title} class="font-semibold">{@title}</p>
+        <p class={@title && "mt-1"}>{msg}</p>
+      </div>
+      <button
+        type="button"
+        class="-m-1 h-fit rounded-sm p-1 opacity-60 hover:opacity-100"
+        aria-label={gettext("close")}
+      >
+        <.icon name="hero-x-mark-mini" />
       </button>
     </div>
     """
@@ -146,9 +82,9 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   def flash_group(assigns) do
     ~H"""
-    <div id={@id}>
-      <.flash kind={:info} title={gettext("Success!")} flash={@flash} />
-      <.flash kind={:error} title={gettext("Error!")} flash={@flash} />
+    <div id={@id} aria-live="polite">
+      <.flash kind={:info} flash={@flash} />
+      <.flash kind={:error} flash={@flash} />
       <.flash
         id="client-error"
         kind={:error}
@@ -158,7 +94,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         hidden
       >
         {gettext("Attempting to reconnect")}
-        <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+        <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
 
       <.flash
@@ -170,7 +106,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         hidden
       >
         {gettext("Hang in there while we get back on track")}
-        <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+        <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
     </div>
     """
@@ -202,9 +138,9 @@ defmodule ClothingStoreWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="my-6 space-y-8 bg-white">
+      <div class="space-y-5">
         {render_slot(@inner_block, f)}
-        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+        <div :for={action <- @actions} class="flex flex-wrap items-center justify-between gap-4 pt-1">
           {render_slot(action, f)}
         </div>
       </div>
@@ -213,41 +149,77 @@ defmodule ClothingStoreWeb.CoreComponents do
   end
 
   @doc """
-  Renders a button.
+  Renders a button, or a link styled as one when `href`, `navigate` or `patch` is given.
+
+  While its form submits, a button with an `icon` swaps the icon for a spinner
+  (LiveView sets `phx-submit-loading`; `app.js` does the same for regular forms).
 
   ## Examples
 
       <.button>Send!</.button>
-      <.button phx-click="go" class="ml-2">Send!</.button>
+      <.button variant="secondary" icon="hero-pencil-square" navigate={~p"/products/1/edit"}>Edit</.button>
+      <.button variant="danger" icon="hero-trash" phx-click="delete">Delete</.button>
   """
   attr :type, :string, default: nil
-  attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr :variant, :string, default: "primary", values: ~w(primary secondary danger)
+  attr :size, :string, default: "md", values: ~w(sm md)
+  attr :icon, :string, default: nil, doc: "a heroicon name shown before the label"
+  attr :class, :any, default: nil
+
+  attr :rest, :global,
+    include: ~w(disabled form name value href navigate patch method download commandfor command)
 
   slot :inner_block, required: true
 
   def button(assigns) do
-    ~H"""
-    <button
-      type={@type}
-      class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
-        @class
-      ]}
-      {@rest}
-    >
-      {render_slot(@inner_block)}
-    </button>
-    """
+    assigns =
+      assign(assigns, :classes, [
+        "inline-flex items-center justify-center gap-1.5 rounded-md font-semibold whitespace-nowrap shadow-xs transition-colors",
+        "disabled:cursor-not-allowed disabled:opacity-60 phx-submit-loading:cursor-wait phx-submit-loading:opacity-75",
+        @focus_ring,
+        case assigns.size do
+          "sm" -> "px-2.5 py-1.5 text-sm"
+          "md" -> "px-4 py-2 text-sm"
+        end,
+        case assigns.variant do
+          "primary" -> "bg-red-600 text-white hover:bg-red-700"
+          "secondary" -> "bg-white text-gray-800 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+          "danger" -> "bg-white text-red-700 ring-1 ring-red-300 ring-inset hover:bg-red-50"
+        end,
+        assigns.class
+      ])
+
+    if assigns.rest[:href] || assigns.rest[:navigate] || assigns.rest[:patch] do
+      ~H"""
+      <.link class={@classes} {@rest}>
+        <.icon :if={@icon} name={@icon} class="size-4" />
+        {render_slot(@inner_block)}
+      </.link>
+      """
+    else
+      ~H"""
+      <button type={@type} class={@classes} {@rest}>
+        <.icon :if={@icon} name={@icon} class="size-4 phx-submit-loading:hidden" />
+        <.icon
+          :if={@icon}
+          name="hero-arrow-path"
+          class="hidden size-4 motion-safe:animate-spin phx-submit-loading:inline-block"
+        />
+        {render_slot(@inner_block)}
+      </button>
+      """
+    end
   end
 
   @doc """
-  Renders an input with label and error messages.
+  Renders an input with label, hint and error messages.
 
   A `Phoenix.HTML.FormField` may be passed as argument,
   which is used to retrieve the input name, id, and values.
   Otherwise all attributes may be passed explicitly.
+
+  Errors show only once the field was used (see `Phoenix.Component.used_input?/1`),
+  and are linked to the input with `aria-describedby`.
 
   ## Types
 
@@ -271,6 +243,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   attr :id, :any, default: nil
   attr :name, :any
   attr :label, :string, default: nil
+  attr :hint, :string, default: nil, doc: "help text shown below the input"
   attr :value, :any
 
   attr :type, :string,
@@ -310,7 +283,7 @@ defmodule ClothingStoreWeb.CoreComponents do
 
     ~H"""
     <div>
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+      <label class="flex items-center gap-2 text-sm text-gray-700">
         <input type="hidden" name={@name} value="false" disabled={@rest[:disabled]} />
         <input
           type="checkbox"
@@ -318,7 +291,7 @@ defmodule ClothingStoreWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded-sm border-zinc-300 text-zinc-900 focus:ring-0"
+          class="size-4 rounded-sm border-gray-300 text-red-600 focus:ring-red-600"
           {@rest}
         />
         {@label}
@@ -331,18 +304,21 @@ defmodule ClothingStoreWeb.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <.label :if={@label} for={@id}>{@label}</.label>
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-xs focus:border-zinc-400 focus:ring-0 sm:text-sm"
+        class={[input_classes(@errors), "bg-white"]}
         multiple={@multiple}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={describedby(@id, @hint, @errors)}
         {@rest}
       >
         <option :if={@prompt} value="">{@prompt}</option>
         {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
+      <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
     </div>
     """
   end
@@ -350,18 +326,17 @@ defmodule ClothingStoreWeb.CoreComponents do
   def input(%{type: "textarea"} = assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <.label :if={@label} for={@id}>{@label}</.label>
       <textarea
         id={@id}
         name={@name}
-        class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 min-h-24",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
-        ]}
+        class={[input_classes(@errors), "min-h-28"]}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={describedby(@id, @hint, @errors)}
         {@rest}
       >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
+      <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
     </div>
     """
   end
@@ -370,22 +345,36 @@ defmodule ClothingStoreWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <.label :if={@label} for={@id}>{@label}</.label>
       <input
         type={@type}
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-        class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
-        ]}
+        class={input_classes(@errors)}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={describedby(@id, @hint, @errors)}
         {@rest}
       />
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
+      <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>
     </div>
     """
+  end
+
+  defp input_classes(errors) do
+    [
+      "mt-1.5 block w-full rounded-md text-gray-900 shadow-xs sm:text-sm/6",
+      if(errors == [],
+        do: "border-gray-300 focus:border-red-600 focus:ring-red-600",
+        else: "border-rose-400 focus:border-rose-500 focus:ring-rose-500"
+      )
+    ]
+  end
+
+  defp describedby(id, hint, errors) do
+    ids = [hint && "#{id}-hint", errors != [] && "#{id}-error"] |> Enum.filter(& &1)
+    if ids != [], do: Enum.join(ids, " ")
   end
 
   @doc """
@@ -396,30 +385,40 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class="block text-sm font-semibold text-gray-800">
       {render_slot(@inner_block)}
     </label>
+    """
+  end
+
+  attr :id, :string, default: nil
+  slot :inner_block, required: true
+
+  defp hint(assigns) do
+    ~H"""
+    <p id={@id} class="mt-1.5 text-sm text-gray-500">{render_slot(@inner_block)}</p>
     """
   end
 
   @doc """
   Generates a generic error message.
   """
+  attr :id, :string, default: nil
   slot :inner_block, required: true
 
   def error(assigns) do
     ~H"""
-    <p class="mt-3 flex gap-3 text-sm leading-6 text-rose-600">
-      <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
+    <p id={@id} class="mt-1.5 flex gap-1.5 text-sm text-rose-700">
+      <.icon name="hero-exclamation-circle-mini" class="mt-px size-5 shrink-0" />
       {render_slot(@inner_block)}
     </p>
     """
   end
 
   @doc """
-  Renders a header with title.
+  Renders a page header with title, optional subtitle and actions.
   """
-  attr :class, :string, default: nil
+  attr :class, :any, default: nil
 
   slot :inner_block, required: true
   slot :subtitle
@@ -427,34 +426,36 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   def header(assigns) do
     ~H"""
-    <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
-      <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-800">
+    <header class={["mb-8 flex flex-wrap items-end justify-between gap-4", @class]}>
+      <div class="min-w-0">
+        <h1 class="font-display text-2xl font-bold text-gray-900 sm:text-3xl">
           {render_slot(@inner_block)}
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
+        <p :if={@subtitle != []} class="mt-1 text-gray-600">
           {render_slot(@subtitle)}
         </p>
       </div>
-      <div class="flex-none">{render_slot(@actions)}</div>
+      <div :if={@actions != []} class="flex flex-wrap items-center gap-3">
+        {render_slot(@actions)}
+      </div>
     </header>
     """
   end
 
   @doc ~S"""
-  Renders a table with enhanced styling and responsiveness.
+  Renders a table, or the `:empty` slot when there are no rows.
 
   ## Examples
 
       <.table id="users" rows={@users}>
         <:col :let={user} label="ID">{user.id}</:col>
         <:col :let={user} label="Username">{user.username}</:col>
+        <:empty>No users yet.</:empty>
       </.table>
   """
   attr :id, :string, required: true
   attr :rows, :list, required: true
   attr :row_id, :any, default: nil, doc: "the function for generating the row id"
-  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
 
   attr :row_item, :any,
     default: &Function.identity/1,
@@ -462,64 +463,42 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   slot :col, required: true do
     attr :label, :string
+    attr :class, :string
   end
 
   slot :action, doc: "the slot for showing user actions in the last table column"
+  slot :empty, doc: "shown instead of the table when there are no rows"
 
   def table(assigns) do
-    assigns =
-      with %{rows: %Phoenix.LiveView.LiveStream{}} <- assigns do
-        assign(assigns, row_id: assigns.row_id || fn {id, _item} -> id end)
-      end
-
     ~H"""
-    <div class="overflow-x-auto mt-6">
-      <table class="min-w-full border-collapse border border-gray-200 rounded-lg shadow-xs">
-        <thead class="bg-gray-100">
+    <div :if={@rows == [] && @empty != []}>{render_slot(@empty)}</div>
+    <div :if={@rows != [] || @empty == []} class="card overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 text-sm">
+        <thead class="bg-gray-50 text-left">
           <tr>
             <th
               :for={col <- @col}
-              class="px-6 py-3 text-left text-sm font-semibold text-gray-700 tracking-wider"
+              scope="col"
+              class={["px-4 py-3 font-semibold text-gray-700", col[:class]]}
             >
               {col[:label]}
             </th>
-            <th :if={@action != []} class="px-6 py-3 text-right text-sm font-semibold text-gray-700">
-              {gettext("Actions")}
+            <th :if={@action != []} scope="col" class="px-4 py-3">
+              <span class="sr-only">{gettext("Actions")}</span>
             </th>
           </tr>
         </thead>
-        <tbody
-          id={@id}
-          phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-          class="divide-y divide-gray-200 bg-white"
-        >
-          <tr
-            :for={row <- @rows}
-            id={@row_id && @row_id.(row)}
-            class="group hover:bg-gray-200 transition"
-          >
+        <tbody id={@id} class="divide-y divide-gray-200 bg-white">
+          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="hover:bg-gray-50">
             <td
-              :for={{col, i} <- Enum.with_index(@col)}
-              phx-click={@row_click && @row_click.(row)}
-              class={[
-                "px-6 py-4 whitespace-nowrap",
-                @row_click && "hover:cursor-pointer",
-                i == 0 && "font-medium text-gray-900"
-              ]}
+              :for={col <- @col}
+              class={["px-4 py-3 align-middle text-gray-700", col[:class]]}
             >
               {render_slot(col, @row_item.(row))}
             </td>
-            <td
-              :if={@action != []}
-              class="px-4 py-4 whitespace-nowrap text-right w-32"
-            >
-              <div class="flex justify-end space-x-2">
-                <span
-                  :for={action <- @action}
-                  class="font-medium transition truncate px-2 py-1"
-                >
-                  {render_slot(action, @row_item.(row))}
-                </span>
+            <td :if={@action != []} class="px-4 py-3">
+              <div class="flex items-center justify-end gap-2">
+                {render_slot(@action, @row_item.(row))}
               </div>
             </td>
           </tr>
@@ -545,14 +524,124 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   def list(assigns) do
     ~H"""
-    <div class="mt-14">
-      <dl class="-my-4 divide-y divide-zinc-100">
-        <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-          <dt class="w-1/4 flex-none text-zinc-500">{item.title}</dt>
-          <dd class="text-zinc-700">{render_slot(item)}</dd>
-        </div>
-      </dl>
+    <dl class="divide-y divide-gray-100">
+      <div :for={item <- @item} class="grid gap-1 py-3 text-sm sm:grid-cols-3 sm:gap-4">
+        <dt class="font-medium text-gray-500">{item.title}</dt>
+        <dd class="text-gray-900 sm:col-span-2">{render_slot(item)}</dd>
+      </div>
+    </dl>
+    """
+  end
+
+  @doc """
+  Renders an empty state: an icon, a title, a short explanation and optional actions.
+
+  ## Examples
+
+      <.empty_state icon="hero-cube" title="No products yet">
+        Add the first product to get started.
+        <:actions><.button navigate={~p"/products/new"}>New product</.button></:actions>
+      </.empty_state>
+  """
+  attr :icon, :string, default: "hero-inbox"
+  attr :title, :string, required: true
+  attr :class, :any, default: nil
+  slot :inner_block
+  slot :actions
+
+  def empty_state(assigns) do
+    ~H"""
+    <div class={[
+      "rounded-lg border-2 border-dashed border-gray-300 px-6 py-12 text-center",
+      @class
+    ]}>
+      <.icon name={@icon} class="size-10 text-gray-400" />
+      <h2 class="mt-3 font-semibold text-gray-900">{@title}</h2>
+      <p :if={@inner_block != []} class="mx-auto mt-1 max-w-md text-sm text-gray-600">
+        {render_slot(@inner_block)}
+      </p>
+      <div :if={@actions != []} class="mt-6 flex flex-wrap justify-center gap-3">
+        {render_slot(@actions)}
+      </div>
     </div>
+    """
+  end
+
+  @doc """
+  Renders a small pill, for example a product tag.
+  """
+  attr :class, :any, default: nil
+  slot :inner_block, required: true
+
+  def badge(assigns) do
+    ~H"""
+    <span class={[
+      "inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-gray-200 ring-inset",
+      @class
+    ]}>
+      {render_slot(@inner_block)}
+    </span>
+    """
+  end
+
+  @doc """
+  Renders a delete button that opens a confirmation dialog.
+
+  The dialog is a native `<dialog>`, so focus trapping, Escape and the backdrop
+  come from the browser. The confirm button submits a `DELETE` form to `action`.
+
+  ## Examples
+
+      <.delete_dialog id="delete-product" action={~p"/products/1"} title="Delete this product?">
+        This can't be undone.
+      </.delete_dialog>
+  """
+  attr :id, :string, required: true
+  attr :action, :string, required: true
+  attr :title, :string, required: true
+  attr :label, :string, default: "Delete", doc: "the label of the trigger and confirm buttons"
+  attr :size, :string, default: "md"
+  slot :inner_block, required: true
+
+  def delete_dialog(assigns) do
+    ~H"""
+    <.button
+      type="button"
+      variant="danger"
+      size={@size}
+      icon="hero-trash"
+      commandfor={@id}
+      command="show-modal"
+    >
+      {@label}
+    </.button>
+    <dialog
+      id={@id}
+      aria-labelledby={"#{@id}-title"}
+      aria-describedby={"#{@id}-description"}
+      closedby="any"
+      class="m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-white p-6 text-left shadow-xl backdrop:bg-gray-900/50"
+    >
+      <div class="flex gap-4">
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-100">
+          <.icon name="hero-exclamation-triangle" class="size-6 text-red-600" />
+        </div>
+        <div>
+          <h2 id={"#{@id}-title"} class="font-semibold text-gray-900">{@title}</h2>
+          <p id={"#{@id}-description"} class="mt-1 text-sm text-gray-600">
+            {render_slot(@inner_block)}
+          </p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <form method="dialog">
+          <.button variant="secondary" autofocus>{gettext("Cancel")}</.button>
+        </form>
+        <.form for={%{}} action={@action} method="delete">
+          <.button icon="hero-trash">{@label}</.button>
+        </.form>
+      </div>
+    </dialog>
     """
   end
 
@@ -568,15 +657,13 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   def back(assigns) do
     ~H"""
-    <div class="mt-8">
-      <.link
-        navigate={@navigate}
-        class="inline-flex items-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-xs hover:bg-zinc-50 focus:outline-hidden focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2"
-      >
-        <.icon name="hero-arrow-left-solid" class="h-5 w-5" />
-        {render_slot(@inner_block)}
-      </.link>
-    </div>
+    <.link
+      navigate={@navigate}
+      class="mb-4 inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-gray-600 hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+    >
+      <.icon name="hero-arrow-left-mini" />
+      {render_slot(@inner_block)}
+    </.link>
     """
   end
 
@@ -599,11 +686,11 @@ defmodule ClothingStoreWeb.CoreComponents do
       <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
   """
   attr :name, :string, required: true
-  attr :class, :string, default: nil
+  attr :class, :any, default: nil
 
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
-    <span class={[@name, @class]} />
+    <span class={[@name, @class]} aria-hidden="true" />
     """
   end
 
@@ -629,31 +716,6 @@ defmodule ClothingStoreWeb.CoreComponents do
          "opacity-100 translate-y-0 sm:scale-100",
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
     )
-  end
-
-  def show_modal(js \\ %JS{}, id) when is_binary(id) do
-    js
-    |> JS.show(to: "##{id}")
-    |> JS.show(
-      to: "##{id}-bg",
-      time: 300,
-      transition: {"transition-all transform ease-out duration-300", "opacity-0", "opacity-100"}
-    )
-    |> show("##{id}-container")
-    |> JS.add_class("overflow-hidden", to: "body")
-    |> JS.focus_first(to: "##{id}-content")
-  end
-
-  def hide_modal(js \\ %JS{}, id) do
-    js
-    |> JS.hide(
-      to: "##{id}-bg",
-      transition: {"transition-all transform ease-in duration-200", "opacity-100", "opacity-0"}
-    )
-    |> hide("##{id}-container")
-    |> JS.hide(to: "##{id}", transition: {"block", "block", "hidden"})
-    |> JS.remove_class("overflow-hidden", to: "body")
-    |> JS.pop_focus()
   end
 
   @doc """

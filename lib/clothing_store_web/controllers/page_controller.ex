@@ -1,7 +1,7 @@
 defmodule ClothingStoreWeb.PageController do
   use ClothingStoreWeb, :controller
 
-  alias ClothingStore.{About, Demo}
+  alias ClothingStore.{About, Demo, Transactions}
 
   def about(conn, _params) do
     links = Demo.links()
@@ -27,12 +27,19 @@ defmodule ClothingStoreWeb.PageController do
         start_datetime = DateTime.new!(start_date, ~T[00:00:00], "Etc/UTC")
         end_datetime = DateTime.new!(end_date, ~T[23:59:59], "Etc/UTC")
 
-        ClothingStore.Transactions.list_transactions_by_date_range(start_datetime, end_datetime)
+        Transactions.list_transactions_by_date_range(start_datetime, end_datetime)
       else
-        ClothingStore.Transactions.list_transactions()
+        Transactions.list_transactions()
       end
 
-    render(conn, :transactions, transactions: transactions, selected_month: month)
+    render(conn, :transactions,
+      page_title: "Transactions",
+      transactions: transactions,
+      selected_month: month,
+      month_label: start_date && Calendar.strftime(start_date, "%B %Y"),
+      revenue:
+        transactions |> Enum.map(& &1.total_price) |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
+    )
   end
 
   # "YYYY-MM"; anything else shows every transaction
@@ -48,19 +55,18 @@ defmodule ClothingStoreWeb.PageController do
   defp parse_month(_month), do: {nil, nil}
 
   def statistics(conn, _params) do
-    this_month = Date.utc_today() |> Date.to_string()
-
-    last_month =
-      Date.utc_today() |> Date.add(-1 * Date.days_in_month(Date.utc_today())) |> Date.to_string()
-
-    bestsellers = ClothingStore.Transactions.list_bestsellers(3)
-    this_month_bestsellers = ClothingStore.Transactions.list_bestsellers_per_month(3, this_month)
-    last_month_bestsellers = ClothingStore.Transactions.list_bestsellers_per_month(3, last_month)
+    this_month = Date.utc_today() |> Date.beginning_of_month()
+    last_month = this_month |> Date.add(-1) |> Date.beginning_of_month()
 
     render(conn, :statistics,
-      bestsellers: bestsellers,
-      this_month_bestsellers: this_month_bestsellers,
-      last_month_bestsellers: last_month_bestsellers
+      page_title: "Statistics",
+      this_month: this_month,
+      last_month: last_month,
+      bestsellers: Transactions.list_bestsellers(3),
+      this_month_bestsellers:
+        Transactions.list_bestsellers_per_month(3, Date.to_string(this_month)),
+      last_month_bestsellers:
+        Transactions.list_bestsellers_per_month(3, Date.to_string(last_month))
     )
   end
 end

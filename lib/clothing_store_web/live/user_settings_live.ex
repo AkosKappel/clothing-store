@@ -5,76 +5,109 @@ defmodule ClothingStoreWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header class="text-center">
-      Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
-    </.header>
+    <div class="mx-auto max-w-3xl">
+      <.header>
+        Account Settings
+        <:subtitle>Manage your account email address and password settings.</:subtitle>
+      </.header>
 
-    <p
-      :if={ClothingStore.Demo.locked?(@current_user)}
-      class="rounded-md bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900"
-    >
-      This is the shared demo account, so its e-mail and password can't be changed.
-    </p>
+      <p
+        :if={ClothingStore.Demo.locked?(@current_user)}
+        class="mb-6 flex gap-3 rounded-md bg-amber-50 p-4 text-sm text-amber-900 ring-1 ring-amber-600/20"
+      >
+        <.icon name="hero-lock-closed-mini" class="size-5 shrink-0 text-amber-600" />
+        This is the shared demo account, so its e-mail and password can't be changed.
+      </p>
 
-    <div class="space-y-12 divide-y">
-      <div>
-        <.simple_form
-          for={@email_form}
-          id="email_form"
-          phx-submit="update_email"
-          phx-change="validate_email"
-        >
-          <.input field={@email_form[:email]} type="email" label="Email" required />
-          <.input
-            field={@email_form[:current_password]}
-            name="current_password"
-            id="current_password_for_email"
-            type="password"
-            label="Current password"
-            value={@email_form_current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-      <div>
-        <.simple_form
-          for={@password_form}
-          id="password_form"
-          action={~p"/users/log_in?_action=password_updated"}
-          method="post"
-          phx-change="validate_password"
-          phx-submit="update_password"
-          phx-trigger-action={@trigger_submit}
-        >
-          <input
-            name={@password_form[:email].name}
-            type="hidden"
-            id="hidden_user_email"
-            value={@current_email}
-          />
-          <.input field={@password_form[:password]} type="password" label="New password" required />
-          <.input
-            field={@password_form[:password_confirmation]}
-            type="password"
-            label="Confirm new password"
-          />
-          <.input
-            field={@password_form[:current_password]}
-            name="current_password"
-            type="password"
-            label="Current password"
-            id="current_password_for_password"
-            value={@current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
-          </:actions>
-        </.simple_form>
+      <div class="space-y-6">
+        <section class="card grid gap-6 p-6 sm:p-8 md:grid-cols-3" aria-labelledby="email-title">
+          <div>
+            <h2 id="email-title" class="font-semibold text-gray-900">Email address</h2>
+            <p class="mt-1 text-sm text-gray-600">We send a confirmation link to the new address.</p>
+          </div>
+          <.simple_form
+            for={@email_form}
+            id="email_form"
+            phx-submit="update_email"
+            phx-change="validate_email"
+            class="md:col-span-2"
+          >
+            <.input
+              field={@email_form[:email]}
+              type="email"
+              label="Email"
+              autocomplete="email"
+              required
+            />
+            <.input
+              field={@email_form[:current_password]}
+              name="current_password"
+              id="current_password_for_email"
+              type="password"
+              label="Current password"
+              value={@email_form_current_password}
+              autocomplete="current-password"
+              required
+            />
+            <:actions>
+              <.button phx-disable-with="Changing..." icon="hero-envelope" class="ml-auto">
+                Change Email
+              </.button>
+            </:actions>
+          </.simple_form>
+        </section>
+
+        <section class="card grid gap-6 p-6 sm:p-8 md:grid-cols-3" aria-labelledby="password-title">
+          <div>
+            <h2 id="password-title" class="font-semibold text-gray-900">Password</h2>
+            <p class="mt-1 text-sm text-gray-600">At least 12 characters.</p>
+          </div>
+          <.simple_form
+            for={@password_form}
+            id="password_form"
+            action={~p"/users/log_in?_action=password_updated"}
+            method="post"
+            phx-change="validate_password"
+            phx-submit="update_password"
+            phx-trigger-action={@trigger_submit}
+            class="md:col-span-2"
+          >
+            <input
+              name={@password_form[:email].name}
+              type="hidden"
+              id="hidden_user_email"
+              value={@current_email}
+            />
+            <.input
+              field={@password_form[:password]}
+              type="password"
+              label="New password"
+              autocomplete="new-password"
+              required
+            />
+            <.input
+              field={@password_form[:password_confirmation]}
+              type="password"
+              label="Confirm new password"
+              autocomplete="new-password"
+            />
+            <.input
+              field={@password_form[:current_password]}
+              name="current_password"
+              type="password"
+              label="Current password"
+              id="current_password_for_password"
+              value={@current_password}
+              autocomplete="current-password"
+              required
+            />
+            <:actions>
+              <.button phx-disable-with="Changing..." icon="hero-key" class="ml-auto">
+                Change Password
+              </.button>
+            </:actions>
+          </.simple_form>
+        </section>
       </div>
     </div>
     """
@@ -106,6 +139,7 @@ defmodule ClothingStoreWeb.UserSettingsLive do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
+      |> assign(:page_title, "Settings")
 
     {:ok, socket}
   end

@@ -5,20 +5,28 @@ defmodule ClothingStoreWeb.UserConfirmationLive do
 
   def render(%{live_action: :edit} = assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">Confirm Account</.header>
+    <div class="mx-auto max-w-md pt-4 sm:pt-8">
+      <.header class="justify-center text-center">
+        Confirm Account
+        <:subtitle>Confirm your e-mail address to finish setting up the account.</:subtitle>
+      </.header>
 
-      <.simple_form for={@form} id="confirmation_form" phx-submit="confirm_account">
-        <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
-        <:actions>
-          <.button phx-disable-with="Confirming..." class="w-full">Confirm my account</.button>
-        </:actions>
-      </.simple_form>
+      <div class="card p-6 sm:p-8">
+        <.simple_form for={@form} id="confirmation_form" phx-submit="confirm_account">
+          <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
+          <:actions>
+            <.button phx-disable-with="Confirming..." icon="hero-check" class="w-full">
+              Confirm my account
+            </.button>
+          </:actions>
+        </.simple_form>
+      </div>
 
-      <p class="text-center mt-4">
-        <%!-- <.link href={~p"/users/register"}>Register</.link> --%>
-        <%!-- |  --%>
-        <.link href={~p"/users/log_in"}>Log in</.link>
+      <p class="mt-6 text-center text-sm">
+        <.link
+          href={~p"/users/log_in"}
+          class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
+        >Back to log in</.link>
       </p>
     </div>
     """
@@ -26,7 +34,9 @@ defmodule ClothingStoreWeb.UserConfirmationLive do
 
   def mount(%{"token" => token}, _session, socket) do
     form = to_form(%{"token" => token}, as: "user")
-    {:ok, assign(socket, form: form), temporary_assigns: [form: nil]}
+
+    {:ok, assign(socket, form: form, page_title: "Confirm account"),
+     temporary_assigns: [form: nil]}
   end
 
   # Do not log in the user after confirmation to avoid a

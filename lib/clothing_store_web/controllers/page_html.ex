@@ -74,4 +74,41 @@ defmodule ClothingStoreWeb.PageHTML do
   end
 
   def reset_time(%{time: time}), do: Calendar.strftime(time, "%H:%M")
+
+  @doc "A ranked table of `{product, quantity_sold}` rows, or an empty state."
+  attr :id, :string, required: true
+  attr :title, :string, required: true
+  attr :rows, :list, required: true
+  attr :empty, :string, required: true
+
+  def bestsellers(assigns) do
+    ~H"""
+    <section aria-labelledby={"#{@id}-title"}>
+      <h2 id={"#{@id}-title"} class="mb-3 text-lg font-semibold text-gray-900">{@title}</h2>
+      <.table id={@id} rows={Enum.with_index(@rows, 1)}>
+        <:col :let={{_row, rank}} label="#" class="w-12 font-semibold text-gray-900">{rank}</:col>
+        <:col :let={{{product, _sold}, _rank}} label="Product">
+          <.link
+            href={~p"/products/#{product}"}
+            class="font-medium text-gray-900 hover:text-red-700 hover:underline"
+          >
+            {product.title}
+          </.link>
+        </:col>
+        <:col :let={{{product, _sold}, _rank}} label="Price" class="text-right whitespace-nowrap">
+          {format_price(product.price)}
+        </:col>
+        <:col :let={{{_product, sold}, _rank}} label="Sold" class="text-right whitespace-nowrap">
+          {sold}
+        </:col>
+        <:col :let={{{product, _sold}, _rank}} label="In stock" class="text-right whitespace-nowrap">
+          {product.stock}
+        </:col>
+        <:empty>
+          <.empty_state icon="hero-chart-bar" title={@empty} class="py-8" />
+        </:empty>
+      </.table>
+    </section>
+    """
+  end
 end

@@ -10,7 +10,13 @@ defmodule ClothingStoreWeb.ProductController do
     categories = Products.list_categories()
     tags = Products.list_tags()
 
-    render(conn, :index, products: products, filters: filters, categories: categories, tags: tags)
+    render(conn, :index,
+      page_title: "Inventory",
+      products: products,
+      filters: filters,
+      categories: categories,
+      tags: tags
+    )
   end
 
   # only string filters (and a list of tag strings) reach the query and the form
@@ -32,7 +38,7 @@ defmodule ClothingStoreWeb.ProductController do
 
   def new(conn, _params) do
     changeset = Products.change_product(%Product{})
-    render(conn, :new, changeset: changeset)
+    render(conn, :new, page_title: "New product", changeset: changeset)
   end
 
   def create(conn, %{"product" => product_params}) do
@@ -46,19 +52,19 @@ defmodule ClothingStoreWeb.ProductController do
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset)
+        render(conn, :new, page_title: "New product", changeset: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     product = Products.get_product!(id)
-    render(conn, :show, product: product)
+    render(conn, :show, page_title: product.title, product: product)
   end
 
   def edit(conn, %{"id" => id}) do
     product = Products.get_product!(id)
     changeset = Products.change_product(product)
-    render(conn, :edit, product: product, changeset: changeset)
+    render(conn, :edit, page_title: "Edit product", product: product, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "product" => product_params}) do
@@ -74,7 +80,7 @@ defmodule ClothingStoreWeb.ProductController do
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, product: product, changeset: changeset)
+        render(conn, :edit, page_title: "Edit product", product: product, changeset: changeset)
     end
   end
 

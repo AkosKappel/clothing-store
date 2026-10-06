@@ -29,17 +29,55 @@ let liveSocket = new LiveSocket("/live", Socket, {
 })
 
 // Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
+topbar.config({barColors: {0: "#dc2626"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
 // Mobile menu toggle. Delegated from document so it keeps working after LiveView
 // navigation replaces the header; inline scripts would be blocked by the CSP.
 document.addEventListener("click", event => {
-  if (event.target.closest("#menu-toggle")) {
-    document.getElementById("menu")?.classList.toggle("hidden")
+  const toggle = event.target.closest("#menu-toggle")
+  if (!toggle) return
+
+  const open = document.getElementById("menu")?.classList.toggle("hidden") === false
+  toggle.setAttribute("aria-expanded", open)
+})
+
+// Pending state for regular (non-LiveView) forms: reuse LiveView's
+// phx-submit-loading class so buttons show the same spinner, and ignore
+// repeated submits while the request is in flight.
+document.addEventListener("submit", event => {
+  const form = event.target
+  if (form.hasAttribute("phx-submit") || form.method === "dialog") return
+
+  if (form.classList.contains("phx-submit-loading")) {
+    event.preventDefault()
+  } else {
+    form.classList.add("phx-submit-loading")
   }
 })
+
+// Back/forward restores pages from the cache with the pending state still on.
+window.addEventListener("pageshow", event => {
+  if (event.persisted) {
+    document.querySelectorAll("form.phx-submit-loading").forEach(form => {
+      form.classList.remove("phx-submit-loading")
+    })
+  }
+})
+
+// <button commandfor command="show-modal"> opens dialogs natively; this covers
+// browsers without invoker command support.
+if (!("commandForElement" in HTMLButtonElement.prototype)) {
+  document.addEventListener("click", event => {
+    const button = event.target.closest("button[commandfor]")
+    const dialog = button && document.getElementById(button.getAttribute("commandfor"))
+    if (!(dialog instanceof HTMLDialogElement)) return
+
+    if (button.getAttribute("command") === "show-modal") dialog.showModal()
+    if (button.getAttribute("command") === "close") dialog.close()
+  })
+}
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()

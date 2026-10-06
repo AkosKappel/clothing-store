@@ -33,7 +33,7 @@ defmodule ClothingStoreWeb.ProductControllerTest do
   describe "index" do
     test "lists all products", %{conn: conn} do
       conn = get(conn, ~p"/products")
-      assert html_response(conn, 200) =~ "Inventory Overview"
+      assert html_response(conn, 200) =~ "Inventory"
     end
   end
 

@@ -5,32 +5,41 @@ defmodule ClothingStoreWeb.UserConfirmationInstructionsLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">
+    <div class="mx-auto max-w-md pt-4 sm:pt-8">
+      <.header class="justify-center text-center">
         No confirmation instructions received?
-        <:subtitle>We'll send a new confirmation link to your inbox</:subtitle>
+        <:subtitle>We'll send a new confirmation link to your inbox.</:subtitle>
       </.header>
 
-      <.simple_form for={@form} id="resend_confirmation_form" phx-submit="send_instructions">
-        <.input field={@form[:email]} type="email" placeholder="Email" required />
-        <:actions>
-          <.button phx-disable-with="Sending..." class="w-full">
-            Resend confirmation instructions
-          </.button>
-        </:actions>
-      </.simple_form>
+      <div class="card p-6 sm:p-8">
+        <.simple_form for={@form} id="resend_confirmation_form" phx-submit="send_instructions">
+          <.input
+            field={@form[:email]}
+            type="email"
+            label="Email"
+            autocomplete="email"
+            required
+          />
+          <:actions>
+            <.button phx-disable-with="Sending..." icon="hero-envelope" class="w-full">
+              Resend confirmation instructions
+            </.button>
+          </:actions>
+        </.simple_form>
+      </div>
 
-      <p class="text-center mt-4">
-        <%!-- <.link href={~p"/users/register"}>Register</.link> --%>
-        <%!-- |  --%>
-        <.link href={~p"/users/log_in"}>Log in</.link>
+      <p class="mt-6 text-center text-sm">
+        <.link
+          href={~p"/users/log_in"}
+          class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
+        >Back to log in</.link>
       </p>
     </div>
     """
   end
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, form: to_form(%{}, as: "user"))}
+    {:ok, assign(socket, form: to_form(%{}, as: "user"), page_title: "Resend confirmation")}
   end
 
   def handle_event("send_instructions", %{"user" => %{"email" => email}}, socket) do

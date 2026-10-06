@@ -1,12 +1,9 @@
-<.header>
-  <h1 class="text-2xl font-semibold text-gray-800">New Product</h1>
-  <:subtitle>
-    <p class="text-gray-600">Use this form to manage product records in your database.</p>
-  </:subtitle>
-</.header>
+<div class="mx-auto max-w-3xl">
+  <.back navigate={~p"/products"}>Inventory</.back>
+  <.header>
+    New Product
+    <:subtitle>Add a product to the catalogue. All fields except tags are required.</:subtitle>
+  </.header>
 
-<.product_form changeset={@changeset} action={~p"/products"} />
-
-<.back navigate={~p"/products"}>
-  Back to products
-</.back>
+  <.product_form changeset={@changeset} action={~p"/products"} cancel_to={~p"/products"} />
+</div>

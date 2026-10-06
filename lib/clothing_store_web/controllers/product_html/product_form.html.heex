@@ -1,86 +1,52 @@
-<.simple_form
-  :let={f}
-  for={@changeset}
-  action={@action}
-  class="space-y-6 bg-white my-4 py-4 px-8 rounded-lg shadow-lg"
->
-  <div :if={@changeset.action} class="-mt-4">
-    <.error :for={msg <- translate_errors(@changeset.errors, :base)}>{msg}</.error>
-  </div>
-  <div class="space-y-4">
+<.simple_form :let={f} for={@changeset} action={@action} class="card p-6 sm:p-8">
+  <div
+    :if={@changeset.action}
+    role="alert"
+    class="flex gap-3 rounded-md bg-rose-50 p-4 text-sm text-rose-900 ring-1 ring-rose-600/20"
+  >
+    <.icon name="hero-exclamation-circle-mini" class="size-5 shrink-0 text-rose-600" />
     <div>
-      <label for={f[:photo].id} class="block text-sm font-medium text-gray-700">
-        Photo
-        <span class="text-xs text-gray-500 italic">
-          (a path under /images/, or an https:// URL from {ClothingStore.Products.Product.photo_hosts_text()})
-        </span>
-      </label>
-      <.input
-        field={f[:photo]}
-        type="text"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
-      />
-    </div>
-    <div>
-      <label for={f[:title].id} class="block text-sm font-medium text-gray-700">Title</label>
-      <.input
-        field={f[:title]}
-        type="text"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
-      />
-    </div>
-    <div>
-      <label for={f[:description].id} class="block text-sm font-medium text-gray-700">Description</label>
-      <.input
-        field={f[:description]}
-        type="text"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
-      />
-    </div>
-    <div>
-      <label for={f[:category].id} class="block text-sm font-medium text-gray-700">Category</label>
-      <.input
-        field={f[:category]}
-        type="text"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
-      />
-    </div>
-    <div>
-      <label for={f[:tags].id} class="block text-sm font-medium text-gray-700">
-        Tags <span class="text-xs text-gray-500 italic">(comma separated)</span>
-      </label>
-      <.input
-        field={f[:tags]}
-        type="text"
-        value={@changeset.data.tags |> Enum.join(",")}
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
-      />
-    </div>
-    <div>
-      <label for={f[:price].id} class="block text-sm font-medium text-gray-700">Price</label>
-      <.input
-        field={f[:price]}
-        type="number"
-        min="0.00"
-        step="0.01"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
-      />
-    </div>
-    <div>
-      <label for={f[:stock].id} class="block text-sm font-medium text-gray-700">Stock</label>
-      <.input
-        field={f[:stock]}
-        type="number"
-        min="0"
-        step="1"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
-      />
+      <p class="font-semibold">The product couldn't be saved. Please fix the errors below.</p>
+      <p :for={msg <- translate_errors(@changeset.errors, :base)} class="mt-1">{msg}</p>
     </div>
   </div>
 
+  <.input field={f[:title]} type="text" label="Title" maxlength="100" required />
+  <.input
+    field={f[:description]}
+    type="textarea"
+    label="Description"
+    maxlength="2000"
+    rows="4"
+    required
+  />
+  <.input
+    field={f[:photo]}
+    type="text"
+    label="Photo"
+    placeholder="/images/products/t-shirt.webp"
+    hint={"A path under /images/, or an https:// URL from #{ClothingStore.Products.Product.photo_hosts_text()}."}
+    required
+  />
+
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <.input field={f[:category]} type="text" label="Category" maxlength="50" required />
+    <.input field={f[:price]} type="number" label="Price (€)" min="0" step="0.01" required />
+    <.input field={f[:stock]} type="number" label="Stock" min="0" step="1" required />
+  </div>
+
+  <.input
+    field={f[:tags]}
+    type="text"
+    label="Tags"
+    value={f[:tags].value |> List.wrap() |> Enum.join(", ")}
+    hint="Comma separated, for example: summer, sale"
+  />
+
   <:actions>
-    <.button class="w-full px-6 py-3 text-sm font-medium text-white rounded-lg focus:outline-hidden focus:ring-2 focus:ring-offset-2">
-      Save Product
-    </.button>
+    <div class="ml-auto flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
+      <.button href={@cancel_to} variant="secondary">Cancel</.button>
+      <.button type="submit" icon="hero-check">Save product</.button>
+    </div>
   </:actions>
 </.simple_form>

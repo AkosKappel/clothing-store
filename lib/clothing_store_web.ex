@@ -55,6 +55,8 @@ defmodule ClothingStoreWeb do
       use Phoenix.LiveView,
         layout: {ClothingStoreWeb.Layouts, :app}
 
+      on_mount ClothingStoreWeb.CurrentPath
+
       unquote(html_helpers())
     end
   end

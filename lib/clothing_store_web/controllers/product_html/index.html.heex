@@ -1,150 +1,158 @@
-<div class="container mx-auto p-4">
-  <.header>
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Inventory Overview</h1>
-    <:actions>
-      <.link href={~p"/products/new"}>
-        <.button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-sm">
-          New Product
-        </.button>
-      </.link>
-    </:actions>
-  </.header>
+<.header>
+  Inventory
+  <:subtitle>Every product with its stock. Filter by category, price, stock and tags.</:subtitle>
+  <:actions>
+    <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
+  </:actions>
+</.header>
 
-  <div class="bg-white p-6 rounded-lg shadow-xs my-4">
-    <h2 class="text-lg font-semibold mb-4">Filter Products</h2>
-    <.form :let={f} for={%{}} action={~p"/products"} method="get">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <.input
-            field={f[:category]}
-            type="select"
-            label="Category"
-            options={@categories}
-            value={@filters["category"]}
+<section class="card mb-6 p-5" aria-labelledby="filters-title">
+  <h2 id="filters-title" class="flex items-center gap-2 font-semibold text-gray-900">
+    <.icon name="hero-funnel" class="size-5 text-gray-500" /> Filters
+  </h2>
+  <.form :let={f} for={%{}} action={~p"/products"} method="get" class="mt-4 space-y-5">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <.input
+        field={f[:category]}
+        type="select"
+        label="Category"
+        options={@categories}
+        value={@filters["category"]}
+      />
+      <.input
+        field={f[:min_price]}
+        type="number"
+        min="0"
+        step="0.01"
+        label="Min price (€)"
+        placeholder="0,00"
+        value={@filters["min_price"]}
+      />
+      <.input
+        field={f[:max_price]}
+        type="number"
+        min="0"
+        step="0.01"
+        label="Max price (€)"
+        placeholder="Any"
+        value={@filters["max_price"]}
+      />
+      <label class="flex items-center gap-2 self-end pb-2 text-sm text-gray-700">
+        <input
+          type="checkbox"
+          name="in_stock"
+          value="true"
+          class="size-4 rounded-sm border-gray-300 text-red-600 focus:ring-red-600"
+          checked={@filters["in_stock"] == "true"}
+        /> In stock only
+      </label>
+    </div>
+
+    <fieldset :if={@tags != []}>
+      <legend class="text-sm font-semibold text-gray-800">Tags</legend>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <label :for={tag <- @tags} class="cursor-pointer">
+          <input
+            type="checkbox"
+            name="tags[]"
+            value={tag}
+            class="peer sr-only"
+            checked={tag in @filters["tags"]}
           />
-        </div>
-        <div>
-          <.input
-            field={f[:min_price]}
-            type="number"
-            min="0.00"
-            step="0.01"
-            label="Min Price"
-            value={@filters["min_price"]}
-          />
-        </div>
-        <div>
-          <.input
-            field={f[:max_price]}
-            type="number"
-            min="0.00"
-            step="0.01"
-            label="Max Price"
-            value={@filters["max_price"]}
-          />
-        </div>
-        <div class="flex items-center mt-6">
-          <label class="inline-flex items-center">
-            <input
-              type="checkbox"
-              name="in_stock"
-              value="true"
-              class="form-checkbox"
-              checked={@filters["in_stock"] == "true"}
-            />
-            <span class="ml-2">In Stock Only</span>
-          </label>
-        </div>
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition-colors ring-inset peer-checked:bg-red-600 peer-checked:text-white peer-checked:ring-red-600 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-red-600 hover:bg-gray-50 peer-checked:hover:bg-red-700">
+            {tag}
+          </span>
+        </label>
       </div>
+    </fieldset>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="flex items-center gap-4 flex-wrap">
-          <label class="block text-sm font-semibold leading-6 text-zinc-800 mr-2">Tags:</label>
-          <%= for tag <- @tags do %>
-            <div class="flex items-center">
-              <input
-                type="checkbox"
-                name="tags[]"
-                value={tag}
-                id={tag}
-                class="form-checkbox"
-                checked={tag in List.wrap(@filters["tags"])}
-              />
-              <label for={tag} class="ml-2 text-sm text-gray-700">{tag}</label>
-            </div>
-          <% end %>
-        </div>
-
-        <div class="flex items-center justify-end gap-2 mt-4 md:mt-0">
-          <.button type="submit" class="text-white font-bold py-2 px-4 rounded-sm">
-            Apply Filters
-          </.button>
-          <.link href={~p"/products"} class="ml-2 text-gray-600 hover:text-gray-900">
-            Reset Filters
-          </.link>
-        </div>
-      </div>
-    </.form>
-  </div>
-</div>
-
-<.table id="products" rows={@products} row_click={&JS.navigate(~p"/products/#{&1}")}>
-  <:col :let={product} label="Photo">
-    <img
-      src={image_link(product.photo)}
-      alt={product.title}
-      class="h-24 w-24 object-cover rounded-sm"
-    />
-  </:col>
-  <:col :let={product} label="Title">
-    {product.title}
-  </:col>
-  <:col :let={product} label="Description">
-    <%= if String.length(product.description) > 16 do %>
-      {String.slice(product.description, 0, 16) <> "..."}
-    <% else %>
-      {product.description}
-    <% end %>
-  </:col>
-  <:col :let={product} label="Category">
-    {product.category}
-  </:col>
-  <:col :let={product} label="Tags">
-    <%= if product.tags == [] do %>
-      -
-    <% else %>
-      <span
-        :for={tag <- product.tags}
-        class="inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2"
+    <div class="flex flex-wrap items-center justify-end gap-3 border-t border-gray-100 pt-4">
+      <.button
+        :if={filtered?(@filters)}
+        href={~p"/products"}
+        variant="secondary"
+        icon="hero-x-mark"
       >
-        {tag}
-      </span>
-    <% end %>
+        Clear filters
+      </.button>
+      <.button type="submit" icon="hero-funnel">Apply filters</.button>
+    </div>
+  </.form>
+</section>
+
+<p :if={@products != []} class="mb-3 text-sm text-gray-600">
+  {ngettext("1 product", "%{count} products", length(@products))}
+</p>
+
+<.table id="products" rows={@products} row_id={&"product-#{&1.id}"}>
+  <:col :let={product} label="Product">
+    <div class="flex min-w-64 items-center gap-4">
+      <img
+        src={image_link(product.photo)}
+        alt=""
+        class="size-14 shrink-0 rounded-md bg-gray-100 object-cover"
+        loading="lazy"
+      />
+      <div class="min-w-0">
+        <.link
+          href={~p"/products/#{product}"}
+          class="font-semibold text-gray-900 hover:text-red-700 hover:underline"
+        >
+          {product.title}
+        </.link>
+        <p class="line-clamp-1 max-w-xs text-gray-500">{product.description}</p>
+      </div>
+    </div>
   </:col>
-  <:col :let={product} label="Price">
+  <:col :let={product} label="Category">{product.category}</:col>
+  <:col :let={product} label="Tags">
+    <div class="flex flex-wrap gap-1.5">
+      <.badge :for={tag <- product.tags}>{tag}</.badge>
+      <span :if={product.tags == []} class="text-gray-400">–</span>
+    </div>
+  </:col>
+  <:col :let={product} label="Price" class="text-right whitespace-nowrap">
     {format_price(product.price)}
   </:col>
-  <:col :let={product} label="Stock">
-    {product.stock}
+  <:col :let={product} label="Stock" class="text-right whitespace-nowrap">
+    <span class={product.stock == 0 && "font-medium text-red-700"}>{stock_text(product.stock)}</span>
   </:col>
   <:action :let={product}>
-    <div class="sr-only">
-      <.link navigate={~p"/products/#{product}"}>
-        <i class="hero-eye-solid"></i> Show
-      </.link>
-    </div>
-    <.link navigate={~p"/products/#{product}/edit"} class="text-purple-500 hover:text-purple-700">
-      <i class="hero-pencil-solid"></i> Edit
-    </.link>
-  </:action>
-  <:action :let={product}>
-    <.link
-      href={~p"/products/#{product}"}
-      method="delete"
-      data-confirm="Do you want to delete this product?"
-      class="text-red-500 hover:text-red-700"
+    <.button
+      href={~p"/products/#{product}/edit"}
+      variant="secondary"
+      size="sm"
+      icon="hero-pencil-square"
     >
-      <i class="hero-trash-solid"></i> Delete
-    </.link>
+      Edit<span class="sr-only">, {product.title}</span>
+    </.button>
+    <.delete_dialog
+      id={"delete-product-#{product.id}"}
+      action={~p"/products/#{product}"}
+      title={"Delete #{product.title}?"}
+      size="sm"
+    >
+      The product and its stock are removed for every visitor. This can't be undone.
+    </.delete_dialog>
   </:action>
+  <:empty>
+    <.empty_state
+      :if={filtered?(@filters)}
+      icon="hero-magnifying-glass"
+      title="No products match these filters"
+    >
+      Try a wider price range, another category or fewer tags.
+      <:actions>
+        <.button href={~p"/products"} variant="secondary" icon="hero-x-mark">
+          Clear filters
+        </.button>
+      </:actions>
+    </.empty_state>
+    <.empty_state :if={!filtered?(@filters)} icon="hero-shopping-bag" title="No products yet">
+      Add the first product to start tracking stock.
+      <:actions>
+        <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
+      </:actions>
+    </.empty_state>
+  </:empty>
 </.table>

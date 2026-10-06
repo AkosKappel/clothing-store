@@ -1,71 +1,75 @@
-<div class="container mx-auto p-4">
-  <h1 class="text-2xl font-semibold text-gray-800 mb-6">
-    Transactions History (Total: {length(@transactions)})
-  </h1>
+<.header>
+  Transactions
+  <:subtitle>
+    {if @month_label, do: "Sales in #{@month_label}.", else: "Every sale, newest first."}
+  </:subtitle>
+</.header>
 
-  <div class="mb-6">
-    <.form :let={f} for={%{}} action={~p"/transactions"} method="get">
-      <div class="flex items-center gap-4">
-        <div class="w-64">
-          <.input
-            field={f[:month]}
-            type="month"
-            value={@selected_month}
-            label="Filter by Month"
-          />
-        </div>
-        <div class="mt-6">
-          <.button type="submit" class="bg-blue-500 hover:bg-blue-700 mt-2">
-            Filter
-          </.button>
-          <%= if @selected_month do %>
-            <.link href={~p"/transactions"} class="ml-2 text-gray-600 hover:text-gray-900">
-              Clear Filter
-            </.link>
-          <% end %>
-        </div>
-      </div>
-    </.form>
+<section class="card mb-6 p-5">
+  <.form
+    :let={f}
+    for={%{}}
+    action={~p"/transactions"}
+    method="get"
+    class="flex flex-wrap items-end gap-3"
+  >
+    <div class="w-full sm:w-56">
+      <.input field={f[:month]} type="month" value={@selected_month} label="Month" />
+    </div>
+    <.button type="submit" icon="hero-funnel">Filter</.button>
+    <.button :if={@selected_month} href={~p"/transactions"} variant="secondary" icon="hero-x-mark">
+      Show all
+    </.button>
+  </.form>
+</section>
+
+<dl :if={@transactions != []} class="mb-6 grid grid-cols-2 gap-4 sm:max-w-md">
+  <div class="card p-4">
+    <dt class="text-sm text-gray-500">Transactions</dt>
+    <dd class="mt-1 text-2xl font-semibold text-gray-900">{length(@transactions)}</dd>
   </div>
+  <div class="card p-4">
+    <dt class="text-sm text-gray-500">Revenue</dt>
+    <dd class="mt-1 text-2xl font-semibold text-gray-900">{format_price(@revenue)}</dd>
+  </div>
+</dl>
 
-  <table class="min-w-full border-collapse border border-gray-300 shadow-lg rounded-lg">
-    <thead>
-      <tr class="bg-gray-200 text-gray-700">
-        <th class="border border-gray-300 px-4 py-2 text-left">
-          Transaction ID
-        </th>
-        <th class="border border-gray-300 px-4 py-2 text-left">Created At</th>
-        <th class="border border-gray-300 px-4 py-2 text-left">
-          Total Price
-        </th>
-        <th class="border border-gray-300 px-4 py-2 text-left">
-          Products (quantity)
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= for transaction <- @transactions do %>
-        <tr class="hover:bg-gray-50">
-          <td class="border border-gray-300 px-4 py-2 font-semibold">{transaction.id}</td>
-          <td class="border border-gray-300 px-4 py-2">
-            {format_date(transaction.inserted_at)}
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            {format_price(transaction.total_price)}
-          </td>
-          <td class="border border-gray-300 px-4 py-2">
-            <ul>
-              <%= for product_transaction <- transaction.products_transactions do %>
-                <.link href={~p"/products/#{product_transaction.product}"}>
-                  <li class="hover:text-blue-500 hover:underline">
-                    {product_transaction.product.title} ({product_transaction.quantity}x)
-                  </li>
-                </.link>
-              <% end %>
-            </ul>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+<.table id="transactions" rows={@transactions}>
+  <:col :let={transaction} label="ID" class="whitespace-nowrap">
+    <span class="font-semibold text-gray-900">#{transaction.id}</span>
+  </:col>
+  <:col :let={transaction} label="Date" class="whitespace-nowrap">
+    {format_date(transaction.inserted_at)}
+  </:col>
+  <:col :let={transaction} label="Products">
+    <ul class="space-y-1">
+      <li :for={item <- transaction.products_transactions}>
+        <.link
+          href={~p"/products/#{item.product}"}
+          class="text-gray-900 hover:text-red-700 hover:underline"
+        >
+          {item.product.title}
+        </.link>
+        <span class="text-gray-500">× {item.quantity}</span>
+      </li>
+    </ul>
+  </:col>
+  <:col :let={transaction} label="Total" class="text-right font-semibold whitespace-nowrap">
+    {format_price(transaction.total_price)}
+  </:col>
+  <:empty>
+    <.empty_state
+      :if={@selected_month}
+      icon="hero-calendar"
+      title={"No transactions in #{@month_label}"}
+    >
+      Pick another month, or show every transaction.
+      <:actions>
+        <.button href={~p"/transactions"} variant="secondary" icon="hero-x-mark">Show all</.button>
+      </:actions>
+    </.empty_state>
+    <.empty_state :if={!@selected_month} icon="hero-receipt-percent" title="No transactions yet">
+      Sales appear here as soon as they are recorded.
+    </.empty_state>
+  </:empty>
+</.table>

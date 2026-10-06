@@ -24,9 +24,8 @@ defmodule ClothingStoreWeb.Helpers do
 
   def current_path(assigns) do
     cond do
-      # For LiveView pages
-      assigns[:live_action] -> "/" <> Atom.to_string(assigns.live_action)
-      # For regular controller pages
+      # LiveViews, see ClothingStoreWeb.CurrentPath
+      assigns[:current_path] -> assigns.current_path
       assigns[:conn] -> assigns.conn.request_path
       true -> "/"
     end

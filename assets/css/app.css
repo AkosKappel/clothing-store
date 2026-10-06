@@ -35,6 +35,10 @@
   }
 }
 
+@layer components {
+  .card { @apply rounded-lg bg-white shadow-xs ring-1 ring-gray-200; }
+}
+
 /* About page: garment-label look. Ink gray-800, body gray-700, tag red-600, thread gray-400. */
 @layer components {
   .about-wide { font-stretch: 112.5%; }
@@ -87,7 +91,7 @@
   .about-timeline > li { @apply relative pb-10 pl-8 last:pb-0; }
   .about-timeline > li::before {
     content: "";
-    @apply absolute top-1 -left-[9px] size-4 rounded-full bg-red-600 ring-4 ring-zinc-50;
+    @apply absolute top-1 -left-[9px] size-4 rounded-full bg-red-600 ring-4 ring-gray-50;
   }
   .about-timeline .about-subheading { @apply mt-1 mb-2; }
 

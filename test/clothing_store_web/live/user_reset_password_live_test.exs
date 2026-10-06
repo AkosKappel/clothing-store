@@ -93,7 +93,7 @@ defmodule ClothingStoreWeb.UserResetPasswordLiveTest do
 
       {:ok, conn} =
         lv
-        |> element("main a", "Log in")
+        |> element("main a", "Back to log in")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/log_in")
 

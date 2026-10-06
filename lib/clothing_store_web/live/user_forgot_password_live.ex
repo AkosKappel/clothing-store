@@ -5,31 +5,41 @@ defmodule ClothingStoreWeb.UserForgotPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">
+    <div class="mx-auto max-w-md pt-4 sm:pt-8">
+      <.header class="justify-center text-center">
         Forgot your password?
-        <:subtitle>We'll send a password reset link to your inbox</:subtitle>
+        <:subtitle>We'll send a password reset link to your inbox.</:subtitle>
       </.header>
 
-      <.simple_form for={@form} id="reset_password_form" phx-submit="send_email">
-        <.input field={@form[:email]} type="email" placeholder="Email" required />
-        <:actions>
-          <.button phx-disable-with="Sending..." class="w-full">
-            Send password reset instructions
-          </.button>
-        </:actions>
-      </.simple_form>
-      <p class="text-center text-sm mt-4">
-        <%!-- <.link href={~p"/users/register"}>Register</.link> --%>
-        <%!-- |  --%>
-        <.link href={~p"/users/log_in"}>Log in</.link>
+      <div class="card p-6 sm:p-8">
+        <.simple_form for={@form} id="reset_password_form" phx-submit="send_email">
+          <.input
+            field={@form[:email]}
+            type="email"
+            label="Email"
+            autocomplete="email"
+            required
+          />
+          <:actions>
+            <.button phx-disable-with="Sending..." icon="hero-envelope" class="w-full">
+              Send password reset instructions
+            </.button>
+          </:actions>
+        </.simple_form>
+      </div>
+
+      <p class="mt-6 text-center text-sm">
+        <.link
+          href={~p"/users/log_in"}
+          class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
+        >Back to log in</.link>
       </p>
     </div>
     """
   end
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, form: to_form(%{}, as: "user"))}
+    {:ok, assign(socket, form: to_form(%{}, as: "user"), page_title: "Forgot password")}
   end
 
   def handle_event("send_email", %{"user" => %{"email" => email}}, socket) do

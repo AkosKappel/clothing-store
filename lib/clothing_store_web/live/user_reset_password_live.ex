@@ -5,35 +5,46 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">Reset Password</.header>
+    <div class="mx-auto max-w-md pt-4 sm:pt-8">
+      <.header class="justify-center text-center">
+        Reset Password
+        <:subtitle>Choose a new password of at least 12 characters.</:subtitle>
+      </.header>
 
-      <.simple_form
-        for={@form}
-        id="reset_password_form"
-        phx-submit="reset_password"
-        phx-change="validate"
-      >
-        <.error :if={@form.errors != []}>
-          Oops, something went wrong! Please check the errors below.
-        </.error>
+      <div class="card p-6 sm:p-8">
+        <.simple_form
+          for={@form}
+          id="reset_password_form"
+          phx-submit="reset_password"
+          phx-change="validate"
+        >
+          <.input
+            field={@form[:password]}
+            type="password"
+            label="New password"
+            autocomplete="new-password"
+            required
+          />
+          <.input
+            field={@form[:password_confirmation]}
+            type="password"
+            label="Confirm new password"
+            autocomplete="new-password"
+            required
+          />
+          <:actions>
+            <.button phx-disable-with="Resetting..." icon="hero-key" class="w-full">
+              Reset Password
+            </.button>
+          </:actions>
+        </.simple_form>
+      </div>
 
-        <.input field={@form[:password]} type="password" label="New password" required />
-        <.input
-          field={@form[:password_confirmation]}
-          type="password"
-          label="Confirm new password"
-          required
-        />
-        <:actions>
-          <.button phx-disable-with="Resetting..." class="w-full">Reset Password</.button>
-        </:actions>
-      </.simple_form>
-
-      <p class="text-center text-sm mt-4">
-        <%!-- <.link href={~p"/users/register"}>Register</.link> --%>
-        <%!-- |  --%>
-        <.link href={~p"/users/log_in"}>Log in</.link>
+      <p class="mt-6 text-center text-sm">
+        <.link
+          href={~p"/users/log_in"}
+          class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
+        >Back to log in</.link>
       </p>
     </div>
     """
@@ -51,7 +62,8 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
           %{}
       end
 
-    {:ok, assign_form(socket, form_source), temporary_assigns: [form: nil]}
+    {:ok, socket |> assign_form(form_source) |> assign(:page_title, "Reset password"),
+     temporary_assigns: [form: nil]}
   end
 
   # Do not log in the user after reset password to avoid a

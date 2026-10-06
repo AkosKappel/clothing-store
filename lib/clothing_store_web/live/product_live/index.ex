@@ -16,7 +16,7 @@ defmodule ClothingStoreWeb.ProductLive.Index do
     end
 
     # Assign the products to the socket
-    {:ok, assign(socket, :products, products)}
+    {:ok, assign(socket, products: products, page_title: "Dashboard")}
   end
 
   @impl true

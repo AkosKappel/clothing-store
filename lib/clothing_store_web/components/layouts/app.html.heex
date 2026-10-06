@@ -1,116 +1,77 @@
-<header class="relative px-4 sm:px-6 lg:px-8 bg-gray-800 text-white h-24 pt-2">
-  <div class="mx-auto max-w-7xl flex items-center justify-between py-3 text-sm">
-    <div class="flex items-center gap-4">
-      <a href="/" class="flex items-center">
-        <img src={~p"/images/logo.svg"} width="48" alt="Clothing Store Logo" />
-        <span class="ml-2 text-3xl font-bold text-red-400 italic">
-          Modern Fashion Store
-        </span>
-      </a>
-    </div>
+<% current_path = ClothingStoreWeb.Helpers.current_path(assigns) %>
+<header class="relative bg-gray-800 text-white">
+  <nav
+    class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8"
+    aria-label="Main"
+  >
+    <a
+      href="/"
+      class="flex items-center gap-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+    >
+      <img src={~p"/images/logo.svg"} width="40" height="40" alt="" />
+      <span class="font-display text-xl font-bold text-red-400 italic sm:text-2xl">
+        Modern Fashion Store
+      </span>
+    </a>
 
-    <div class="block lg:hidden">
-      <button
-        id="menu-toggle"
-        class="text-white hover:text-gray-400 focus:outline-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white rounded-xs"
-        aria-label="Toggle Menu"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M4 6h16M4 12h16m-7 6h7"
-          />
-        </svg>
-      </button>
-    </div>
-
-    <div class="hidden">
-      {active_path = ClothingStoreWeb.Helpers.current_path(assigns)}
-    </div>
+    <button
+      id="menu-toggle"
+      type="button"
+      class="rounded-md p-2 text-gray-200 hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
+      aria-controls="menu"
+      aria-expanded="false"
+      aria-label="Toggle menu"
+    >
+      <.icon name="hero-bars-3" />
+    </button>
 
     <ul
       id="menu"
-      class="hidden lg:flex items-center font-semibold bg-gray-800 lg:bg-transparent lg:static absolute top-24 left-0 w-full lg:w-auto lg:py-0 pb-4 lg:px-0 px-8 z-50 gap-x-8"
+      class="absolute top-full left-0 z-40 hidden w-full space-y-1 bg-gray-800 px-4 pb-4 shadow-lg lg:static lg:flex lg:w-auto lg:items-center lg:gap-1 lg:space-y-0 lg:p-0 lg:shadow-none"
     >
       <%= if assigns[:current_user] do %>
-        <li class="flex items-center justify-end my-2">
-          <.link
-            href={~p"/products"}
-            class={if active_path == "/products", do: "text-red-400", else: "hover:text-zinc-400"}
-          >
-            Inventory
-          </.link>
-        </li>
-        <li class="flex items-center justify-end my-2">
-          <.link
-            href={~p"/transactions"}
-            class={
-              if active_path == "/transactions", do: "text-red-400", else: "hover:text-zinc-400"
-            }
-          >
-            Transactions
-          </.link>
-        </li>
-        <li class="flex items-center justify-end my-2">
-          <.link
-            href={~p"/statistics"}
-            class={
-              if active_path == "/statistics", do: "text-red-400", else: "hover:text-zinc-400"
-            }
-          >
-            Statistics
-          </.link>
-        </li>
+        <.nav_link href={~p"/"} current_path={current_path}>Dashboard</.nav_link>
+        <.nav_link href={~p"/products"} current_path={current_path}>Inventory</.nav_link>
+        <.nav_link href={~p"/transactions"} current_path={current_path}>Transactions</.nav_link>
+        <.nav_link href={~p"/statistics"} current_path={current_path}>Statistics</.nav_link>
       <% end %>
-      <li class="flex items-center justify-end my-2">
-        <.link
-          href={~p"/about"}
-          class={if active_path == "/about", do: "text-red-400", else: "hover:text-zinc-400"}
-          aria-current={if active_path == "/about", do: "page"}
-        >
-          About
-        </.link>
-      </li>
-      <li :if={assigns[:current_user]} class="flex items-center justify-end my-2">
+      <.nav_link href={~p"/about"} current_path={current_path}>About</.nav_link>
+      <li :if={assigns[:current_user]} class="pt-2 lg:pt-0 lg:pl-3">
         <.link
           href={~p"/users/log_out"}
           method="delete"
-          class="hover:text-zinc-200 bg-red-600 px-4 py-2 rounded-sm"
+          class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
         >
-          Log out
+          <.icon name="hero-arrow-right-start-on-rectangle-mini" /> Log out
         </.link>
       </li>
-      <li :if={!assigns[:current_user]} class="flex items-center justify-end my-2">
+      <li
+        :if={!assigns[:current_user] && current_path != ~p"/users/log_in"}
+        class="pt-2 lg:pt-0 lg:pl-3"
+      >
         <.link
           href={~p"/users/log_in"}
-          class="hover:text-zinc-200 bg-red-600 px-4 py-2 rounded-sm"
+          class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-white"
         >
           Log in
         </.link>
       </li>
     </ul>
-  </div>
+  </nav>
 </header>
 
-<main class="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+<main class="min-h-[70vh] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
   <div class="mx-auto max-w-7xl">
-    <.flash_group flash={@flash} /> {@inner_content}
+    <.flash_group flash={@flash} />
+    {@inner_content}
   </div>
 </main>
 
-<footer class="bg-gray-800 text-white py-4 mt-12">
-  <div class="max-w-7xl mx-auto text-center">
+<footer class="mt-12 bg-gray-800 py-6 text-sm text-gray-300">
+  <div class="mx-auto max-w-7xl px-4 text-center">
     <p>&copy; {Date.utc_today().year} Modern Fashion Store. All rights reserved.</p>
-    <p class="mt-1 text-sm">
-      <.link href={~p"/about"} class="underline underline-offset-4 hover:text-zinc-300">
+    <p class="mt-1">
+      <.link href={~p"/about"} class="underline underline-offset-4 hover:text-white">
         About this project
       </.link>
     </p>
