@@ -104,7 +104,7 @@
       </div>
     </div>
   </:col>
-  <:col :let={product} label="Category">{product.category}</:col>
+  <:col :let={product} label="Category"><.category_badge category={product.category} /></:col>
   <:col :let={product} label="Tags">
     <div class="flex flex-wrap gap-1.5">
       <.badge :for={tag <- product.tags}>{tag}</.badge>
@@ -115,7 +115,7 @@
     {format_price(product.price)}
   </:col>
   <:col :let={product} label="Stock" class="text-right whitespace-nowrap">
-    <span class={product.stock == 0 && "font-medium text-red-700"}>{stock_text(product.stock)}</span>
+    <.stock_badge stock={product.stock} />
   </:col>
   <:action :let={product}>
     <.button
@@ -148,7 +148,7 @@
         </.button>
       </:actions>
     </.empty_state>
-    <.empty_state :if={!filtered?(@filters)} icon="hero-shopping-bag" title="No products yet">
+    <.empty_state :if={!filtered?(@filters)} image={~p"/images/logo.svg"} title="No products yet">
       Add the first product to start tracking stock.
       <:actions>
         <.button href={~p"/products/new"} icon="hero-plus">New product</.button>

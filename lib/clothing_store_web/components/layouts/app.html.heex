@@ -21,6 +21,7 @@
       aria-controls="menu"
       aria-expanded="false"
       aria-label="Toggle menu"
+      title="Menu"
     >
       <.icon name="hero-bars-3" />
     </button>
@@ -30,12 +31,12 @@
       class="absolute top-full left-0 z-40 hidden w-full space-y-1 bg-gray-800 px-4 pb-4 shadow-lg lg:static lg:flex lg:w-auto lg:items-center lg:gap-1 lg:space-y-0 lg:p-0 lg:shadow-none"
     >
       <%= if assigns[:current_user] do %>
-        <.nav_link href={~p"/"} current_path={current_path}>Dashboard</.nav_link>
-        <.nav_link href={~p"/products"} current_path={current_path}>Inventory</.nav_link>
-        <.nav_link href={~p"/transactions"} current_path={current_path}>Transactions</.nav_link>
-        <.nav_link href={~p"/statistics"} current_path={current_path}>Statistics</.nav_link>
+        <.nav_link href={~p"/"} current_path={current_path} icon="hero-squares-2x2">Dashboard</.nav_link>
+        <.nav_link href={~p"/products"} current_path={current_path} icon="hero-cube">Inventory</.nav_link>
+        <.nav_link href={~p"/transactions"} current_path={current_path} icon="hero-banknotes">Transactions</.nav_link>
+        <.nav_link href={~p"/statistics"} current_path={current_path} icon="hero-chart-bar">Statistics</.nav_link>
       <% end %>
-      <.nav_link href={~p"/about"} current_path={current_path}>About</.nav_link>
+      <.nav_link href={~p"/about"} current_path={current_path} icon="hero-information-circle">About</.nav_link>
       <li :if={assigns[:current_user]} class="pt-2 lg:pt-0 lg:pl-3">
         <.link
           href={~p"/users/log_out"}

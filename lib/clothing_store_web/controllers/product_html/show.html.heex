@@ -27,11 +27,9 @@
       <span class="text-lg font-semibold">{format_price(@product.price)}</span>
     </:item>
     <:item title="Stock">
-      <span class={@product.stock == 0 && "font-medium text-red-700"}>
-        {stock_text(@product.stock)}
-      </span>
+      <.stock_badge stock={@product.stock} />
     </:item>
-    <:item title="Category">{@product.category}</:item>
+    <:item title="Category"><.category_badge category={@product.category} /></:item>
     <:item title="Tags">
       <div class="flex flex-wrap gap-1.5">
         <.badge :for={tag <- @product.tags}>{tag}</.badge>

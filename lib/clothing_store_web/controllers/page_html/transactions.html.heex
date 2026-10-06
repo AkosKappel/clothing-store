@@ -39,7 +39,12 @@
     <span class="font-semibold text-gray-900">#{transaction.id}</span>
   </:col>
   <:col :let={transaction} label="Date" class="whitespace-nowrap">
-    {format_date(transaction.inserted_at)}
+    <time
+      datetime={DateTime.to_iso8601(transaction.inserted_at)}
+      title={format_date(transaction.inserted_at)}
+    >
+      {relative_time(transaction.inserted_at)}
+    </time>
   </:col>
   <:col :let={transaction} label="Products">
     <ul class="space-y-1">

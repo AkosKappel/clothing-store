@@ -63,6 +63,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         type="button"
         class="-m-1 h-fit rounded-sm p-1 opacity-60 hover:opacity-100"
         aria-label={gettext("close")}
+        title={gettext("Close")}
       >
         <.icon name="hero-x-mark-mini" />
       </button>
@@ -544,6 +545,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       </.empty_state>
   """
   attr :icon, :string, default: "hero-inbox"
+  attr :image, :string, default: nil, doc: "an illustration shown instead of the icon"
   attr :title, :string, required: true
   attr :class, :any, default: nil
   slot :inner_block
@@ -555,7 +557,8 @@ defmodule ClothingStoreWeb.CoreComponents do
       "rounded-lg border-2 border-dashed border-gray-300 px-6 py-12 text-center",
       @class
     ]}>
-      <.icon name={@icon} class="size-10 text-gray-400" />
+      <img :if={@image} src={@image} alt="" class="mx-auto size-16 opacity-50 grayscale" />
+      <.icon :if={!@image} name={@icon} class="size-10 text-gray-400" />
       <h2 class="mt-3 font-semibold text-gray-900">{@title}</h2>
       <p :if={@inner_block != []} class="mx-auto mt-1 max-w-md text-sm text-gray-600">
         {render_slot(@inner_block)}
@@ -569,14 +572,16 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   @doc """
   Renders a small pill, for example a product tag.
+
+  `class` replaces the default gray colours, e.g. `class="bg-red-50 text-red-800 ring-red-600/20"`.
   """
-  attr :class, :any, default: nil
+  attr :class, :string, default: "bg-gray-100 text-gray-700 ring-gray-200"
   slot :inner_block, required: true
 
   def badge(assigns) do
     ~H"""
     <span class={[
-      "inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-gray-200 ring-inset",
+      "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset",
       @class
     ]}>
       {render_slot(@inner_block)}

@@ -91,6 +91,7 @@ defmodule ClothingStoreWeb do
       import Phoenix.HTML
       # Core UI components
       import ClothingStoreWeb.CoreComponents
+      import ClothingStoreWeb.ProductComponents
       import ClothingStoreWeb.DemoBanner
 
       # Shortcut for generating JS commands

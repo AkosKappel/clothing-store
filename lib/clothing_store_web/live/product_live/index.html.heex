@@ -14,7 +14,7 @@
   </:actions>
 </.header>
 
-<.empty_state :if={@products == []} icon="hero-shopping-bag" title="No products yet">
+<.empty_state :if={@products == []} image={~p"/images/logo.svg"} title="No products yet">
   Add the first product, or wait for the nightly reset to bring back the demo catalogue.
   <:actions>
     <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
@@ -46,13 +46,8 @@
         </div>
         <p class="line-clamp-2 text-sm text-gray-600">{product.description}</p>
         <div class="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2 text-sm">
-          <span class="text-gray-500">{product.category}</span>
-          <span class={[
-            "font-medium",
-            if(product.stock > 0, do: "text-emerald-700", else: "text-red-700")
-          ]}>
-            {if product.stock > 0, do: "#{product.stock} in stock", else: "Out of stock"}
-          </span>
+          <.category_badge category={product.category} />
+          <.stock_badge stock={product.stock} />
         </div>
         <div :if={product.tags != []} class="flex flex-wrap gap-1.5">
           <.badge :for={tag <- product.tags}>{tag}</.badge>

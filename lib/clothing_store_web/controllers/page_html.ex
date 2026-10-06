@@ -102,7 +102,7 @@ defmodule ClothingStoreWeb.PageHTML do
           {sold}
         </:col>
         <:col :let={{{product, _sold}, _rank}} label="In stock" class="text-right whitespace-nowrap">
-          {product.stock}
+          <.stock_badge stock={product.stock} />
         </:col>
         <:empty>
           <.empty_state icon="hero-chart-bar" title={@empty} class="py-8" />
