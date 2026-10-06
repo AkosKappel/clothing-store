@@ -11,7 +11,13 @@ defmodule ClothingStoreWeb.UserAuth do
   # the token expiry itself in UserToken.
   @max_age 60 * 60 * 24 * 60
   @remember_me_cookie "_clothing_store_web_user_remember_me"
-  @remember_me_options [sign: true, max_age: @max_age, same_site: "Lax"]
+  # Secure like the session cookie (see Endpoint): on in prod, off for plain-http dev and tests
+  @remember_me_options [
+    sign: true,
+    max_age: @max_age,
+    same_site: "Lax",
+    secure: Application.compile_env(:clothing_store, :secure_cookies, false)
+  ]
 
   @doc """
   Logs the user in.

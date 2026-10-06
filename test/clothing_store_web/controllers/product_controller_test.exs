@@ -123,9 +123,12 @@ defmodule ClothingStoreWeb.ProductControllerTest do
       conn = delete(conn, ~p"/products/#{product}")
       assert redirected_to(conn) == ~p"/products"
 
-      assert_error_sent 404, fn ->
-        get(conn, ~p"/products/#{product}")
-      end
+      {404, _headers, body} =
+        assert_error_sent 404, fn ->
+          get(conn, ~p"/products/#{product}")
+        end
+
+      assert body =~ "Page not found"
     end
   end
 
