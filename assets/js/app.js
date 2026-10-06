@@ -57,6 +57,16 @@ document.addEventListener("submit", event => {
   }
 })
 
+// Welcome dialog (Layouts.welcome_dialog/1): the server renders it with
+// data-open-on-load until it has been shown once. The cookie is set on opening,
+// because "Try the demo" leaves the page without closing the dialog.
+const welcome = document.getElementById("welcome")
+if (welcome?.hasAttribute("data-open-on-load")) {
+  const secure = location.protocol === "https:" ? "; Secure" : ""
+  document.cookie = `welcome_seen=1; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
+  welcome.showModal()
+}
+
 // Back/forward restores pages from the cache with the pending state still on.
 window.addEventListener("pageshow", event => {
   if (event.persisted) {

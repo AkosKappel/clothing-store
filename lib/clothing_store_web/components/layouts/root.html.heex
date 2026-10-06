@@ -14,7 +14,10 @@
     </script>
   </head>
   <body class="bg-gray-50 text-gray-900 antialiased">
-    <.demo_banner />
+    <.welcome_dialog
+      open_on_load={!@conn.cookies["welcome_seen"]}
+      logged_in={@conn.assigns[:current_user] != nil}
+    />
     {@inner_content}
   </body>
 </html>

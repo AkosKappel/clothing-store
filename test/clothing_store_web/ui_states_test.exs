@@ -14,6 +14,36 @@ defmodule ClothingStoreWeb.UIStatesTest do
     end
   end
 
+  describe "welcome dialog" do
+    test "opens on the first visit and offers the demo", %{conn: conn} do
+      html = conn |> get(~p"/users/log_in") |> html_response(200)
+
+      assert html =~ ~r|<dialog id="welcome" data-open-on-load|
+      assert html =~ ~s(action="/users/demo_log_in")
+      refute html =~ "Start exploring"
+    end
+
+    test "stays closed once seen, but can be reopened", %{conn: conn} do
+      html =
+        conn
+        |> put_req_cookie("welcome_seen", "1")
+        |> get(~p"/users/log_in")
+        |> html_response(200)
+
+      assert html =~ ~s(<dialog id="welcome")
+      refute html =~ "data-open-on-load"
+      assert html =~ ~s(commandfor="welcome")
+    end
+
+    test "logged-in visitors get a close button instead of Try the demo", %{conn: conn} do
+      %{conn: conn} = register_and_log_in_user(%{conn: conn})
+      html = conn |> get(~p"/products") |> html_response(200)
+
+      assert html =~ "Start exploring"
+      refute html =~ ~s(action="/users/demo_log_in")
+    end
+  end
+
   describe "logged in" do
     setup :register_and_log_in_user
 

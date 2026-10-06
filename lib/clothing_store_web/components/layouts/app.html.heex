@@ -37,6 +37,18 @@
         <.nav_link href={~p"/statistics"} current_path={current_path} icon="hero-chart-bar">Statistics</.nav_link>
       <% end %>
       <.nav_link href={~p"/about"} current_path={current_path} icon="hero-information-circle">About</.nav_link>
+      <li>
+        <button
+          type="button"
+          commandfor="welcome"
+          command="show-modal"
+          class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-gray-200 hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          title="What is this demo?"
+        >
+          <.icon name="hero-question-mark-circle" class="size-5 opacity-80" />
+          <span class="lg:sr-only">Demo info</span>
+        </button>
+      </li>
       <li :if={assigns[:current_user]} class="pt-2 lg:pt-0 lg:pl-3">
         <.link
           href={~p"/users/log_out"}
@@ -68,13 +80,4 @@
   </div>
 </main>
 
-<footer class="mt-12 bg-gray-800 py-6 text-sm text-gray-300">
-  <div class="mx-auto max-w-7xl px-4 text-center">
-    <p>&copy; {Date.utc_today().year} Modern Fashion Store. All rights reserved.</p>
-    <p class="mt-1">
-      <.link href={~p"/about"} class="underline underline-offset-4 hover:text-white">
-        About this project
-      </.link>
-    </p>
-  </div>
-</footer>
+<.site_footer />
