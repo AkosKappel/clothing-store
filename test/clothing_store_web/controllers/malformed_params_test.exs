@@ -25,7 +25,8 @@ defmodule ClothingStoreWeb.MalformedParamsTest do
       ClothingStore.Repo.insert!(%ClothingStore.Products.ProductTransaction{
         product_id: product.id,
         transaction_id: transaction.id,
-        quantity: 1
+        quantity: 1,
+        unit_price: product.price
       })
     end
 

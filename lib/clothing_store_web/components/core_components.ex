@@ -564,6 +564,9 @@ defmodule ClothingStoreWeb.CoreComponents do
   slot :col, required: true do
     attr :label, :string
     attr :class, :string
+
+    attr :card_label, :boolean,
+      doc: "false: on cards the cell spans the full width without its label"
   end
 
   slot :action, doc: "the slot for showing user actions in the last table column"
@@ -592,7 +595,7 @@ defmodule ClothingStoreWeb.CoreComponents do
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="hover:bg-gray-50">
             <td
               :for={col <- @col}
-              data-label={col[:label]}
+              data-label={col[:card_label] != false && col[:label]}
               class={["px-4 py-3 align-middle text-gray-700", col[:class]]}
             >
               {render_slot(col, @row_item.(row))}
@@ -632,6 +635,102 @@ defmodule ClothingStoreWeb.CoreComponents do
       </div>
     </dl>
     """
+  end
+
+  @doc ~S"""
+  Renders "Showing 21–40 of 203" with previous/next links and page numbers.
+  `path` turns a page number into its URL.
+
+  ## Examples
+
+      <.pagination page={2} total_pages={11} total_entries={203} per_page={20} path={fn page -> ~p"/x?page=#{page}" end} />
+  """
+  attr :page, :integer, required: true
+  attr :total_pages, :integer, required: true
+  attr :total_entries, :integer, required: true
+  attr :per_page, :integer, required: true
+  attr :path, :any, required: true
+
+  def pagination(assigns) do
+    first = (assigns.page - 1) * assigns.per_page + 1
+    last = min(assigns.page * assigns.per_page, assigns.total_entries)
+
+    assigns =
+      assign(assigns,
+        first: first,
+        last: last,
+        pages: page_window(assigns.page, assigns.total_pages)
+      )
+
+    ~H"""
+    <nav
+      :if={@total_entries > 0}
+      class="mt-6 flex flex-wrap items-center justify-between gap-4"
+      aria-label={gettext("Pagination")}
+    >
+      <p class="text-sm text-gray-600">
+        Showing <span class="font-medium tabular-nums">{@first}–{@last}</span>
+        of <span class="font-medium tabular-nums">{@total_entries}</span>
+      </p>
+      <ul :if={@total_pages > 1} class="flex items-center gap-1">
+        <li>
+          <.page_link :if={@page > 1} href={@path.(@page - 1)} label={gettext("Previous page")}>
+            <.icon name="hero-chevron-left-mini" />
+          </.page_link>
+        </li>
+        <li :for={page <- @pages}>
+          <span :if={page == :gap} class="px-2 text-gray-400">…</span>
+          <.page_link :if={page != :gap} href={@path.(page)} current={page == @page}>
+            {page}
+          </.page_link>
+        </li>
+        <li>
+          <.page_link :if={@page < @total_pages} href={@path.(@page + 1)} label={gettext("Next page")}>
+            <.icon name="hero-chevron-right-mini" />
+          </.page_link>
+        </li>
+      </ul>
+    </nav>
+    """
+  end
+
+  attr :href, :string, required: true
+  attr :current, :boolean, default: false
+  attr :label, :string, default: nil
+  slot :inner_block, required: true
+
+  defp page_link(assigns) do
+    ~H"""
+    <.link
+      href={@href}
+      aria-current={@current && "page"}
+      aria-label={@label}
+      title={@label}
+      class={[
+        "flex h-9 min-w-9 items-center justify-center rounded-md px-2 text-sm font-semibold tabular-nums",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600",
+        if(@current,
+          do: "bg-red-600 text-white",
+          else: "text-gray-700 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+        )
+      ]}
+    >
+      {render_slot(@inner_block)}
+    </.link>
+    """
+  end
+
+  # 1 … 4 5 6 … 11: the first, the last and the neighbours of the current page
+  defp page_window(page, total) do
+    [1, page - 1, page, page + 1, total]
+    |> Enum.filter(&(&1 in 1..total))
+    |> Enum.uniq()
+    |> Enum.sort()
+    |> Enum.chunk_every(2, 1)
+    |> Enum.flat_map(fn
+      [a, b] when b - a > 1 -> [a, :gap]
+      [a | _] -> [a]
+    end)
   end
 
   @doc """

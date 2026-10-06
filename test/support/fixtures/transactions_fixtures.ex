@@ -18,7 +18,8 @@ defmodule ClothingStore.TransactionsFixtures do
       Repo.insert!(%ProductTransaction{
         product_id: product.id,
         transaction_id: transaction.id,
-        quantity: quantity
+        quantity: quantity,
+        unit_price: product.price
       })
     end
 

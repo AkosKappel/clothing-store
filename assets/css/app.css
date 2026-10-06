@@ -68,7 +68,8 @@
       content: attr(data-label);
       @apply text-left font-medium text-gray-500;
     }
-    .responsive-table td:last-child:not([data-label]) { @apply justify-end pt-3; }
+    .responsive-table td:not(:first-child):not([data-label]) { @apply block text-left; }
+    .responsive-table td:last-child:not([data-label]) { @apply flex justify-end pt-3; }
   }
 }
 

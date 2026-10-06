@@ -75,6 +75,17 @@ defmodule ClothingStoreWeb.PageHTML do
 
   def reset_time(%{time: time}), do: Calendar.strftime(time, "%H:%M")
 
+  @doc ~S'~D[2026-10-01] -> "2026-10", the month filter value'
+  def month_param(%Date{} = month), do: Calendar.strftime(month, "%Y-%m")
+
+  @doc "The month (its first day) of a group of transactions from the same month."
+  def month_of([transaction | _]),
+    do: transaction.inserted_at |> DateTime.to_date() |> Date.beginning_of_month()
+
+  @doc "Query params for a page of the transactions list, keeping the month filter."
+  def page_params(nil, page), do: [page: page]
+  def page_params(month, page), do: [month: month, page: page]
+
   @doc "A euro amount rounded for chart axes: 850 €, 1.5k €, 12k €."
   def short_euro(value) do
     value = to_float(value)

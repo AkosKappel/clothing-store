@@ -17,30 +17,37 @@ defmodule ClothingStoreWeb.PageController do
     )
   end
 
+  @per_page 20
+
   def transactions(conn, params) do
-    {month, start_date} = parse_month(params["month"])
-
-    transactions =
-      if start_date do
-        end_date = Date.end_of_month(start_date)
-
-        start_datetime = DateTime.new!(start_date, ~T[00:00:00], "Etc/UTC")
-        end_datetime = DateTime.new!(end_date, ~T[23:59:59], "Etc/UTC")
-
-        Transactions.list_transactions_by_date_range(start_datetime, end_datetime)
-      else
-        Transactions.list_transactions()
-      end
+    {selected_month, month} = parse_month(params["month"])
+    result = Transactions.page_transactions(month, parse_page(params["page"]), @per_page)
+    months = result.entries |> Enum.map(&month_of/1) |> Enum.uniq()
 
     render(conn, :transactions,
       page_title: "Transactions",
-      transactions: transactions,
-      selected_month: month,
-      month_label: start_date && Calendar.strftime(start_date, "%B %Y"),
-      revenue:
-        transactions |> Enum.map(& &1.total_price) |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
+      selected_month: selected_month,
+      month: month,
+      this_month: Date.utc_today() |> Date.beginning_of_month(),
+      result: result,
+      per_page: @per_page,
+      groups: Enum.chunk_by(result.entries, &month_of/1),
+      month_totals: Transactions.month_totals(months)
     )
   end
+
+  defp month_of(transaction),
+    do: transaction.inserted_at |> DateTime.to_date() |> Date.beginning_of_month()
+
+  # a positive page number; anything else is the first page
+  defp parse_page(page) when is_binary(page) do
+    case Integer.parse(page) do
+      {page, ""} when page >= 1 -> page
+      _ -> 1
+    end
+  end
+
+  defp parse_page(_page), do: 1
 
   # "YYYY-MM"; anything else shows every transaction
   defp parse_month(month) when is_binary(month) do

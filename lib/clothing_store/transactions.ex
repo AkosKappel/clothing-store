@@ -5,22 +5,62 @@ defmodule ClothingStore.Transactions do
   alias ClothingStore.Products.ProductTransaction
   alias ClothingStore.Transactions.Transaction
 
-  def list_transactions do
-    Transaction
-    |> order_by(desc: :inserted_at)
-    |> Repo.all()
-    |> Repo.preload(products_transactions: [:product])
+  @doc """
+  One page of transactions, newest first, with their line items and products.
+  `month` (the first day of a month) limits them to that month; `nil` means all.
+  The page is clamped to the existing pages.
+
+  Returns the entries plus the count and revenue of everything that matches.
+  """
+  def page_transactions(month, page, per_page) do
+    query = in_month(Transaction, month)
+    total_entries = Repo.aggregate(query, :count)
+    total_pages = max(ceil(total_entries / per_page), 1)
+    page = page |> max(1) |> min(total_pages)
+
+    entries =
+      query
+      |> order_by([t], desc: t.inserted_at, desc: t.id)
+      |> limit(^per_page)
+      |> offset(^((page - 1) * per_page))
+      |> preload(products_transactions: :product)
+      |> Repo.all()
+
+    %{
+      entries: entries,
+      page: page,
+      total_pages: total_pages,
+      total_entries: total_entries,
+      revenue: Repo.aggregate(query, :sum, :total_price) || Decimal.new(0)
+    }
   end
 
-  @doc """
-  Returns transactions within the specified date range.
-  """
-  def list_transactions_by_date_range(start_date, end_date) do
-    Transaction
-    |> where([t], t.inserted_at >= ^start_date and t.inserted_at <= ^end_date)
-    |> order_by([t], desc: t.inserted_at)
-    |> preload(products_transactions: [:product])
+  defp in_month(query, nil), do: query
+
+  defp in_month(query, %Date{} = month) do
+    from = DateTime.new!(Date.beginning_of_month(month), ~T[00:00:00], "Etc/UTC")
+    to = DateTime.new!(month |> Date.end_of_month() |> Date.add(1), ~T[00:00:00], "Etc/UTC")
+    where(query, [t], t.inserted_at >= ^from and t.inserted_at < ^to)
+  end
+
+  @doc "Sales count and revenue for each of `months` (first days of months) that had sales."
+  def month_totals([]), do: %{}
+
+  def month_totals(months) do
+    {first, last} = Enum.min_max_by(months, &Date.to_gregorian_days/1)
+    from = DateTime.new!(first, ~T[00:00:00], "Etc/UTC")
+    to = DateTime.new!(last |> Date.end_of_month() |> Date.add(1), ~T[00:00:00], "Etc/UTC")
+
+    from(t in Transaction,
+      where: t.inserted_at >= ^from and t.inserted_at < ^to,
+      group_by: fragment("date_trunc('month', ?)", t.inserted_at),
+      select: {
+        fragment("date_trunc('month', ?)::date", t.inserted_at),
+        %{revenue: sum(t.total_price), count: count(t.id)}
+      }
+    )
     |> Repo.all()
+    |> Map.new()
   end
 
   def list_bestsellers(n) do
@@ -83,8 +123,8 @@ defmodule ClothingStore.Transactions do
   end
 
   @doc """
-  Revenue per product category since `since`, largest first. Line items are
-  valued at the product's current price.
+  Revenue per product category since `since`, largest first, at the prices
+  the products sold for.
   """
   def revenue_by_category(%DateTime{} = since) do
     from(pt in ProductTransaction,
@@ -92,8 +132,8 @@ defmodule ClothingStore.Transactions do
       join: p in assoc(pt, :product),
       where: t.inserted_at >= ^since,
       group_by: p.category,
-      select: {p.category, sum(fragment("? * ?", pt.quantity, p.price))},
-      order_by: [desc: sum(fragment("? * ?", pt.quantity, p.price))]
+      select: {p.category, sum(fragment("? * ?", pt.quantity, pt.unit_price))},
+      order_by: [desc: sum(fragment("? * ?", pt.quantity, pt.unit_price))]
     )
     |> Repo.all()
   end

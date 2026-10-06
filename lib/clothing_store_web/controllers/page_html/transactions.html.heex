@@ -1,11 +1,31 @@
 <.header>
   Transactions
   <:subtitle>
-    {if @month_label, do: "Sales in #{@month_label}.", else: "Every sale, newest first."}
+    {if @month,
+      do: "Sales in #{Calendar.strftime(@month, "%B %Y")}.",
+      else: "Every sale, newest first."}
   </:subtitle>
 </.header>
 
-<section class="card mb-6 p-5">
+<section class="card mb-6 flex flex-wrap items-end justify-between gap-4 p-5">
+  <div :if={@month} class="flex items-center gap-2">
+    <.button
+      href={~p"/transactions?#{[month: month_param(Date.shift(@month, month: -1))]}"}
+      variant="secondary"
+      icon="hero-chevron-left-mini"
+    >
+      {Calendar.strftime(Date.shift(@month, month: -1), "%b %Y")}
+    </.button>
+    <.button
+      :if={Date.before?(@month, @this_month)}
+      href={~p"/transactions?#{[month: month_param(Date.shift(@month, month: 1))]}"}
+      variant="secondary"
+    >
+      {Calendar.strftime(Date.shift(@month, month: 1), "%b %Y")}
+      <.icon name="hero-chevron-right-mini" />
+    </.button>
+  </div>
+
   <.form
     :let={f}
     for={%{}}
@@ -13,68 +33,124 @@
     method="get"
     class="flex flex-wrap items-end gap-3"
   >
-    <div class="w-full sm:w-56">
+    <div class="w-full sm:w-52">
       <.input field={f[:month]} type="month" value={@selected_month} label="Month" />
     </div>
-    <.button type="submit" icon="hero-funnel">Filter</.button>
-    <.button :if={@selected_month} href={~p"/transactions"} variant="secondary" icon="hero-x-mark">
-      Show all
+    <.button type="submit" icon="hero-funnel">Show month</.button>
+    <.button :if={@month} href={~p"/transactions"} variant="secondary" icon="hero-x-mark">
+      All months
+    </.button>
+    <.button
+      :if={!@month}
+      href={~p"/transactions?#{[month: month_param(@this_month)]}"}
+      variant="secondary"
+      icon="hero-calendar"
+    >
+      This month
     </.button>
   </.form>
 </section>
 
-<dl :if={@transactions != []} class="mb-6 grid grid-cols-2 gap-4 sm:max-w-md">
+<dl :if={@result.total_entries > 0} class="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
   <div class="card p-4">
-    <dt class="text-sm text-gray-500">Transactions</dt>
-    <dd class="mt-1 text-2xl font-semibold text-gray-900">{length(@transactions)}</dd>
+    <dt class="text-sm text-gray-500">Sales</dt>
+    <dd class="mt-1 text-2xl font-semibold text-gray-900 tabular-nums">
+      {@result.total_entries}
+    </dd>
   </div>
   <div class="card p-4">
     <dt class="text-sm text-gray-500">Revenue</dt>
-    <dd class="mt-1 text-2xl font-semibold text-gray-900">{format_price(@revenue)}</dd>
+    <dd class="mt-1 text-2xl font-semibold text-gray-900 tabular-nums">
+      {format_price(@result.revenue)}
+    </dd>
+  </div>
+  <div class="card p-4 max-sm:col-span-2">
+    <dt class="text-sm text-gray-500">Average sale</dt>
+    <dd class="mt-1 text-2xl font-semibold text-gray-900 tabular-nums">
+      {format_price(Decimal.div(@result.revenue, @result.total_entries))}
+    </dd>
   </div>
 </dl>
 
-<.table id="transactions" rows={@transactions}>
-  <:col :let={transaction} label="ID" class="whitespace-nowrap">
-    <span class="font-semibold text-gray-900">#{transaction.id}</span>
-  </:col>
-  <:col :let={transaction} label="Date" class="whitespace-nowrap">
-    <time
-      datetime={DateTime.to_iso8601(transaction.inserted_at)}
-      title={format_date(transaction.inserted_at)}
-    >
-      {relative_time(transaction.inserted_at)}
-    </time>
-  </:col>
-  <:col :let={transaction} label="Products">
-    <ul class="space-y-1">
-      <li :for={item <- transaction.products_transactions}>
-        <.link
-          href={~p"/products/#{item.product}"}
-          class="text-gray-900 hover:text-red-700 hover:underline"
-        >
-          {item.product.title}
-        </.link>
-        <span class="text-gray-500">× {item.quantity}</span>
-      </li>
-    </ul>
-  </:col>
-  <:col :let={transaction} label="Total" class="text-right font-semibold whitespace-nowrap">
-    {format_price(transaction.total_price)}
-  </:col>
-  <:empty>
-    <.empty_state
-      :if={@selected_month}
-      icon="hero-calendar"
-      title={"No transactions in #{@month_label}"}
-    >
-      Pick another month, or show every transaction.
-      <:actions>
-        <.button href={~p"/transactions"} variant="secondary" icon="hero-x-mark">Show all</.button>
-      </:actions>
-    </.empty_state>
-    <.empty_state :if={!@selected_month} icon="hero-receipt-percent" title="No transactions yet">
-      Sales appear here as soon as they are recorded.
-    </.empty_state>
-  </:empty>
-</.table>
+<section
+  :for={group <- @groups}
+  class="mb-8"
+  aria-labelledby={"month-#{month_param(month_of(group))}"}
+>
+  <% month = month_of(group) %>
+  <% totals = @month_totals[month] %>
+  <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+    <h2 id={"month-#{month_param(month)}"} class="text-lg font-semibold text-gray-900">
+      {Calendar.strftime(month, "%B %Y")}
+    </h2>
+    <p :if={totals} class="text-sm text-gray-600">
+      {ngettext("1 sale", "%{count} sales", totals.count)} · {format_price(totals.revenue)}
+    </p>
+  </div>
+
+  <.table id={"transactions-#{month_param(month)}"} rows={group}>
+    <:col :let={transaction} label="Sale" class="whitespace-nowrap">
+      <span class="font-semibold text-gray-900">#{transaction.id}</span>
+      <time
+        class="block text-gray-500 max-lg:inline max-lg:ml-2"
+        datetime={DateTime.to_iso8601(transaction.inserted_at)}
+        title={format_date(transaction.inserted_at)}
+      >
+        {relative_time(transaction.inserted_at)}
+      </time>
+    </:col>
+    <:col :let={transaction} label="Products" class="w-full" card_label={false}>
+      <ul class="space-y-2">
+        <li :for={item <- transaction.products_transactions} class="flex items-center gap-3">
+          <img
+            src={item.product.photo}
+            alt=""
+            class="size-10 shrink-0 rounded-md bg-gray-100 object-cover"
+            loading="lazy"
+          />
+          <.link
+            href={~p"/products/#{item.product}"}
+            class="min-w-0 flex-1 truncate text-left font-medium text-gray-900 hover:text-red-700 hover:underline"
+          >
+            {item.product.title}
+          </.link>
+          <span class="text-gray-500 tabular-nums whitespace-nowrap">
+            {item.quantity} × {format_price(item.unit_price)}
+          </span>
+        </li>
+        <li :if={transaction.products_transactions == []} class="text-gray-500">
+          The products of this sale were deleted.
+        </li>
+      </ul>
+    </:col>
+    <:col :let={transaction} label="Total" class="text-right font-semibold whitespace-nowrap">
+      {format_price(transaction.total_price)}
+    </:col>
+  </.table>
+</section>
+
+<.pagination
+  page={@result.page}
+  total_pages={@result.total_pages}
+  total_entries={@result.total_entries}
+  per_page={@per_page}
+  path={fn page -> ~p"/transactions?#{page_params(@selected_month, page)}" end}
+/>
+
+<.empty_state
+  :if={@result.total_entries == 0 && @month}
+  icon="hero-calendar"
+  title={"No transactions in #{Calendar.strftime(@month, "%B %Y")}"}
+>
+  Pick another month, or show every transaction.
+  <:actions>
+    <.button href={~p"/transactions"} variant="secondary" icon="hero-x-mark">All months</.button>
+  </:actions>
+</.empty_state>
+<.empty_state
+  :if={@result.total_entries == 0 && !@month}
+  icon="hero-receipt-percent"
+  title="No transactions yet"
+>
+  Sales appear here as soon as they are recorded.
+</.empty_state>

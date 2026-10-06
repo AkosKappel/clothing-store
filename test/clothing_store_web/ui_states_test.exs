@@ -100,7 +100,7 @@ defmodule ClothingStoreWeb.UIStatesTest do
     test "transactions explain an empty month", %{conn: conn} do
       html = conn |> get(~p"/transactions?month=2024-01") |> html_response(200)
       assert html =~ "No transactions in January 2024"
-      assert html =~ "Show all"
+      assert html =~ "All months"
 
       html = conn |> get(~p"/transactions") |> html_response(200)
       assert html =~ "No transactions yet"
@@ -114,6 +114,33 @@ defmodule ClothingStoreWeb.UIStatesTest do
       assert html =~ "This month (#{Calendar.strftime(this_month, "%B %Y")})"
       assert html =~ "Last month (#{Calendar.strftime(last_month, "%B %Y")})"
       assert html =~ "No sales recorded yet."
+    end
+
+    test "transactions show line items at the price they sold for, grouped by month", %{
+      conn: conn
+    } do
+      product = product_fixture(%{title: "Linen shirt", price: "20.00"})
+      ClothingStore.TransactionsFixtures.sale_fixture([{product, 2}], ~U[2026-09-15 10:00:00Z])
+      ClothingStore.Products.update_product(product, %{price: "25.00"})
+
+      html = conn |> get(~p"/transactions?month=2026-09") |> html_response(200)
+      assert html =~ "September 2026"
+      assert html =~ "Linen shirt"
+      assert html =~ "2 × 20,00 €"
+      assert html =~ ~s(href="/transactions?month=2026-08")
+    end
+
+    test "transactions are paginated and ignore bad page numbers", %{conn: conn} do
+      product = product_fixture()
+      for _ <- 1..21, do: ClothingStore.TransactionsFixtures.sale_fixture([{product, 1}])
+
+      html = conn |> get(~p"/transactions?page=2") |> html_response(200)
+      assert html =~ "Showing"
+      assert html =~ "21–21"
+
+      for page <- ["0", "-1", "abc", "9999999999999999999999"] do
+        assert conn |> get(~p"/transactions?#{[page: page]}") |> html_response(200)
+      end
     end
 
     test "statistics show summary tiles and charts with a table view", %{conn: conn} do

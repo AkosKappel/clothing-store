@@ -125,6 +125,7 @@ Repo.insert_all(
       transaction_id: transaction_id,
       product_id: product.id,
       quantity: quantity,
+      unit_price: product.price,
       inserted_at: at,
       updated_at: at
     }

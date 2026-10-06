@@ -44,4 +44,31 @@ defmodule ClothingStore.TransactionsTest do
 
     assert Products.stock_alerts() == %{out: 2, low: 2}
   end
+
+  test "page_transactions/3 pages newest first, clamps the page and filters by month" do
+    shirt = product_fixture(%{price: "10.00"})
+
+    for day <- 1..25 do
+      sale_fixture([{shirt, 1}], DateTime.new!(Date.new!(2026, 9, day), ~T[12:00:00], "Etc/UTC"))
+    end
+
+    sale_fixture([{shirt, 3}], ~U[2026-10-02 12:00:00Z])
+
+    first = Transactions.page_transactions(nil, 1, 20)
+    assert first.total_entries == 26 and first.total_pages == 2
+    assert length(first.entries) == 20
+    assert hd(first.entries).inserted_at == ~U[2026-10-02 12:00:00Z]
+    assert Decimal.equal?(first.revenue, 280)
+
+    assert %{page: 2, entries: last_page} = Transactions.page_transactions(nil, 99, 20)
+    assert length(last_page) == 6
+
+    october = Transactions.page_transactions(~D[2026-10-01], 1, 20)
+    assert october.total_entries == 1
+    assert [%{products_transactions: [%{quantity: 3, product: %{id: id}}]}] = october.entries
+    assert id == shirt.id
+
+    assert %{~D[2026-09-01] => %{count: 25}, ~D[2026-10-01] => %{count: 1}} =
+             Transactions.month_totals([~D[2026-09-01], ~D[2026-10-01]])
+  end
 end

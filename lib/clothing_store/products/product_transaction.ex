@@ -4,6 +4,7 @@ defmodule ClothingStore.Products.ProductTransaction do
 
   schema "products_transactions" do
     field :quantity, :integer
+    field :unit_price, :decimal
 
     belongs_to :product, ClothingStore.Products.Product
     belongs_to :transaction, ClothingStore.Transactions.Transaction
