@@ -111,7 +111,7 @@ Specifications:
 ### Solution
 
 I installed Elixir with Phoenix framework and setup PostgreSQL.
-In the [`priv/repo/seeds.exs`](priv/repo/seeds.exs) I generated 10 products whose images I took randomly from the internet and the prices are made up.
+In the [`priv/repo/seeds.exs`](priv/repo/seeds.exs) I generated 10 products whose images I took randomly from the internet and the prices are made up. (Since 2026-10-06 the seeds hold 24 products with matching Pexels photos and a year of generated sales.)
 The structure of the products is defined in the migration file (it has all the required fields).
 CRUD operations are defined in the [`lib/clothing_store_web/controllers/product_controller.ex`](lib/clothing_store_web/controllers/product_controller.ex) file and the corresponding SQL ORM queries are defined in the [`lib/clothing_store/products.ex`](lib/clothing_store/products.ex) file.
 The admin has the option to view, add, edit and delete the products.
