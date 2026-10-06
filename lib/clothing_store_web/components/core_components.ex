@@ -349,13 +349,14 @@ defmodule ClothingStoreWeb.CoreComponents do
   end
 
   # The show/hide toggle sits next to the text field, not on top of it, so the
-  # icons password managers put at the field's right edge never cover it.
+  # icons password managers put at the field's right edge never cover it. The
+  # frame's ring is drawn outside: an inset ring would sit under the button.
   def input(%{type: "password"} = assigns) do
     ~H"""
     <div>
       <.label :if={@label} for={@id}>{@label}</.label>
       <div class={[
-        "mt-1.5 flex rounded-md bg-white shadow-xs ring-1 ring-inset focus-within:ring-2",
+        "mt-1.5 flex rounded-md bg-white shadow-xs ring-1 focus-within:ring-2",
         if(@errors == [],
           do: "ring-gray-300 focus-within:ring-red-600",
           else: "ring-rose-400 focus-within:ring-rose-500"
@@ -366,7 +367,7 @@ defmodule ClothingStoreWeb.CoreComponents do
           name={@name}
           id={@id}
           value={Form.normalize_value("password", @value)}
-          class="block w-full min-w-0 flex-1 rounded-l-md border-0 bg-transparent text-gray-900 focus:ring-0 sm:text-sm/6"
+          class="block w-full min-w-0 flex-1 rounded-l-md border-0 bg-transparent text-gray-900 focus:ring-0 focus:outline-hidden sm:text-sm/6"
           aria-invalid={@errors != [] && "true"}
           aria-describedby={describedby(@id, @hint, @errors)}
           {@rest}

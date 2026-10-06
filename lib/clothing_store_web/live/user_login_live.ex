@@ -10,32 +10,6 @@ defmodule ClothingStoreWeb.UserLoginLive do
       </.header>
 
       <div class="card p-6 sm:p-8">
-        <section aria-labelledby="demo-title">
-          <h2 id="demo-title" class="font-semibold text-gray-900">Just looking around?</h2>
-          <p class="mt-1 text-sm text-gray-600">
-            Try the dashboard with the shared demo account: add, edit and delete anything.
-            The data resets every night.
-          </p>
-          <.form for={%{}} action={~p"/users/demo_log_in"} method="post" class="mt-4">
-            <.button
-              type="submit"
-              icon="hero-play"
-              class="w-full py-2.5"
-              disabled={!@demo_available}
-            >
-              Try the demo
-            </.button>
-          </.form>
-          <p :if={!@demo_available} class="mt-2 text-sm text-gray-500">
-            The demo account isn't available right now.
-          </p>
-        </section>
-
-        <div class="my-6 flex items-center gap-3 text-xs font-medium tracking-wide text-gray-500 uppercase">
-          <span class="h-px flex-1 bg-gray-200"></span>
-          or log in with your account <span class="h-px flex-1 bg-gray-200"></span>
-        </div>
-
         <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
           <.input
             field={@form[:email]}
@@ -65,7 +39,6 @@ defmodule ClothingStoreWeb.UserLoginLive do
           <:actions>
             <.button
               type="submit"
-              variant="secondary"
               icon="hero-arrow-right-end-on-rectangle"
               class="w-full py-2.5"
             >
@@ -73,6 +46,33 @@ defmodule ClothingStoreWeb.UserLoginLive do
             </.button>
           </:actions>
         </.simple_form>
+
+        <div class="my-6 flex items-center gap-3 text-xs font-medium tracking-wide text-gray-500 uppercase">
+          <span class="h-px flex-1 bg-gray-200"></span>
+          or just look around <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+
+        <section aria-labelledby="demo-title">
+          <h2 id="demo-title" class="sr-only">Demo</h2>
+          <p class="text-sm text-gray-600">
+            Try the dashboard with the shared demo account: add, edit and delete anything.
+            The data resets every night.
+          </p>
+          <.form for={%{}} action={~p"/users/demo_log_in"} method="post" class="mt-4">
+            <.button
+              type="submit"
+              variant="secondary"
+              icon="hero-play"
+              class="w-full py-2.5"
+              disabled={!@demo_available}
+            >
+              Try the demo
+            </.button>
+          </.form>
+          <p :if={!@demo_available} class="mt-2 text-sm text-gray-500">
+            The demo account isn't available right now.
+          </p>
+        </section>
       </div>
 
       <p class="mt-6 text-center text-sm">
