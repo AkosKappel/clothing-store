@@ -223,4 +223,49 @@ defmodule ClothingStore.ProductsTest do
       assert {:ok, _} = Products.update_product(product, %{title: "renamed"})
     end
   end
+
+  describe "list_products/1 search and sort" do
+    import ClothingStore.ProductsFixtures
+
+    setup do
+      %{
+        linen:
+          product_fixture(%{title: "Linen shirt", price: "50.00", stock: 3, tags: ["summer"]}),
+        boots:
+          product_fixture(%{title: "Chelsea boots", price: "150.00", stock: 0, tags: ["winter"]}),
+        sale: product_fixture(%{title: "100% wool scarf", price: "20.00", stock: 9, tags: []})
+      }
+    end
+
+    defp titles(filters), do: Products.list_products(filters) |> Enum.map(& &1.title)
+
+    test "searches title, description, category and tags case-insensitively" do
+      assert titles(%{"q" => "LINEN"}) == ["Linen shirt"]
+      assert titles(%{"q" => "winter"}) == ["Chelsea boots"]
+      assert titles(%{"q" => "  "}) |> length() == 3
+    end
+
+    test "matches % and _ literally" do
+      assert titles(%{"q" => "100%"}) == ["100% wool scarf"]
+      assert titles(%{"q" => "%"}) == ["100% wool scarf"]
+      assert titles(%{"q" => "_"}) == []
+    end
+
+    test "sorts by price, stock and name; unknown sorts fall back to newest" do
+      assert titles(%{"sort" => "price_asc"}) == [
+               "100% wool scarf",
+               "Linen shirt",
+               "Chelsea boots"
+             ]
+
+      assert titles(%{"sort" => "stock_desc"}) == [
+               "100% wool scarf",
+               "Linen shirt",
+               "Chelsea boots"
+             ]
+
+      assert titles(%{"sort" => "title"}) == ["100% wool scarf", "Chelsea boots", "Linen shirt"]
+      assert titles(%{"sort" => "drop table"}) == titles(%{})
+    end
+  end
 end

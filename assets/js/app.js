@@ -67,6 +67,11 @@ if (welcome?.hasAttribute("data-open-on-load")) {
   welcome.showModal()
 }
 
+// Selects marked data-autosubmit (the inventory sort) apply on change
+document.addEventListener("change", event => {
+  if (event.target.matches("[data-autosubmit]")) event.target.form?.requestSubmit()
+})
+
 // Back/forward restores pages from the cache with the pending state still on.
 window.addEventListener("pageshow", event => {
   if (event.persisted) {

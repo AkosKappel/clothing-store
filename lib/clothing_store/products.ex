@@ -42,9 +42,34 @@ defmodule ClothingStore.Products do
 
   """
   def list_products(filters \\ %{}) do
-    query = from(p in apply_filters(Product, filters), order_by: [desc: p.inserted_at])
-    Repo.all(query)
+    Product
+    |> apply_filters(filters)
+    |> sort(filters["sort"])
+    |> Repo.all()
   end
+
+  @sorts [
+    {"newest", "Newest first"},
+    {"price_asc", "Price: low to high"},
+    {"price_desc", "Price: high to low"},
+    {"stock_asc", "Stock: low to high"},
+    {"stock_desc", "Stock: high to low"},
+    {"title", "Name: A to Z"}
+  ]
+
+  @doc "The inventory sort options as `{value, label}`; the first is the default."
+  def sorts, do: @sorts
+
+  # the id keeps the order stable when the sorted values tie
+  defp sort(query, "price_asc"), do: order_by(query, [p], asc: p.price, desc: p.id)
+  defp sort(query, "price_desc"), do: order_by(query, [p], desc: p.price, desc: p.id)
+  defp sort(query, "stock_asc"), do: order_by(query, [p], asc: p.stock, desc: p.id)
+  defp sort(query, "stock_desc"), do: order_by(query, [p], desc: p.stock, desc: p.id)
+
+  defp sort(query, "title"),
+    do: order_by(query, [p], asc: fragment("lower(?)", p.title), asc: p.id)
+
+  defp sort(query, _newest), do: order_by(query, [p], desc: p.inserted_at, desc: p.id)
 
   # Filters come straight from query params: a missing, non-string or unparsable
   # value leaves that filter out rather than failing the request.
@@ -55,7 +80,29 @@ defmodule ClothingStore.Products do
     |> filter_price(:max, parse_price(filters["max_price"]))
     |> filter_in_stock(filters["in_stock"])
     |> filter_tags(filters["tags"])
+    |> filter_search(filters["q"])
   end
+
+  # case-insensitive substring match on title, description, category and tags;
+  # % and _ in the search are matched literally
+  defp filter_search(query, search) when is_binary(search) do
+    case String.trim(search) do
+      "" ->
+        query
+
+      search ->
+        pattern = "%" <> String.replace(search, ~r/[\\%_]/, "\\\\\\0") <> "%"
+
+        from(p in query,
+          where:
+            ilike(p.title, ^pattern) or ilike(p.description, ^pattern) or
+              ilike(p.category, ^pattern) or
+              fragment("array_to_string(?, ' ') ILIKE ?", p.tags, ^pattern)
+        )
+    end
+  end
+
+  defp filter_search(query, _search), do: query
 
   defp filter_category(query, category) when is_binary(category) and category not in ["", "All"],
     do: from(p in query, where: p.category == ^category)

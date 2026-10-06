@@ -21,8 +21,9 @@ defmodule ClothingStoreWeb.ProductController do
   # only string filters (and a list of tag strings) reach the query and the form
   defp filter_params(params) do
     params
-    |> Map.take(~w(category min_price max_price in_stock))
+    |> Map.take(~w(q category min_price max_price in_stock sort))
     |> Map.filter(fn {_key, value} -> is_binary(value) end)
+    |> Map.update("q", nil, &String.slice(&1, 0, 100))
     |> Map.put("tags", Products.parse_tags(params["tags"]))
   end
 

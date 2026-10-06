@@ -78,6 +78,23 @@ defmodule ClothingStoreWeb.UIStatesTest do
       assert html =~ "1 product"
     end
 
+    test "the inventory shows a removable chip per filter and keeps the sort", %{conn: conn} do
+      product_fixture(%{title: "Linen shirt", tags: ["summer", "sale"]})
+
+      html =
+        conn
+        |> get(~p"/products?#{[q: "linen", tags: ["summer", "sale"], sort: "price_asc"]}")
+        |> html_response(200)
+
+      assert html =~ "Linen shirt"
+      assert html =~ "“linen”"
+      # removing the search keeps the tags and the sort
+      assert html =~ ~s(href="/products?sort=price_asc&amp;tags[]=summer&amp;tags[]=sale")
+      # removing one tag keeps the other
+      assert html =~ ~s(href="/products?q=linen&amp;sort=price_asc&amp;tags[]=sale")
+      assert html =~ ~r|<option selected value="price_asc">|
+    end
+
     test "deleting asks for confirmation in a dialog that sends a DELETE", %{conn: conn} do
       product = product_fixture()
 
