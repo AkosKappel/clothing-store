@@ -89,6 +89,7 @@ services:
       - "${APP_BIND:-127.0.0.1}:${APP_PORT:-8083}:80"
     volumes:
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${ACCESS_LOG_DIR:-./tmp/nginx}:/var/log/nginx/shared
     networks:
       - app-network
     depends_on:
