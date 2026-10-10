@@ -71,7 +71,7 @@ config :clothing_store, :demo,
   links: [
     github: "https://github.com/AkosKappel",
     repository: "https://github.com/AkosKappel/clothing-store",
-    linkedin: "https://www.linkedin.com/in/%C3%A1kos-kappel-b53344220/",
+    linkedin: "https://www.linkedin.com/in/akos-kappel/",
     portfolio: nil
   ]
 
