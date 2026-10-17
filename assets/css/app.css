@@ -42,11 +42,15 @@
 }
 
 @layer components {
-  /* info toasts fade out after 6 s; hovering or focusing one keeps it */
+  /* info and warning toasts fade out after 6 s while a strip shows the time left;
+     hovering or focusing one pauses both */
   .toast-auto-dismiss { animation: toast-out 300ms ease-in 6s forwards; }
-  .toast-auto-dismiss:is(:hover, :focus-within) { animation-play-state: paused; }
+  .toast-progress { animation: toast-progress 6s linear forwards; }
+  .toast-auto-dismiss:is(:hover, :focus-within),
+  .toast-auto-dismiss:is(:hover, :focus-within) .toast-progress { animation-play-state: paused; }
   @media (prefers-reduced-motion: reduce) {
     .toast-auto-dismiss { animation-name: toast-hide; animation-duration: 1ms; }
+    .toast-progress { animation: none; }
   }
 
   /* a product that just changed in another session */
@@ -190,6 +194,10 @@
 
 @keyframes toast-out {
   to { opacity: 0; translate: 0 0.5rem; visibility: hidden; }
+}
+@keyframes toast-progress {
+  from { scale: 1 1; }
+  to { scale: 0 1; }
 }
 @keyframes toast-hide {
   to { visibility: hidden; }

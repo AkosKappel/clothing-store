@@ -16,6 +16,30 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   @focus_ring "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
 
+  @flash_styles %{
+    info: %{
+      title: "Done",
+      icon: "hero-check-circle-mini",
+      box: "bg-emerald-50 text-emerald-900 ring-emerald-600/30",
+      icon_color: "text-emerald-600",
+      bar: "bg-emerald-500/60"
+    },
+    warning: %{
+      title: "Please note",
+      icon: "hero-exclamation-triangle-mini",
+      box: "bg-amber-50 text-amber-900 ring-amber-600/30",
+      icon_color: "text-amber-600",
+      bar: "bg-amber-500/60"
+    },
+    error: %{
+      title: "Something went wrong",
+      icon: "hero-exclamation-circle-mini",
+      box: "bg-rose-50 text-rose-900 ring-rose-600/30",
+      icon_color: "text-rose-600",
+      bar: "bg-rose-500/60"
+    }
+  }
+
   @doc """
   Renders flash notices.
 
@@ -26,42 +50,38 @@ defmodule ClothingStoreWeb.CoreComponents do
   """
   attr :id, :string, doc: "the optional id of flash container"
   attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
-  attr :title, :string, default: nil
-  attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
+  attr :title, :string, default: nil, doc: "defaults to a title for the kind"
+  attr :kind, :atom, values: [:info, :warning, :error], doc: "used for styling and flash lookup"
   attr :auto_dismiss, :boolean, default: false, doc: "fade out after a few seconds (see app.css)"
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
   slot :inner_block, doc: "the optional inner block that renders the flash message"
 
   def flash(assigns) do
-    assigns = assign_new(assigns, :id, fn -> "flash-#{assigns.kind}" end)
+    assigns =
+      assigns
+      |> assign_new(:id, fn -> "flash-#{assigns.kind}" end)
+      |> assign(:style, Map.fetch!(@flash_styles, assigns.kind))
 
     ~H"""
     <div
       :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
       id={if @auto_dismiss, do: "#{@id}-#{:erlang.phash2(msg)}", else: @id}
-      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide({:closest, "[role=alert]"})}
-      role="alert"
+      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide({:closest, "[data-toast]"})}
+      data-toast
+      role={if @kind == :error, do: "alert", else: "status"}
       class={[
-        "fixed right-4 bottom-4 z-50 flex w-[calc(100%-2rem)] gap-3 rounded-lg p-4 shadow-lg ring-1 sm:w-96",
+        "pointer-events-auto relative flex w-full gap-3 overflow-hidden rounded-lg p-4 shadow-lg ring-1",
         "motion-safe:transition motion-safe:starting:translate-y-2 motion-safe:starting:opacity-0",
         @auto_dismiss && "toast-auto-dismiss",
-        @kind == :info && "bg-emerald-50 text-emerald-900 ring-emerald-600/30",
-        @kind == :error && "bg-rose-50 text-rose-900 ring-rose-600/30"
+        @style.box
       ]}
       {@rest}
     >
-      <.icon
-        name={if @kind == :info, do: "hero-check-circle-mini", else: "hero-exclamation-circle-mini"}
-        class={[
-          "mt-0.5 shrink-0",
-          @kind == :info && "text-emerald-600",
-          @kind == :error && "text-rose-600"
-        ]}
-      />
+      <.icon name={@style.icon} class={["mt-0.5 shrink-0", @style.icon_color]} />
       <div class="min-w-0 flex-1 text-sm">
-        <p :if={@title} class="font-semibold">{@title}</p>
-        <p class={@title && "mt-1"}>{msg}</p>
+        <p class="font-semibold">{@title || @style.title}</p>
+        <p class="mt-0.5">{msg}</p>
       </div>
       <button
         type="button"
@@ -71,12 +91,19 @@ defmodule ClothingStoreWeb.CoreComponents do
       >
         <.icon name="hero-x-mark-mini" />
       </button>
+      <span
+        :if={@auto_dismiss}
+        class={["toast-progress absolute inset-x-0 bottom-0 h-1 origin-left", @style.bar]}
+        aria-hidden="true"
+      />
     </div>
     """
   end
 
   @doc """
-  Shows the flash group with standard titles and content.
+  Shows the flash group: one stack in the corner, newest at the bottom.
+  Info and warning toasts fade after a few seconds (a strip shows the time left,
+  hover or focus pauses it); errors stay until closed.
 
   ## Examples
 
@@ -87,8 +114,12 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   def flash_group(assigns) do
     ~H"""
-    <div id={@id} aria-live="polite">
+    <div
+      id={@id}
+      class="pointer-events-none fixed right-4 bottom-4 z-50 flex w-[calc(100%-2rem)] flex-col gap-3 sm:w-96"
+    >
       <.flash kind={:info} flash={@flash} auto_dismiss />
+      <.flash kind={:warning} flash={@flash} auto_dismiss />
       <.flash kind={:error} flash={@flash} />
       <.flash
         id="client-error"

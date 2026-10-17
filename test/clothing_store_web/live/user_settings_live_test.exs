@@ -21,7 +21,7 @@ defmodule ClothingStoreWeb.UserSettingsLiveTest do
 
       assert {:redirect, %{to: path, flash: flash}} = redirect
       assert path == ~p"/users/log_in"
-      assert %{"error" => "You must log in to access this page."} = flash
+      assert %{"warning" => "You must log in to access this page."} = flash
     end
   end
 
@@ -203,7 +203,7 @@ defmodule ClothingStoreWeb.UserSettingsLiveTest do
       {:error, redirect} = live(conn, ~p"/users/settings/confirm_email/#{token}")
       assert {:redirect, %{to: path, flash: flash}} = redirect
       assert path == ~p"/users/log_in"
-      assert %{"error" => message} = flash
+      assert %{"warning" => message} = flash
       assert message == "You must log in to access this page."
     end
   end

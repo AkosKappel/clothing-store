@@ -237,7 +237,7 @@ defmodule ClothingStoreWeb.UserAuthTest do
 
       assert redirected_to(conn) == ~p"/users/log_in"
 
-      assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
+      assert Phoenix.Flash.get(conn.assigns.flash, :warning) ==
                "You must log in to access this page."
     end
 

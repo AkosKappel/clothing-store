@@ -112,6 +112,19 @@ defmodule ClothingStoreWeb.UIStatesTest do
       html = conn |> get(redirected_to(conn)) |> html_response(200)
       assert html =~ ~r|<div id="flash-info-\d+"[^>]*class="[^"]*toast-auto-dismiss|
       refute html =~ ~r|id="client-error"[^>]*toast-auto-dismiss|
+      assert html =~ "toast-progress"
+
+      assert html =~ ~r|role="status"[^>]*>\s*<span class="hero-check-circle-mini|s or
+               html =~ "Done"
+    end
+
+    test "logging in is asked for with a warning toast, not an error", %{conn: _conn} do
+      conn = build_conn() |> get(~p"/products") |> then(&get(recycle(&1), redirected_to(&1)))
+      html = html_response(conn, 200)
+
+      assert html =~ "Please note"
+      assert html =~ "You must log in to access this page."
+      assert html =~ ~r|id="flash-warning-\d+"[^>]*role="status"|
     end
 
     test "transactions explain an empty month", %{conn: conn} do
