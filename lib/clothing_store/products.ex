@@ -5,7 +5,7 @@ defmodule ClothingStore.Products do
 
   import Ecto.Query, warn: false
   alias ClothingStore.ActivityFeed
-  alias ClothingStore.Products.{Product, Version}
+  alias ClothingStore.Products.{Product, Variant, Version}
   alias ClothingStore.Repo
 
   # the public demo resets nightly; this keeps visitors from filling the database until then
@@ -228,7 +228,7 @@ defmodule ClothingStore.Products do
   def get_product!(id) do
     # ids from the URL beyond bigint would crash the query; no product has one
     case Ecto.Type.cast(:id, id) do
-      {:ok, id} when id in 1..@max_id -> Repo.get!(active(), id)
+      {:ok, id} when id in 1..@max_id -> active() |> Repo.get!(id) |> Repo.preload(:variants)
       _ -> raise Ecto.NoResultsError, queryable: Product
     end
   end
@@ -246,7 +246,7 @@ defmodule ClothingStore.Products do
 
   """
   def create_product(attrs \\ %{}) do
-    changeset = Product.changeset(%Product{}, attrs)
+    changeset = Product.changeset(%Product{variants: []}, attrs)
 
     Repo.transaction(fn ->
       Repo.query!("SELECT pg_advisory_xact_lock($1)", [@create_lock])
@@ -333,7 +333,8 @@ defmodule ClothingStore.Products do
 
   defp import_target(id) do
     case Ecto.Type.cast(:id, id) do
-      {:ok, id} when id in 1..@max_id -> Repo.get(active(), id)
+      # with its variants, so an imported stock can't contradict them
+      {:ok, id} when id in 1..@max_id -> active() |> Repo.get(id) |> Repo.preload(:variants)
       _ -> nil
     end
   end
@@ -372,6 +373,7 @@ defmodule ClothingStore.Products do
   """
   def update_product(%Product{} = product, attrs) do
     product
+    |> Repo.preload(:variants)
     |> Product.changeset(attrs)
     |> Repo.update()
     |> log_event("updated", product)
@@ -384,25 +386,55 @@ defmodule ClothingStore.Products do
   def restock_amount, do: @restock_amount
 
   @doc """
-  Adds #{@restock_amount} to a product's stock, capped at the largest stock a product may have.
-  The increment runs in the database, so two restocks at once both count.
+  Adds #{@restock_amount} to a product's stock, capped at the largest stock a product may have;
+  with variants, to the variant with the least stock. The increments run in the database,
+  so two restocks at once both count.
   """
   def restock_product(%Product{id: id} = product) do
     max = Product.max_amount()
 
-    from(p in active(),
-      where: p.id == ^id,
-      select: p,
-      update: [set: [stock: fragment("LEAST(? + ?, ?)", p.stock, ^@restock_amount, ^max)]]
-    )
-    |> Repo.update_all(set: [updated_at: DateTime.utc_now(:second)])
+    Repo.transaction(fn ->
+      variant_restocked? =
+        Repo.update_all(
+          from(v in Variant,
+            where:
+              v.id ==
+                subquery(
+                  from(v in Variant,
+                    where: v.product_id == ^id,
+                    order_by: [asc: v.stock, asc: v.id],
+                    limit: 1,
+                    select: v.id
+                  )
+                )
+          ),
+          inc: [stock: @restock_amount]
+        )
+        |> elem(0) == 1
+
+      new_stock =
+        if variant_restocked?,
+          do:
+            dynamic(
+              [p],
+              fragment("(SELECT sum(stock) FROM product_variants WHERE product_id = ?)", p.id)
+            ),
+          else: dynamic([p], fragment("LEAST(? + ?, ?)", p.stock, ^@restock_amount, ^max))
+
+      from(p in active(), where: p.id == ^id, select: p, update: [set: [stock: ^new_stock]])
+      |> Repo.update_all(set: [updated_at: DateTime.utc_now(:second)])
+      |> case do
+        {1, [restocked]} -> restocked
+        {0, []} -> Repo.rollback(:not_found)
+      end
+    end)
     |> case do
-      {1, [restocked]} ->
+      {:ok, restocked} ->
         {:ok, restocked}
         |> log_event("restocked", product)
         |> notify_subscribers(:product_updated)
 
-      {0, []} ->
+      {:error, :not_found} ->
         {:error, :not_found}
     end
   end
@@ -501,7 +533,7 @@ defmodule ClothingStore.Products do
 
   """
   def change_product(%Product{} = product, attrs \\ %{}) do
-    Product.changeset(product, attrs)
+    product |> Repo.preload(:variants) |> Product.changeset(attrs)
   end
 
   # the feed gets every event; the history gets each state the product was in

@@ -15,6 +15,10 @@ defmodule ClothingStore.Products.Product do
     field :discount_starts_on, :date
     field :discount_ends_on, :date
 
+    has_many :variants, ClothingStore.Products.Variant,
+      on_replace: :delete,
+      preload_order: [asc: :id]
+
     has_many :products_transactions, ClothingStore.Products.ProductTransaction
     has_many :transactions, through: [:products_transactions, :transaction]
 
@@ -22,6 +26,7 @@ defmodule ClothingStore.Products.Product do
   end
 
   @max_amount 100_000
+  @max_variants 12
   @max_tags 10
   @max_tag_length 30
   @max_tag_bytes 120
@@ -64,6 +69,29 @@ defmodule ClothingStore.Products.Product do
     |> validate_number(:price, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
     |> validate_number(:stock, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
     |> validate_discount()
+    |> cast_assoc(:variants,
+      with: &ClothingStore.Products.Variant.changeset/2,
+      sort_param: :variants_sort,
+      drop_param: :variants_drop
+    )
+    |> validate_length(:variants, max: @max_variants, message: "can be at most %{count}")
+    |> total_variant_stock()
+  end
+
+  # with variants, the product's stock is their total and can't be set on its own
+  defp total_variant_stock(changeset) do
+    variants =
+      case fetch_change(changeset, :variants) do
+        {:ok, _changes} ->
+          get_assoc(changeset, :variants, :struct)
+
+        :error ->
+          if Ecto.assoc_loaded?(changeset.data.variants), do: changeset.data.variants, else: []
+      end
+
+    if variants == [],
+      do: changeset,
+      else: put_change(changeset, :stock, variants |> Enum.map(&(&1.stock || 0)) |> Enum.sum())
   end
 
   # a discount needs all three fields, and the end can't come before the start

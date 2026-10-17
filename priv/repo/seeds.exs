@@ -87,6 +87,26 @@ catalogue = [
 # products tagged "sale" run a 20 % discount from a few days ago to a few days ahead
 today = Date.utc_today()
 
+# clothes come in S to XL, shoes in EU 39 to 43, accessories in one size; the stock is
+# shared out with the middle sizes getting the most
+sizes = fn
+  "Shoes" -> {~w(39 40 41 42 43), [1, 2, 3, 2, 1]}
+  "Accessories" -> {[], []}
+  _clothes -> {~w(S M L XL), [1, 2, 2, 1]}
+end
+
+split = fn
+  _stock, [] ->
+    []
+
+  stock, weights ->
+    total = Enum.sum(weights)
+    shares = Enum.map(weights, &div(stock * &1, total))
+    # the rounding remainder goes to the biggest share
+    {_, index} = shares |> Enum.with_index() |> Enum.max_by(&elem(&1, 0))
+    List.update_at(shares, index, &(&1 + stock - Enum.sum(shares)))
+end
+
 for {slug, title, category, price, stock, tags, description} <- catalogue do
   discount =
     if "sale" in tags,
@@ -97,9 +117,16 @@ for {slug, title, category, price, stock, tags, description} <- catalogue do
       },
       else: %{}
 
+  {names, weights} = sizes.(category)
+
+  variants =
+    for {size, size_stock} <- Enum.zip(names, split.(stock, weights)),
+        do: %{size: size, stock: size_stock}
+
   {:ok, _} =
     Products.create_product(
       Map.merge(discount, %{
+        variants: variants,
         title: title,
         description: description,
         category: category,

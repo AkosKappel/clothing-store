@@ -4,7 +4,7 @@ defmodule ClothingStore.Transactions do
   import Ecto.Query, warn: false
   alias ClothingStore.Repo
 
-  alias ClothingStore.Products.{Product, ProductTransaction}
+  alias ClothingStore.Products.{Product, ProductTransaction, Variant}
   alias ClothingStore.Transactions.Transaction
 
   @doc """
@@ -122,8 +122,28 @@ defmodule ClothingStore.Transactions do
     )
     |> Repo.update_all([])
     |> case do
-      {1, [product]} -> product
-      {0, []} -> Repo.rollback(:out_of_stock)
+      {1, [product]} ->
+        take_variant_units(id, quantity)
+        product
+
+      {0, []} ->
+        Repo.rollback(:out_of_stock)
+    end
+  end
+
+  # a product with sizes sells its units from random sizes in stock, so the sizes
+  # keep adding up to the product's stock; without sizes this changes nothing
+  defp take_variant_units(product_id, quantity) do
+    for _unit <- 1..quantity do
+      in_stock =
+        from(v in Variant,
+          where: v.product_id == ^product_id and v.stock > 0,
+          order_by: fragment("random()"),
+          limit: 1,
+          select: v.id
+        )
+
+      Repo.update_all(from(v in Variant, where: v.id == subquery(in_stock)), inc: [stock: -1])
     end
   end
 

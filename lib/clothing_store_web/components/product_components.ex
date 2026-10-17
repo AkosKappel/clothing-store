@@ -5,6 +5,7 @@ defmodule ClothingStoreWeb.ProductComponents do
   import ClothingStoreWeb.CoreComponents
 
   alias ClothingStore.Products.Product
+  alias Phoenix.LiveView.JS
 
   @low_stock ClothingStore.Products.low_stock()
 
@@ -116,7 +117,16 @@ defmodule ClothingStoreWeb.ProductComponents do
         />
         <div class="flex items-start gap-1.5">
           <div class="min-w-0 flex-1">
-            <.input field={@form[:stock]} type="number" label="Stock" min="0" step="1" required />
+            <.input
+              field={@form[:stock]}
+              type="number"
+              label="Stock"
+              min="0"
+              step="1"
+              required
+              readonly={has_variants?(@form)}
+              hint={has_variants?(@form) && "The total of the sizes below"}
+            />
           </div>
           <button
             :for={
@@ -165,6 +175,44 @@ defmodule ClothingStoreWeb.ProductComponents do
       </ul>
 
       <fieldset class="rounded-md border border-gray-200 p-4">
+        <legend class="px-1 text-sm font-semibold text-gray-800">Sizes and colours (optional)</legend>
+        <p class="mb-3 text-xs text-gray-500">
+          With sizes, each has its own stock and the product's stock is their total.
+        </p>
+        <.inputs_for :let={variant} field={@form[:variants]}>
+          <input type="hidden" name="product[variants_sort][]" value={variant.index} />
+          <div class="mb-3 grid grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)_auto] items-start gap-2">
+            <.input field={variant[:size]} label="Size" maxlength="10" required />
+            <.input field={variant[:colour]} label="Colour" maxlength="30" />
+            <.input field={variant[:stock]} type="number" label="Stock" min="0" step="1" required />
+            <button
+              type="button"
+              name="product[variants_drop][]"
+              value={variant.index}
+              phx-click={JS.dispatch("change")}
+              aria-label={"Remove size #{variant[:size].value}"}
+              title="Remove"
+              class="mt-7 rounded-md p-2 text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-red-600"
+            >
+              <.icon name="hero-trash-mini" class="size-5" />
+            </button>
+          </div>
+        </.inputs_for>
+        <input type="hidden" name="product[variants_drop][]" />
+        <.button
+          type="button"
+          name="product[variants_sort][]"
+          value="new"
+          phx-click={JS.dispatch("change")}
+          variant="secondary"
+          size="sm"
+          icon="hero-plus"
+        >
+          Add a size
+        </.button>
+      </fieldset>
+
+      <fieldset class="rounded-md border border-gray-200 p-4">
         <legend class="px-1 text-sm font-semibold text-gray-800">Discount (optional)</legend>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <.input
@@ -194,6 +242,8 @@ defmodule ClothingStoreWeb.ProductComponents do
     </.simple_form>
     """
   end
+
+  defp has_variants?(form), do: match?([_ | _], form[:variants].value)
 
   defp tag_list(form), do: form[:tags].value |> List.wrap() |> Enum.filter(&is_binary/1)
 

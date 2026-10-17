@@ -19,12 +19,12 @@ defmodule ClothingStore.ProductsTest do
 
     test "list_products/0 returns all products" do
       product = product_fixture()
-      assert Products.list_products() == [product]
+      assert Enum.map(Products.list_products(), & &1.id) == [product.id]
     end
 
     test "get_product!/1 returns the product with given id" do
       product = product_fixture()
-      assert Products.get_product!(product.id) == product
+      assert Products.get_product!(product.id) == Repo.preload(product, :variants)
     end
 
     test "create_product/1 with valid data creates a product" do
@@ -74,7 +74,7 @@ defmodule ClothingStore.ProductsTest do
     test "update_product/2 with invalid data returns error changeset" do
       product = product_fixture()
       assert {:error, %Ecto.Changeset{}} = Products.update_product(product, @invalid_attrs)
-      assert product == Products.get_product!(product.id)
+      assert Repo.preload(product, :variants) == Products.get_product!(product.id)
     end
 
     test "delete_product/1 deletes the product" do
