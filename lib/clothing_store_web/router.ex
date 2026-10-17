@@ -119,6 +119,7 @@ defmodule ClothingStoreWeb.Router do
       on_mount: [{ClothingStoreWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
+      live "/system", SystemLive, :index
     end
   end
 end

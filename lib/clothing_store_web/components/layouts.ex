@@ -168,6 +168,11 @@ defmodule ClothingStoreWeb.Layouts do
               </button>
             </li>
             <li>
+              <.link href={~p"/system"} class="hover:text-white hover:underline">
+                System status
+              </.link>
+            </li>
+            <li>
               <.link href={~p"/privacy"} class="hover:text-white hover:underline">Privacy</.link>
             </li>
             <li>
