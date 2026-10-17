@@ -30,4 +30,32 @@ defmodule ClothingStore.Demo.SchedulerTest do
     assert Scheduler.next_run(~U[2026-10-24 12:00:00Z], ~T[02:30:00], @tz) ==
              ~U[2026-10-25 00:30:00Z]
   end
+
+  describe "running" do
+    import ExUnit.CaptureLog
+
+    test "a failing reset is logged and the next one is still scheduled" do
+      {:ok, state} = Scheduler.init(run: fn -> raise "boom" end)
+      target = DateTime.utc_now()
+
+      log =
+        capture_log(fn ->
+          assert {:noreply, %{last: ^target}} = Scheduler.handle_info({:reset, target}, state)
+        end)
+
+      assert log =~ "Demo reset failed"
+      assert log =~ "boom"
+    end
+
+    test "after a reset the next target is never the same one again" do
+      {:ok, state} = Scheduler.init(run: fn -> :ok end)
+      # a target in the future, as if the clock had stepped back after it fired
+      target = DateTime.add(DateTime.utc_now(), 60)
+
+      capture_log(fn ->
+        assert {:noreply, %{next: next}} = Scheduler.handle_info({:reset, target}, state)
+        assert DateTime.after?(next, target)
+      end)
+    end
+  end
 end

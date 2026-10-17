@@ -11,27 +11,38 @@ defmodule ClothingStore.Demo.Scheduler do
   def start_link(opts), do: GenServer.start_link(__MODULE__, opts, name: __MODULE__)
 
   @impl true
-  def init(_opts) do
-    {:ok, schedule(Demo.reset_settings())}
+  def init(opts) do
+    state = %{
+      settings: Demo.reset_settings(),
+      # tests swap in their own reset
+      run: Keyword.get(opts, :run, &Demo.Reset.run/0),
+      last: nil,
+      next: nil
+    }
+
+    {:ok, schedule(state)}
   end
 
   @impl true
-  def handle_info(:reset, settings) do
+  def handle_info({:reset, target}, state) do
     try do
-      Demo.Reset.run()
+      state.run.()
     rescue
       e -> Logger.error("Demo reset failed: " <> Exception.format(:error, e, __STACKTRACE__))
     end
 
-    {:noreply, schedule(settings)}
+    {:noreply, schedule(%{state | last: target})}
   end
 
-  defp schedule(%{time: time, timezone: tz} = settings) do
+  # Counting from the last target as well as from now: if the clock steps back
+  # after a reset, the same target can't come round again.
+  defp schedule(%{settings: %{time: time, timezone: tz}, last: last} = state) do
     now = DateTime.utc_now()
-    next = next_run(now, time, tz)
+    from = if last && DateTime.after?(last, now), do: last, else: now
+    next = next_run(from, time, tz)
     Logger.info("Next demo reset at #{DateTime.shift_zone!(next, tz)}")
-    Process.send_after(self(), :reset, DateTime.diff(next, now, :millisecond))
-    settings
+    Process.send_after(self(), {:reset, next}, DateTime.diff(next, now, :millisecond))
+    %{state | next: next}
   end
 
   @doc "Next moment after `now` (UTC) when the local clock in `tz` shows `at`."
