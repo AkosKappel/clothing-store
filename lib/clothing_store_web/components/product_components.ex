@@ -105,7 +105,7 @@ defmodule ClothingStoreWeb.ProductComponents do
         <.input
           field={@form[:price]}
           type="number"
-          label="Price (€)"
+          label="Price"
           prefix="€"
           min="0"
           step="0.01"
