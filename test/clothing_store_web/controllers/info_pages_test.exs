@@ -30,4 +30,16 @@ defmodule ClothingStoreWeb.InfoPagesTest do
     assert html =~ ~r/<meta name="description" content="[^"]+"/
     assert html =~ ~r{<meta property="og:image" content="http[^"]+/images/og-image.jpg"}
   end
+
+  test "the app is installable: manifest, service worker and offline page", %{conn: conn} do
+    html = conn |> get(~p"/about") |> html_response(200)
+    assert html =~ ~s(rel="manifest")
+
+    manifest = conn |> get("/manifest.webmanifest") |> response(200) |> Jason.decode!()
+    assert manifest["display"] == "standalone"
+    assert Enum.map(manifest["icons"], & &1["sizes"]) == ["192x192", "512x512"]
+
+    assert build_conn() |> get("/sw.js") |> response(200) =~ "offline.html"
+    assert build_conn() |> get("/offline.html") |> response(200) =~ "You're offline"
+  end
 end

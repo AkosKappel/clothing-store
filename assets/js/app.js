@@ -196,6 +196,9 @@ if (!("commandForElement" in HTMLButtonElement.prototype)) {
   })
 }
 
+// Installable app: the service worker only serves an offline page (priv/static/sw.js)
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js")
+
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 
