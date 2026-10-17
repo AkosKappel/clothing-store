@@ -74,17 +74,34 @@ defmodule ClothingStore.Transactions do
     |> Map.new()
   end
 
-  @doc "Units of a product sold in the last `days` days."
-  def units_sold(product_id, days, now \\ DateTime.utc_now()) do
-    since = DateTime.add(now, -days, :day)
+  @doc """
+  Units of a product sold on each of the last `days` UTC days, oldest first and
+  ending with `today`, as `{date, units}`; days without sales count 0.
+  """
+  def daily_units(product_id, days, today \\ Date.utc_today()) do
+    first = Date.add(today, -(days - 1))
+    since = DateTime.new!(first, ~T[00:00:00], "Etc/UTC")
 
-    from(pt in ProductTransaction,
-      join: t in assoc(pt, :transaction),
-      where: pt.product_id == ^product_id and t.inserted_at >= ^since,
-      select: coalesce(sum(pt.quantity), 0)
-    )
-    |> Repo.one()
+    sold =
+      from(pt in ProductTransaction,
+        join: t in assoc(pt, :transaction),
+        where: pt.product_id == ^product_id and t.inserted_at >= ^since,
+        group_by: fragment("(?)::date", t.inserted_at),
+        select: {fragment("(?)::date", t.inserted_at), sum(pt.quantity)}
+      )
+      |> Repo.all()
+      |> Map.new()
+
+    for offset <- 0..(days - 1),
+        date = Date.add(first, offset),
+        do: {date, Map.get(sold, date, 0)}
   end
+
+  @doc """
+  How many to reorder so the stock covers another `days` like the last ones
+  (`sold` units in that time): 0 when the stock already does.
+  """
+  def reorder_quantity(stock, sold), do: max(sold - stock, 0)
 
   @doc """
   When a product with `stock` left runs out if it keeps selling like it sold

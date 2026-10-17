@@ -132,6 +132,20 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     end
   end
 
+  describe "show product forecast" do
+    import ClothingStore.TransactionsFixtures
+
+    test "suggests a reorder and draws the daily sales", %{conn: conn} do
+      product = product_fixture(stock: 1)
+      sale_fixture([{product, 5}])
+
+      html = conn |> get(~p"/products/#{product}") |> html_response(200)
+      assert html =~ "Suggested reorder: 4"
+      assert html =~ ~s(id="sales-sparkline")
+      assert html =~ "5 in total"
+    end
+  end
+
   describe "restock product" do
     test "adds stock and shows the button only while stock is low", %{conn: conn} do
       product = product_fixture(stock: 2)

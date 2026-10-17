@@ -72,16 +72,21 @@ defmodule ClothingStore.TransactionsTest do
              Transactions.month_totals([~D[2026-09-01], ~D[2026-10-01]])
   end
 
-  test "units_sold/3 counts the product's units inside the window only" do
+  test "daily_units/3 lists every day of the window with the product's units" do
     shirt = product_fixture()
     other = product_fixture()
-    now = ~U[2026-10-06 12:00:00Z]
-    sale_fixture([{shirt, 3}, {other, 7}], ~U[2026-10-01 08:00:00Z])
-    sale_fixture([{shirt, 2}], ~U[2026-09-20 08:00:00Z])
-    sale_fixture([{shirt, 9}], ~U[2026-08-01 08:00:00Z])
+    sale_fixture([{shirt, 3}, {other, 7}], ~U[2026-10-05 08:00:00Z])
+    sale_fixture([{shirt, 2}], ~U[2026-10-05 20:00:00Z])
+    sale_fixture([{shirt, 1}], ~U[2026-10-06 09:00:00Z])
+    sale_fixture([{shirt, 9}], ~U[2026-10-03 23:59:59Z])
 
-    assert Transactions.units_sold(shirt.id, 30, now) == 5
-    assert Transactions.units_sold(product_fixture().id, 30, now) == 0
+    assert Transactions.daily_units(shirt.id, 3, ~D[2026-10-06]) ==
+             [{~D[2026-10-04], 0}, {~D[2026-10-05], 5}, {~D[2026-10-06], 1}]
+  end
+
+  test "reorder_quantity/2 tops the stock up to the recent demand" do
+    assert Transactions.reorder_quantity(2, 10) == 8
+    assert Transactions.reorder_quantity(20, 10) == 0
   end
 
   test "days_of_stock_left/3 extrapolates the recent pace" do

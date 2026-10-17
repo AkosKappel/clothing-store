@@ -63,14 +63,17 @@ defmodule ClothingStoreWeb.ProductController do
 
   def show(conn, %{"id" => id}) do
     product = Products.get_product!(id)
-    sold = Transactions.units_sold(product.id, @forecast_days)
+    daily = Transactions.daily_units(product.id, @forecast_days)
+    sold = daily |> Enum.map(&elem(&1, 1)) |> Enum.sum()
 
     render(conn, :show,
       page_title: product.title,
       product: product,
       forecast_days: @forecast_days,
+      daily: daily,
       sold: sold,
-      days_left: Transactions.days_of_stock_left(product.stock, sold, @forecast_days)
+      days_left: Transactions.days_of_stock_left(product.stock, sold, @forecast_days),
+      reorder: Transactions.reorder_quantity(product.stock, sold)
     )
   end
 

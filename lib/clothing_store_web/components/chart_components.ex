@@ -10,6 +10,57 @@ defmodule ClothingStoreWeb.ChartComponents do
   use Phoenix.Component
 
   @doc """
+  A tiny daily column chart, `points` as `[{date, value}]`, oldest first. The
+  label states the total and the busiest day; each column has a tooltip.
+  """
+  attr :id, :string, required: true
+  attr :title, :string, required: true
+  attr :points, :list, required: true
+  attr :class, :any, default: nil
+
+  def sparkline(assigns) do
+    values = Enum.map(assigns.points, &elem(&1, 1))
+    {best_date, best} = Enum.max_by(assigns.points, &elem(&1, 1), fn -> {nil, 0} end)
+
+    assigns =
+      assign(assigns,
+        max: max(Enum.max(values, fn -> 0 end), 1),
+        width: length(values) * 6,
+        summary:
+          "#{assigns.title}: #{Enum.sum(values)} in total" <>
+            if(best > 0,
+              do: ", most on #{Calendar.strftime(best_date, "%-d %b")} (#{best})",
+              else: ""
+            )
+      )
+
+    ~H"""
+    <svg
+      id={@id}
+      class={["h-10 w-full max-w-xs text-red-600", @class]}
+      viewBox={"0 0 #{@width} 40"}
+      preserveAspectRatio="none"
+      role="img"
+      aria-label={@summary}
+    >
+      <rect x="0" y="39.5" width={@width} height="0.5" class="fill-gray-300" />
+      <rect
+        :for={{{date, value}, index} <- Enum.with_index(@points)}
+        :if={value > 0}
+        x={index * 6 + 1}
+        y={40 - value / @max * 38}
+        width="4"
+        height={value / @max * 38}
+        rx="1"
+        fill="currentColor"
+      >
+        <title>{Calendar.strftime(date, "%-d %b")}: {value}</title>
+      </rect>
+    </svg>
+    """
+  end
+
+  @doc """
   A single-series column chart, for example revenue per month.
 
   Each bar is `%{label: "Oct", value: number, tooltip: "October 2026: 1 234,50 €"}`.

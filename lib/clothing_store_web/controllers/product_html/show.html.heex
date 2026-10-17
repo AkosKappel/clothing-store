@@ -49,6 +49,16 @@
         </span>
         <span :if={@product.stock > 0 && !@days_left}>No recent sales, so no run-out date.</span>
       </p>
+      <p :if={@reorder > 0} class="mt-1 font-medium text-amber-800">
+        Suggested reorder: {@reorder}, enough for another {@forecast_days} days like the last ones.
+      </p>
+      <.sparkline
+        :if={@sold > 0}
+        id="sales-sparkline"
+        class="mt-3"
+        points={@daily}
+        title={"Units sold per day over the last #{@forecast_days} days"}
+      />
     </:item>
     <:item title="Category"><.category_badge category={@product.category} /></:item>
     <:item title="Tags">
