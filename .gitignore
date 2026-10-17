@@ -47,3 +47,6 @@ docs/superpowers/
 # Tailscale sidecar secrets and state
 docker/tailscale/ts.env
 docker/tailscale/state/
+
+# maintenance mode flag (see docker/nginx.conf)
+docker/maintenance/on
