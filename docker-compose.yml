@@ -60,6 +60,9 @@ services:
       DEMO_RESET_ENABLED: ${DEMO_RESET_ENABLED:-true}
       DEMO_RESET_TIME: ${DEMO_RESET_TIME:-03:15}
       DEMO_RESET_TIMEZONE: ${DEMO_RESET_TIMEZONE:-Europe/Bratislava}
+      # simulated sales every few minutes (minutes between them, roughly)
+      DEMO_ACTIVITY_ENABLED: ${DEMO_ACTIVITY_ENABLED:-true}
+      DEMO_ACTIVITY_INTERVAL: ${DEMO_ACTIVITY_INTERVAL:-4}
       # About page; empty values keep the defaults from config/config.exs
       DEMO_AUTHOR: ${DEMO_AUTHOR:-}
       DEMO_GITHUB_URL: ${DEMO_GITHUB_URL:-}

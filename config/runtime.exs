@@ -45,6 +45,19 @@ demo_reset =
     timezone: System.get_env("DEMO_RESET_TIMEZONE")
   )
 
+demo_activity =
+  present.(
+    enabled:
+      if(config_env() == :test or System.get_env("DEMO_ACTIVITY_ENABLED") in [nil, ""],
+        do: nil,
+        else: System.get_env("DEMO_ACTIVITY_ENABLED") in ~w(true 1)
+      ),
+    interval_minutes:
+      with value when value not in [nil, ""] <- System.get_env("DEMO_ACTIVITY_INTERVAL") do
+        String.to_integer(value)
+      end
+  )
+
 demo_links =
   present.(
     github: System.get_env("DEMO_GITHUB_URL"),
@@ -58,6 +71,7 @@ config :clothing_store,
        present.(
          account: demo_account,
          reset: demo_reset,
+         activity: demo_activity,
          links: demo_links,
          author: System.get_env("DEMO_AUTHOR")
        )

@@ -23,7 +23,10 @@ defmodule ClothingStore.Application do
   end
 
   defp demo_children do
-    if ClothingStore.Demo.reset_settings().enabled, do: [ClothingStore.Demo.Scheduler], else: []
+    alias ClothingStore.Demo
+
+    if(Demo.reset_settings().enabled, do: [Demo.Scheduler], else: []) ++
+      if Demo.Activity.enabled?(), do: [Demo.Activity], else: []
   end
 
   # Tell Phoenix to update the endpoint configuration

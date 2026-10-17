@@ -36,6 +36,17 @@ defmodule ClothingStoreWeb.SalesLiveTest do
     end
   end
 
+  describe "new sales" do
+    test "appear on the transactions page without a reload", %{conn: conn} do
+      shirt = product_fixture(title: "Linen shirt", stock: 5)
+      {:ok, lv, html} = live(conn, ~p"/transactions")
+      refute html =~ "Linen shirt"
+
+      {:ok, _} = ClothingStore.Transactions.record_sale([{shirt, 1}])
+      assert render(lv) =~ "Linen shirt"
+    end
+  end
+
   describe "statistics" do
     test "stock alerts update when stock changes elsewhere", %{conn: conn} do
       product = product_fixture(stock: 50)

@@ -1,7 +1,7 @@
 defmodule ClothingStoreWeb.StatisticsLive do
   @moduledoc """
   Sales statistics: summary tiles, revenue charts, stock alerts and bestsellers.
-  Product changes (stock, titles, deletions) and the nightly reset refresh it live.
+  New sales, product changes (stock, titles, deletions) and the nightly reset refresh it live.
   """
   use ClothingStoreWeb, :live_view
 
@@ -11,7 +11,11 @@ defmodule ClothingStoreWeb.StatisticsLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "transactions")
+    end
+
     {:ok, socket |> assign(:page_title, "Statistics") |> load()}
   end
 
@@ -21,6 +25,7 @@ defmodule ClothingStoreWeb.StatisticsLive do
       do: {:noreply, load(socket)}
 
   def handle_info(:demo_reset, socket), do: {:noreply, load(socket)}
+  def handle_info({:transaction_created, _transaction}, socket), do: {:noreply, load(socket)}
 
   defp load(socket) do
     this_month = Date.utc_today() |> Date.beginning_of_month()

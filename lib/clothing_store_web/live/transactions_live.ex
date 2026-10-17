@@ -1,7 +1,7 @@
 defmodule ClothingStoreWeb.TransactionsLive do
   @moduledoc """
   Sales grouped by month, 20 per page, filterable by month. The month and page
-  live in the URL; product changes and the nightly reset refresh the page live.
+  live in the URL; new sales, product changes and the nightly reset refresh the page live.
   """
   use ClothingStoreWeb, :live_view
 
@@ -13,7 +13,11 @@ defmodule ClothingStoreWeb.TransactionsLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "transactions")
+    end
+
     {:ok, assign(socket, page_title: "Transactions", per_page: @per_page)}
   end
 
@@ -40,6 +44,7 @@ defmodule ClothingStoreWeb.TransactionsLive do
       do: {:noreply, load(socket)}
 
   def handle_info(:demo_reset, socket), do: {:noreply, load(socket)}
+  def handle_info({:transaction_created, _transaction}, socket), do: {:noreply, load(socket)}
 
   defp load(socket) do
     %{month: month, page: page} = socket.assigns

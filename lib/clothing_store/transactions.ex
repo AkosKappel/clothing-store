@@ -4,7 +4,7 @@ defmodule ClothingStore.Transactions do
   import Ecto.Query, warn: false
   alias ClothingStore.Repo
 
-  alias ClothingStore.Products.ProductTransaction
+  alias ClothingStore.Products.{Product, ProductTransaction}
   alias ClothingStore.Transactions.Transaction
 
   @doc """
@@ -44,6 +44,88 @@ defmodule ClothingStore.Transactions do
     |> order_by([t], asc: t.inserted_at, asc: t.id)
     |> preload(products_transactions: :product)
     |> Repo.all()
+  end
+
+  @doc """
+  Records a sale of `[{product, quantity}]` at the products' current prices and
+  takes the units out of stock, all or nothing: `{:error, :out_of_stock}` when a
+  product doesn't have enough. Open pages hear about the new stock levels on
+  "products" and about the sale on "transactions".
+  """
+  def record_sale(items) when items != [] do
+    now = DateTime.utc_now(:second)
+
+    Repo.transaction(fn ->
+      sold =
+        Enum.map(items, fn {product, quantity} ->
+          {take_stock(product, quantity, now), quantity}
+        end)
+
+      total =
+        Enum.reduce(sold, Decimal.new(0), fn {product, quantity}, sum ->
+          Decimal.add(sum, Decimal.mult(product.price, quantity))
+        end)
+
+      transaction =
+        Repo.insert!(%Transaction{total_price: total, inserted_at: now, updated_at: now})
+
+      Repo.insert_all(
+        ProductTransaction,
+        for {product, quantity} <- sold do
+          %{
+            transaction_id: transaction.id,
+            product_id: product.id,
+            quantity: quantity,
+            unit_price: product.price,
+            inserted_at: now,
+            updated_at: now
+          }
+        end
+      )
+
+      {transaction, sold}
+    end)
+    |> case do
+      {:ok, {transaction, sold}} ->
+        for {product, _quantity} <- sold,
+            do:
+              Phoenix.PubSub.broadcast(
+                ClothingStore.PubSub,
+                "products",
+                {:product_updated, product}
+              )
+
+        Phoenix.PubSub.broadcast(
+          ClothingStore.PubSub,
+          "transactions",
+          {:transaction_created, transaction}
+        )
+
+        {:ok, transaction}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  # the stock check and the decrement are one statement, so two sales can't oversell
+  defp take_stock(%Product{id: id}, quantity, now) do
+    from(p in Product,
+      where: p.id == ^id and p.stock >= ^quantity,
+      select: p,
+      update: [inc: [stock: ^(-quantity)], set: [updated_at: ^now]]
+    )
+    |> Repo.update_all([])
+    |> case do
+      {1, [product]} -> product
+      {0, []} -> Repo.rollback(:out_of_stock)
+    end
+  end
+
+  @doc "How many sales were recorded since the start of today (UTC)."
+  def count_today do
+    since = DateTime.new!(Date.utc_today(), ~T[00:00:00], "Etc/UTC")
+    Repo.aggregate(from(t in Transaction, where: t.inserted_at >= ^since), :count)
   end
 
   defp in_month(query, nil), do: query

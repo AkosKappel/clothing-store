@@ -66,6 +66,8 @@ config :phoenix, :json_library, Jason
 config :clothing_store, :demo,
   account: [email: "admin@eshop.com", password: "Qwerty123456"],
   reset: [enabled: false, time: "03:15", timezone: "Europe/Bratislava"],
+  # simulated sales and restocks (Demo.Activity), at most daily_limit sales a day
+  activity: [enabled: false, interval_minutes: 4, daily_limit: 300],
   # shown on the About page; empty links are left out
   author: "Ákos Kappel",
   links: [
