@@ -221,6 +221,13 @@ defmodule ClothingStore.Products do
     end
   end
 
+  @doc "Like `get_product!/1`, but `nil` when there is no such product (or the id is not one)."
+  def get_product(id) do
+    get_product!(id)
+  rescue
+    Ecto.NoResultsError -> nil
+  end
+
   @doc """
   Creates a product.
 

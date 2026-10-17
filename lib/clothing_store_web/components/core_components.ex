@@ -891,6 +891,79 @@ defmodule ClothingStoreWeb.CoreComponents do
   end
 
   @doc """
+  Renders a side drawer: a panel that slides in from the right over the page.
+
+  It is a native modal `<dialog>` (focus trap, inert page, Escape) opened when it
+  mounts, so the server decides when it is shown; live updates keep it open, as
+  patches leave its `open` attribute alone. `close` is the URL to patch to
+  when the visitor closes it, by the × button, Escape or a click on the backdrop.
+
+  ## Examples
+
+      <.drawer :if={@product} id="product-drawer" close={~p"/products"}>
+        <:title>{@product.title}</:title>
+        Details
+        <:actions><.button>Edit</.button></:actions>
+      </.drawer>
+  """
+  attr :id, :string, required: true
+  attr :close, :string, required: true, doc: "the URL to patch to on close"
+  slot :title, required: true
+  slot :subtitle
+  slot :inner_block, required: true
+  slot :actions
+
+  def drawer(assigns) do
+    ~H"""
+    <dialog
+      id={@id}
+      data-drawer
+      aria-labelledby={"#{@id}-title"}
+      closedby="any"
+      phx-mounted={JS.ignore_attributes(["open"]) |> JS.dispatch("drawer:open")}
+      class="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-lg bg-surface p-0 text-left shadow-2xl backdrop:bg-black/50 motion-safe:transition-transform motion-safe:duration-200 motion-safe:starting:open:translate-x-full"
+    >
+      <div class="flex h-full flex-col">
+        <div class="flex items-start justify-between gap-4 border-b border-gray-200 px-6 py-4">
+          <div class="min-w-0">
+            <h2 id={"#{@id}-title"} class="font-display text-xl font-bold text-gray-900">
+              {render_slot(@title)}
+            </h2>
+            <p :if={@subtitle != []} class="mt-0.5 text-sm text-gray-600">
+              {render_slot(@subtitle)}
+            </p>
+          </div>
+          <.link
+            patch={@close}
+            data-drawer-close
+            class="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-red-600"
+            aria-label={gettext("Close")}
+            title={gettext("Close")}
+          >
+            <.icon name="hero-x-mark" />
+          </.link>
+        </div>
+        <%!-- focusable, so the content scrolls by keyboard even without links in it --%>
+        <div
+          class="flex-1 overflow-y-auto px-6 py-5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-red-600"
+          tabindex="0"
+          role="region"
+          aria-labelledby={"#{@id}-title"}
+        >
+          {render_slot(@inner_block)}
+        </div>
+        <div
+          :if={@actions != []}
+          class="flex flex-wrap justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4"
+        >
+          {render_slot(@actions)}
+        </div>
+      </div>
+    </dialog>
+    """
+  end
+
+  @doc """
   Renders a delete button that opens a confirmation dialog.
 
   The dialog is a native `<dialog>`, so focus trapping, Escape and the backdrop
@@ -927,7 +1000,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       aria-describedby={"#{@id}-description"}
       closedby="any"
       class={[
-        "m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-surface p-6 text-left shadow-xl backdrop:bg-gray-900/50",
+        "m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-surface p-6 text-left shadow-xl backdrop:bg-black/50",
         "motion-safe:transition-[opacity,scale] motion-safe:duration-150 motion-safe:starting:open:scale-95 motion-safe:starting:open:opacity-0"
       ]}
     >

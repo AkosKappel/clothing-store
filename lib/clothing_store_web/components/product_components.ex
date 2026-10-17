@@ -40,6 +40,29 @@ defmodule ClothingStoreWeb.ProductComponents do
     """
   end
 
+  @doc "The stock of each size (and colour) as small chips; sold-out sizes are struck through."
+  attr :variants, :list, required: true
+
+  def variant_stock(assigns) do
+    ~H"""
+    <ul :if={@variants != []} class="flex flex-wrap gap-1.5" aria-label={gettext("Stock per size")}>
+      <li
+        :for={variant <- @variants}
+        class={[
+          "rounded-md px-2 py-1 text-xs ring-1 ring-inset",
+          if(variant.stock == 0,
+            do: "text-gray-500 line-through ring-gray-200",
+            else: "text-gray-800 ring-gray-300"
+          )
+        ]}
+      >
+        <span class="font-semibold">{variant.size}</span>{if variant.colour,
+          do: " #{variant.colour}"}: {variant.stock}
+      </li>
+    </ul>
+    """
+  end
+
   @doc "A category badge with the category's chart colour as a dot."
   attr :category, :string, required: true
 

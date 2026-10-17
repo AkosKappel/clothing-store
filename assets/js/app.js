@@ -202,6 +202,17 @@ document.addEventListener("click", event => {
   if (event.target.closest("#command-palette [role=option]")) palette().close()
 })
 
+// Drawers (CoreComponents.drawer/1) open as modal dialogs when LiveView renders
+// them. Escape or a click on the backdrop closes the dialog natively; following
+// the × link then tells the server, which removes the drawer and updates the URL.
+window.addEventListener("drawer:open", event => {
+  if (!event.target.open) event.target.showModal()
+})
+document.addEventListener("close", event => {
+  if (event.target.matches?.("dialog[data-drawer]") && event.target.isConnected)
+    event.target.querySelector("[data-drawer-close]")?.click()
+}, true)
+
 // Single-key shortcuts: an element with data-shortcut="n" is clicked (links) or
 // focused (inputs) when that key is pressed outside a text field.
 document.addEventListener("keydown", event => {

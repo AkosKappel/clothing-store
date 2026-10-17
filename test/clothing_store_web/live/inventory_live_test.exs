@@ -51,4 +51,34 @@ defmodule ClothingStoreWeb.InventoryLiveTest do
 
     assert html =~ "Every product with its stock"
   end
+
+  test "a product opens in a drawer that follows live changes and closes to the list", %{
+    conn: conn
+  } do
+    product = product_fixture(%{title: "Linen shirt"})
+    {:ok, lv, _html} = live(conn, ~p"/products?q=linen")
+
+    lv |> element("#products a[aria-haspopup]", "Linen shirt") |> render_click()
+    assert_patch(lv, ~p"/products?product=#{product.id}&q=linen")
+    assert has_element?(lv, "#product-drawer-title", "Linen shirt")
+    assert has_element?(lv, "#product-drawer a[href='/products/#{product.id}']", "Open full page")
+
+    {:ok, _} = Products.update_product(product, %{title: "Linen shirt (blue)"})
+    assert has_element?(lv, "#product-drawer-title", "Linen shirt (blue)")
+
+    lv |> element("#product-drawer [data-drawer-close]") |> render_click()
+    assert_patch(lv, ~p"/products?q=linen")
+    refute has_element?(lv, "#product-drawer")
+  end
+
+  test "a drawer link to a missing product shows just the list", %{conn: conn} do
+    {:ok, lv, _html} = live(conn, ~p"/products?product=999999")
+    refute has_element?(lv, "#product-drawer")
+  end
+
+  test "the product page links back to the dashboard", %{conn: conn} do
+    product = product_fixture()
+    {:ok, lv, _html} = live(conn, ~p"/products/#{product}")
+    assert has_element?(lv, "main a[href='/']", "Dashboard")
+  end
 end

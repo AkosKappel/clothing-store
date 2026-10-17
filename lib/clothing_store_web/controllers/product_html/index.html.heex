@@ -170,8 +170,9 @@
       />
       <div class="min-w-0">
         <.link
-          navigate={~p"/products/#{product}"}
+          patch={inventory_path(@filters, product)}
           class="font-semibold text-gray-900 hover:text-red-700 hover:underline"
+          aria-haspopup="dialog"
         >
           {product.title}
         </.link>
@@ -237,3 +238,66 @@
     </.empty_state>
   </:empty>
 </.table>
+
+<.drawer :if={@selected} id="product-drawer" close={inventory_path(@filters)}>
+  <:title>{@selected.title}</:title>
+  <:subtitle>{gettext("Product Details")} · #{@selected.id}</:subtitle>
+  <img
+    src={image_link(@selected.photo)}
+    alt={@selected.title}
+    class="aspect-[4/3] w-full rounded-md bg-gray-100 object-cover"
+  />
+  <.list>
+    <:item title={gettext("Price")}><.price product={@selected} class="text-lg" /></:item>
+    <:item title={gettext("Stock")}>
+      <div class="flex flex-wrap items-center gap-3">
+        <.stock_badge stock={@selected.stock} />
+        <.variant_stock variants={@selected.variants} />
+      </div>
+    </:item>
+    <:item title={gettext("Forecast")}>
+      <p>
+        {ngettext(
+          "1 sold in the last %{days} days.",
+          "%{count} sold in the last %{days} days.",
+          @sold,
+          days: @forecast_days
+        )}
+        <span :if={@selected.stock > 0 && @days_left}>
+          {ngettext(
+            "At that pace it runs out in about 1 day.",
+            "At that pace it runs out in about %{count} days.",
+            @days_left
+          )}
+        </span>
+      </p>
+      <.sparkline
+        :if={@sold > 0}
+        id="drawer-sparkline"
+        class="mt-3"
+        points={@daily}
+        title={gettext("Units sold per day over the last %{days} days", days: @forecast_days)}
+      />
+    </:item>
+    <:item title={gettext("Category")}><.category_badge category={@selected.category} /></:item>
+    <:item title={gettext("Tags")}>
+      <div class="flex flex-wrap gap-1.5">
+        <.badge :for={tag <- @selected.tags}>{tag}</.badge>
+        <span :if={@selected.tags == []} class="text-gray-400">{gettext("No tags")}</span>
+      </div>
+    </:item>
+    <:item title={gettext("Description")}>{@selected.description}</:item>
+  </.list>
+  <:actions>
+    <.button
+      navigate={~p"/products/#{@selected}"}
+      variant="secondary"
+      icon="hero-arrow-top-right-on-square"
+    >
+      {gettext("Open full page")}
+    </.button>
+    <.button navigate={~p"/products/#{@selected}/edit"} icon="hero-pencil-square">
+      {gettext("Edit")}
+    </.button>
+  </:actions>
+</.drawer>

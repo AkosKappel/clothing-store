@@ -52,25 +52,7 @@
     <:item title={gettext("Stock")}>
       <div class="flex flex-wrap items-center gap-3">
         <.stock_badge stock={@product.stock} />
-        <ul
-          :if={@product.variants != []}
-          class="flex flex-wrap gap-1.5"
-          aria-label={gettext("Stock per size")}
-        >
-          <li
-            :for={variant <- @product.variants}
-            class={[
-              "rounded-md px-2 py-1 text-xs ring-1 ring-inset",
-              if(variant.stock == 0,
-                do: "text-gray-500 line-through ring-gray-200",
-                else: "text-gray-800 ring-gray-300"
-              )
-            ]}
-          >
-            <span class="font-semibold">{variant.size}</span>{if variant.colour,
-              do: " #{variant.colour}"}: {variant.stock}
-          </li>
-        </ul>
+        <.variant_stock variants={@product.variants} />
         <.form
           :if={@product.stock <= ClothingStore.Products.low_stock()}
           for={%{}}

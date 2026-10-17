@@ -40,20 +40,32 @@ defmodule ClothingStoreWeb.ProductLive.Show do
   def render(assigns), do: ProductHTML.show(assigns)
 
   defp load(socket, product) do
-    daily = Transactions.daily_units(product.id, @forecast_days)
     versions = Products.list_versions(product.id)
-    sold = daily |> Enum.map(&elem(&1, 1)) |> Enum.sum()
 
-    assign(socket,
+    socket
+    |> assign(
       page_title: product.title,
       product: product,
+      versions: versions,
+      price_history: Products.price_history(versions)
+    )
+    |> assign(forecast(product))
+  end
+
+  @doc """
+  Recent sales of `product` and what they mean for its stock, as assigns for the
+  forecast on the product page and in the inventory drawer.
+  """
+  def forecast(product) do
+    daily = Transactions.daily_units(product.id, @forecast_days)
+    sold = daily |> Enum.map(&elem(&1, 1)) |> Enum.sum()
+
+    %{
       forecast_days: @forecast_days,
       daily: daily,
-      versions: versions,
-      price_history: Products.price_history(versions),
       sold: sold,
       days_left: Transactions.days_of_stock_left(product.stock, sold, @forecast_days),
       reorder: Transactions.reorder_quantity(product.stock, sold)
-    )
+    }
   end
 end

@@ -2,12 +2,14 @@ defmodule ClothingStoreWeb.ProductLive.Inventory do
   @moduledoc """
   The inventory table with its filters and sort, kept in the URL. Filtering
   patches the page instead of reloading it, and changes by other visitors
-  (edits, sales, restocks, deletes) refresh the table live.
+  (edits, sales, restocks, deletes) refresh the table live. Clicking a product
+  opens its details in a drawer (`?product=ID`, so the drawer can be linked).
   """
   use ClothingStoreWeb, :live_view
 
   alias ClothingStore.Products
   alias ClothingStoreWeb.ProductHTML
+  alias ClothingStoreWeb.ProductLive.Show
 
   @impl true
   def mount(_params, _session, socket) do
@@ -18,7 +20,10 @@ defmodule ClothingStoreWeb.ProductLive.Inventory do
 
   @impl true
   def handle_params(params, _uri, socket) do
-    {:noreply, socket |> assign(:filters, ProductHTML.filter_params(params)) |> load()}
+    {:noreply,
+     socket
+     |> assign(filters: ProductHTML.filter_params(params), selected_id: params["product"])
+     |> load()}
   end
 
   @impl true
@@ -40,10 +45,15 @@ defmodule ClothingStoreWeb.ProductLive.Inventory do
   def render(assigns), do: ProductHTML.index(assigns)
 
   defp load(socket) do
-    assign(socket,
+    selected = socket.assigns.selected_id && Products.get_product(socket.assigns.selected_id)
+
+    socket
+    |> assign(
       products: Products.list_products(socket.assigns.filters),
       categories: Products.list_categories(),
-      tags: Products.list_tags()
+      tags: Products.list_tags(),
+      selected: selected
     )
+    |> assign(if selected, do: Show.forecast(selected), else: %{})
   end
 end

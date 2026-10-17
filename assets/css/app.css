@@ -97,6 +97,9 @@
   }
 }
 
+/* the page behind an open drawer doesn't scroll */
+html:has(dialog[data-drawer][open]) { overflow: hidden; }
+
 /* cross-document page transitions: a short cross-fade, the header stays put */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }

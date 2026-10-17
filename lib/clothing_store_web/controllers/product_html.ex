@@ -45,6 +45,13 @@ defmodule ClothingStoreWeb.ProductHTML do
     single ++ tags
   end
 
+  @doc "The inventory with the same filters, optionally with a product open in the drawer."
+  def inventory_path(filters, product \\ nil) do
+    params = Map.new(export_params(filters))
+    params = if product, do: Map.put(params, "product", product.id), else: params
+    ~p"/products?#{params}"
+  end
+
   @doc "The active filters and sort as query params, for the CSV export link."
   def export_params(filters), do: Enum.reject(filters, fn {_key, value} -> blank?(value) end)
 
