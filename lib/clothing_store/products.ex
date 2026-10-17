@@ -252,6 +252,92 @@ defmodule ClothingStore.Products do
     end
   end
 
+  @max_import_rows 100
+  # what a new product gets when the import leaves these columns out
+  @import_defaults %{"description" => "Imported product.", "photo" => "/images/logo.svg"}
+  @import_fields ~w(title category price stock tags description photo)
+
+  @doc "The most rows one import may have."
+  def max_import_rows, do: @max_import_rows
+
+  @doc """
+  Creates and updates products from imported rows: maps with string keys
+  (`"id"`, `"title"`, `"category"`, `"price"`, `"stock"`, `"tags"`, `"description"`,
+  `"photo"`). A row whose id matches a product updates the columns it has; any other
+  row creates a product. Every row is validated first, and nothing is saved unless all
+  of them are valid and the new products fit in the catalogue.
+
+  Returns `{:ok, %{created: n, updated: n}}` or `{:error, [{row_number, message}]}`,
+  where row 1 is the header line.
+  """
+  def import_products(rows) when length(rows) > @max_import_rows,
+    do: {:error, [{1, "An import can have at most #{@max_import_rows} rows"}]}
+
+  def import_products(rows) do
+    plans = rows |> Enum.with_index(2) |> Enum.map(fn {row, line} -> {line, plan_import(row)} end)
+    errors = for {line, {:error, message}} <- plans, do: {line, message}
+    creates = Enum.count(plans, &match?({_, {:create, _}}, &1))
+
+    cond do
+      errors != [] ->
+        {:error, errors}
+
+      Repo.aggregate(Product, :count) + creates > @max_products ->
+        {:error, [{1, "The import would go over the demo's limit of #{@max_products} products"}]}
+
+      true ->
+        {:ok, Enum.reduce(plans, %{created: 0, updated: 0}, &apply_import/2)}
+    end
+  end
+
+  defp plan_import(row) do
+    attrs =
+      row
+      |> Map.take(@import_fields)
+      |> Map.reject(fn {_key, value} -> String.trim(value) == "" end)
+      |> Map.update("tags", nil, &parse_tags/1)
+      |> Map.reject(fn {_key, value} -> is_nil(value) end)
+
+    {action, changeset} =
+      case import_target(row["id"]) do
+        nil -> {:create, Product.changeset(%Product{}, Map.merge(@import_defaults, attrs))}
+        product -> {{:update, product}, Product.changeset(product, attrs)}
+      end
+
+    cond do
+      not changeset.valid? -> {:error, changeset_message(changeset)}
+      action == :create -> {:create, Map.merge(@import_defaults, attrs)}
+      true -> {action, attrs}
+    end
+  end
+
+  defp import_target(id) do
+    case Ecto.Type.cast(:id, id) do
+      {:ok, id} when id in 1..@max_id -> Repo.get(Product, id)
+      _ -> nil
+    end
+  end
+
+  defp apply_import({_line, {:create, attrs}}, counts) do
+    {:ok, _} = create_product(attrs)
+    Map.update!(counts, :created, &(&1 + 1))
+  end
+
+  defp apply_import({_line, {{:update, product}, attrs}}, counts) do
+    {:ok, _} = update_product(product, attrs)
+    Map.update!(counts, :updated, &(&1 + 1))
+  end
+
+  defp changeset_message(changeset) do
+    changeset
+    |> Ecto.Changeset.traverse_errors(fn {message, opts} ->
+      Regex.replace(~r"%{(\w+)}", message, fn _, key ->
+        opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
+      end)
+    end)
+    |> Enum.map_join("; ", fn {field, messages} -> "#{field} #{Enum.join(messages, ", ")}" end)
+  end
+
   @doc """
   Updates a product.
 

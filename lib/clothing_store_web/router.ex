@@ -44,6 +44,7 @@ defmodule ClothingStoreWeb.Router do
       live "/", ProductLive.Index, :index
       # the forms validate live and then post to ProductController, which nginx rate-limits
       live "/products/new", ProductLive.Form, :new
+      live "/products/import", ProductLive.Import, :new
       live "/products/:id/edit", ProductLive.Form, :edit
       live "/transactions", TransactionsLive, :index
       live "/statistics", StatisticsLive, :index
