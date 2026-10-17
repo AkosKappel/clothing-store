@@ -51,6 +51,7 @@ defmodule ClothingStoreWeb.Router do
     get "/statistics", PageController, :statistics
 
     resources "/products", ProductController, except: [:new, :edit]
+    post "/products/:id/restock", ProductController, :restock
   end
 
   scope "/", ClothingStoreWeb do

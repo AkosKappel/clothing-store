@@ -79,6 +79,7 @@ defmodule ClothingStore.Products do
     |> filter_price(:min, parse_price(filters["min_price"]))
     |> filter_price(:max, parse_price(filters["max_price"]))
     |> filter_in_stock(filters["in_stock"])
+    |> filter_low_stock(filters["low_stock"])
     |> filter_tags(filters["tags"])
     |> filter_search(filters["q"])
   end
@@ -124,6 +125,9 @@ defmodule ClothingStore.Products do
 
   defp filter_in_stock(query, "true"), do: from(p in query, where: p.stock > 0)
   defp filter_in_stock(query, _in_stock), do: query
+
+  defp filter_low_stock(query, "true"), do: from(p in query, where: p.stock <= ^@low_stock)
+  defp filter_low_stock(query, _low_stock), do: query
 
   defp filter_tags(query, tags) when is_list(tags) and tags != [] do
     if Enum.all?(tags, &is_binary/1),
@@ -257,6 +261,30 @@ defmodule ClothingStore.Products do
     |> Product.changeset(attrs)
     |> Repo.update()
     |> notify_subscribers(:product_updated)
+  end
+
+  @restock_amount 10
+
+  @doc "How many items one restock adds."
+  def restock_amount, do: @restock_amount
+
+  @doc """
+  Adds #{@restock_amount} to a product's stock, capped at the largest stock a product may have.
+  The increment runs in the database, so two restocks at once both count.
+  """
+  def restock_product(%Product{id: id}) do
+    max = Product.max_amount()
+
+    from(p in Product,
+      where: p.id == ^id,
+      select: p,
+      update: [set: [stock: fragment("LEAST(? + ?, ?)", p.stock, ^@restock_amount, ^max)]]
+    )
+    |> Repo.update_all(set: [updated_at: DateTime.utc_now(:second)])
+    |> case do
+      {1, [product]} -> notify_subscribers({:ok, product}, :product_updated)
+      {0, []} -> {:error, :not_found}
+    end
   end
 
   @doc """

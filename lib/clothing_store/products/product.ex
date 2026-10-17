@@ -24,6 +24,9 @@ defmodule ClothingStore.Products.Product do
   # remote photos must come from these hosts; the CSP img-src lists the same ones
   @photo_hosts ~w(images.pexels.com images.unsplash.com)
 
+  @doc "The highest price and stock a product may have."
+  def max_amount, do: @max_amount
+
   @doc "Hosts that product photos may be loaded from."
   def photo_hosts, do: @photo_hosts
 

@@ -22,7 +22,8 @@ defmodule ClothingStoreWeb.ProductHTML do
             {"category", &"Category: #{&1}"},
             {"min_price", &"From #{&1} €"},
             {"max_price", &"Up to #{&1} €"},
-            {"in_stock", fn _ -> "In stock" end}
+            {"in_stock", fn _ -> "In stock" end},
+            {"low_stock", fn _ -> "Low stock" end}
           ],
           value = params[key],
           value != nil,

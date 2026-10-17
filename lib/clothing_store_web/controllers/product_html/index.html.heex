@@ -62,6 +62,15 @@
         /> In stock only
       </label>
     </div>
+    <label class="flex items-center gap-2 text-sm text-gray-700">
+      <input
+        type="checkbox"
+        name="low_stock"
+        value="true"
+        class="size-4 rounded-sm border-gray-300 text-red-600 focus:ring-red-600"
+        checked={@filters["low_stock"] == "true"}
+      /> Low or out of stock only
+    </label>
 
     <fieldset :if={@tags != []}>
       <legend class="text-sm font-semibold text-gray-800">Tags</legend>

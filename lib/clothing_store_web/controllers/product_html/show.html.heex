@@ -27,7 +27,19 @@
       <span class="text-lg font-semibold">{format_price(@product.price)}</span>
     </:item>
     <:item title="Stock">
-      <.stock_badge stock={@product.stock} />
+      <div class="flex flex-wrap items-center gap-3">
+        <.stock_badge stock={@product.stock} />
+        <.form
+          :if={@product.stock <= ClothingStore.Products.low_stock()}
+          for={%{}}
+          action={~p"/products/#{@product}/restock"}
+          method="post"
+        >
+          <.button type="submit" size="sm" variant="secondary" icon="hero-arrow-up-tray">
+            Restock +{ClothingStore.Products.restock_amount()}
+          </.button>
+        </.form>
+      </div>
     </:item>
     <:item title="Category"><.category_badge category={@product.category} /></:item>
     <:item title="Tags">

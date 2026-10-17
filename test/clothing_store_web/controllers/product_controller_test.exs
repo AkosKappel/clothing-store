@@ -132,6 +132,29 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     end
   end
 
+  describe "restock product" do
+    test "adds stock and shows the button only while stock is low", %{conn: conn} do
+      product = product_fixture(stock: 2)
+      assert conn |> get(~p"/products/#{product}") |> html_response(200) =~ "Restock +10"
+
+      conn = post(conn, ~p"/products/#{product}/restock")
+      assert redirected_to(conn) == ~p"/products/#{product}"
+
+      html = conn |> get(~p"/products/#{product}") |> html_response(200)
+      assert html =~ "now has 12 in stock"
+      refute html =~ "Restock +10"
+    end
+
+    test "the low stock filter lists low and sold-out products", %{conn: conn} do
+      product_fixture(title: "Plenty", stock: 50)
+      product_fixture(title: "Almost gone", stock: 1)
+
+      html = conn |> get(~p"/products?low_stock=true") |> html_response(200)
+      assert html =~ "Almost gone"
+      refute html =~ "Plenty"
+    end
+  end
+
   defp create_product(_) do
     product = product_fixture()
     %{product: product}

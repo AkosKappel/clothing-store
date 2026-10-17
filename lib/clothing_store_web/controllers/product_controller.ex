@@ -21,7 +21,7 @@ defmodule ClothingStoreWeb.ProductController do
   # only string filters (and a list of tag strings) reach the query and the form
   defp filter_params(params) do
     params
-    |> Map.take(~w(q category min_price max_price in_stock sort))
+    |> Map.take(~w(q category min_price max_price in_stock low_stock sort))
     |> Map.filter(fn {_key, value} -> is_binary(value) end)
     |> Map.update("q", nil, &String.slice(&1, 0, 100))
     |> Map.put("tags", Products.parse_tags(params["tags"]))
@@ -61,6 +61,20 @@ defmodule ClothingStoreWeb.ProductController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, page_title: "Edit product", product: product, changeset: changeset)
+    end
+  end
+
+  def restock(conn, %{"id" => id}) do
+    product = Products.get_product!(id)
+
+    case Products.restock_product(product) do
+      {:ok, product} ->
+        conn
+        |> put_flash(:info, "Restocked: #{product.title} now has #{product.stock} in stock.")
+        |> redirect(to: ~p"/products/#{product}")
+
+      {:error, :not_found} ->
+        raise Ecto.NoResultsError, queryable: ClothingStore.Products.Product
     end
   end
 

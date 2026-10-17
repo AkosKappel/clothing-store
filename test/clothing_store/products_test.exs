@@ -268,4 +268,27 @@ defmodule ClothingStore.ProductsTest do
       assert titles(%{"sort" => "drop table"}) == titles(%{})
     end
   end
+
+  describe "restock_product/1" do
+    import ClothingStore.ProductsFixtures
+
+    test "adds the restock amount and broadcasts the update" do
+      product = product_fixture(stock: 0)
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
+
+      assert {:ok, %{stock: 10}} = Products.restock_product(product)
+      assert_receive {:product_updated, %{id: id, stock: 10}} when id == product.id
+    end
+
+    test "caps the stock at the maximum" do
+      product = product_fixture(stock: 99_995)
+      assert {:ok, %{stock: 100_000}} = Products.restock_product(product)
+    end
+
+    test "fails for a deleted product" do
+      product = product_fixture()
+      {:ok, _} = Products.delete_product(product)
+      assert {:error, :not_found} = Products.restock_product(product)
+    end
+  end
 end
