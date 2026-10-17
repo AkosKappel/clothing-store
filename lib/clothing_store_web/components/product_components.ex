@@ -92,10 +92,25 @@ defmodule ClothingStoreWeb.ProductComponents do
         hint={"A path under /images/, or an https:// URL from #{ClothingStore.Products.Product.photo_hosts_text()}."}
         required
       />
+      <img
+        :if={photo_preview?(@form[:photo])}
+        id="photo-preview"
+        src={@form[:photo].value}
+        alt="Photo preview"
+        class="size-32 rounded-md bg-gray-100 object-cover ring-1 ring-gray-200"
+      />
 
       <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
         <.input field={@form[:category]} type="text" label="Category" maxlength="50" required />
-        <.input field={@form[:price]} type="number" label="Price (€)" min="0" step="0.01" required />
+        <.input
+          field={@form[:price]}
+          type="number"
+          label="Price (€)"
+          prefix="€"
+          min="0"
+          step="0.01"
+          required
+        />
         <.input field={@form[:stock]} type="number" label="Stock" min="0" step="1" required />
       </div>
 
@@ -118,6 +133,10 @@ defmodule ClothingStoreWeb.ProductComponents do
     </.simple_form>
     """
   end
+
+  # only a photo that passed validation, so the preview never requests an arbitrary URL
+  defp photo_preview?(%Phoenix.HTML.FormField{value: value, errors: errors}),
+    do: is_binary(value) and value != "" and errors == []
 
   def stock_text(0), do: "Out of stock"
   def stock_text(stock) when stock <= @low_stock, do: "Low: #{stock} left"

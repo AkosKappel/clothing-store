@@ -250,6 +250,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   attr :label, :string, default: nil
   attr :hint, :string, default: nil, doc: "help text shown below the input"
   attr :counter, :boolean, default: false, doc: "show the length against `maxlength`"
+  attr :prefix, :string, default: nil, doc: "a short unit shown inside the input, such as €"
   attr :value, :any
 
   attr :type, :string,
@@ -400,16 +401,25 @@ defmodule ClothingStoreWeb.CoreComponents do
     ~H"""
     <div>
       <.label :if={@label} for={@id}>{@label}</.label>
-      <input
-        type={@type}
-        name={@name}
-        id={@id}
-        value={Form.normalize_value(@type, @value)}
-        class={input_classes(@errors)}
-        aria-invalid={@errors != [] && "true"}
-        aria-describedby={describedby(@id, @hint, @errors)}
-        {@rest}
-      />
+      <div class="relative">
+        <span
+          :if={@prefix}
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 sm:text-sm"
+          aria-hidden="true"
+        >
+          {@prefix}
+        </span>
+        <input
+          type={@type}
+          name={@name}
+          id={@id}
+          value={Form.normalize_value(@type, @value)}
+          class={[input_classes(@errors), @prefix && "pl-7"]}
+          aria-invalid={@errors != [] && "true"}
+          aria-describedby={describedby(@id, @hint, @errors)}
+          {@rest}
+        />
+      </div>
       <.counter :if={@counter} value={@value} max={@rest[:maxlength]} />
       <.hint :if={@hint} id={"#{@id}-hint"}>{@hint}</.hint>
       <.error :for={msg <- @errors} id={"#{@id}-error"}>{msg}</.error>

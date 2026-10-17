@@ -27,6 +27,21 @@ defmodule ClothingStoreWeb.ProductFormLiveTest do
     refute html =~ "couldn&#39;t be saved"
   end
 
+  test "previews the photo only once it passes validation", %{conn: conn} do
+    {:ok, lv, html} = live(conn, ~p"/products/new")
+    refute html =~ "photo-preview"
+
+    html =
+      lv
+      |> form("#product-form", product: %{photo: "https://evil.example/x.png"})
+      |> render_change()
+
+    refute html =~ "photo-preview"
+
+    html = lv |> form("#product-form", product: %{photo: @valid.photo}) |> render_change()
+    assert html =~ ~s(id="photo-preview" src="#{@valid.photo}")
+  end
+
   test "a valid new product is posted to the controller and saved", %{conn: conn} do
     {:ok, lv, _html} = live(conn, ~p"/products/new")
 
