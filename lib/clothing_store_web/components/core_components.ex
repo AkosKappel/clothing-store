@@ -714,7 +714,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   defp page_link(assigns) do
     ~H"""
     <.link
-      href={@href}
+      patch={@href}
       aria-current={@current && "page"}
       aria-label={@label}
       title={@label}

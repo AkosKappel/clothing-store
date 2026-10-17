@@ -20,7 +20,7 @@
 <section class="card mb-6 flex flex-wrap items-end justify-between gap-4 p-5">
   <div :if={@month} class="flex items-center gap-2">
     <.button
-      href={~p"/transactions?#{[month: month_param(Date.shift(@month, month: -1))]}"}
+      patch={~p"/transactions?#{[month: month_param(Date.shift(@month, month: -1))]}"}
       variant="secondary"
       icon="hero-chevron-left-mini"
     >
@@ -28,7 +28,7 @@
     </.button>
     <.button
       :if={Date.before?(@month, @this_month)}
-      href={~p"/transactions?#{[month: month_param(Date.shift(@month, month: 1))]}"}
+      patch={~p"/transactions?#{[month: month_param(Date.shift(@month, month: 1))]}"}
       variant="secondary"
     >
       {Calendar.strftime(Date.shift(@month, month: 1), "%b %Y")}
@@ -39,20 +39,22 @@
   <.form
     :let={f}
     for={%{}}
+    id="month-filter"
     action={~p"/transactions"}
     method="get"
+    phx-submit="filter"
     class="flex flex-wrap items-end gap-3"
   >
     <div class="w-full sm:w-52">
       <.input field={f[:month]} type="month" value={@selected_month} label="Month" />
     </div>
     <.button type="submit" icon="hero-funnel">Show month</.button>
-    <.button :if={@month} href={~p"/transactions"} variant="secondary" icon="hero-x-mark">
+    <.button :if={@month} patch={~p"/transactions"} variant="secondary" icon="hero-x-mark">
       All months
     </.button>
     <.button
       :if={!@month}
-      href={~p"/transactions?#{[month: month_param(@this_month)]}"}
+      patch={~p"/transactions?#{[month: month_param(@this_month)]}"}
       variant="secondary"
       icon="hero-calendar"
     >
@@ -154,7 +156,7 @@
 >
   Pick another month, or show every transaction.
   <:actions>
-    <.button href={~p"/transactions"} variant="secondary" icon="hero-x-mark">All months</.button>
+    <.button patch={~p"/transactions"} variant="secondary" icon="hero-x-mark">All months</.button>
   </:actions>
 </.empty_state>
 <.empty_state

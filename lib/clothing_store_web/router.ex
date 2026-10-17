@@ -45,12 +45,12 @@ defmodule ClothingStoreWeb.Router do
       # the forms validate live and then post to ProductController, which nginx rate-limits
       live "/products/new", ProductLive.Form, :new
       live "/products/:id/edit", ProductLive.Form, :edit
+      live "/transactions", TransactionsLive, :index
+      live "/statistics", StatisticsLive, :index
     end
 
-    get "/transactions", PageController, :transactions
     get "/transactions.csv", PageController, :transactions_csv
     get "/inventory.csv", ProductController, :export
-    get "/statistics", PageController, :statistics
 
     resources "/products", ProductController, except: [:new, :edit]
     post "/products/:id/restock", ProductController, :restock

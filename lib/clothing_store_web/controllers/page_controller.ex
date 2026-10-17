@@ -31,25 +31,6 @@ defmodule ClothingStoreWeb.PageController do
     )
   end
 
-  @per_page 20
-
-  def transactions(conn, params) do
-    {selected_month, month} = Helpers.parse_month(params["month"])
-    result = Transactions.page_transactions(month, parse_page(params["page"]), @per_page)
-    months = result.entries |> Enum.map(&month_of/1) |> Enum.uniq()
-
-    render(conn, :transactions,
-      page_title: "Transactions",
-      selected_month: selected_month,
-      month: month,
-      this_month: Date.utc_today() |> Date.beginning_of_month(),
-      result: result,
-      per_page: @per_page,
-      groups: Enum.chunk_by(result.entries, &month_of/1),
-      month_totals: Transactions.month_totals(months)
-    )
-  end
-
   @doc "One row per line item of the month's transactions (or all of them), as CSV."
   def transactions_csv(conn, params) do
     {selected_month, month} = Helpers.parse_month(params["month"])
@@ -72,40 +53,6 @@ defmodule ClothingStoreWeb.PageController do
     send_download(conn, {:binary, CSV.encode([header | rows])},
       filename: "transactions-#{selected_month || "all"}.csv",
       content_type: "text/csv"
-    )
-  end
-
-  defp month_of(transaction),
-    do: transaction.inserted_at |> DateTime.to_date() |> Date.beginning_of_month()
-
-  # a positive page number; anything else is the first page
-  defp parse_page(page) when is_binary(page) do
-    case Integer.parse(page) do
-      {page, ""} when page >= 1 -> page
-      _ -> 1
-    end
-  end
-
-  defp parse_page(_page), do: 1
-
-  def statistics(conn, _params) do
-    this_month = Date.utc_today() |> Date.beginning_of_month()
-    last_month = this_month |> Date.add(-1) |> Date.beginning_of_month()
-    monthly = Transactions.monthly_sales(12)
-    since = monthly |> hd() |> Map.fetch!(:month) |> DateTime.new!(~T[00:00:00], "Etc/UTC")
-
-    render(conn, :statistics,
-      page_title: "Statistics",
-      this_month: this_month,
-      last_month: last_month,
-      monthly: monthly,
-      categories: Transactions.revenue_by_category(since),
-      stock_alerts: Products.stock_alerts(),
-      bestsellers: Transactions.list_bestsellers(3),
-      this_month_bestsellers:
-        Transactions.list_bestsellers_per_month(3, Date.to_string(this_month)),
-      last_month_bestsellers:
-        Transactions.list_bestsellers_per_month(3, Date.to_string(last_month))
     )
   end
 end

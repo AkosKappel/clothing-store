@@ -1,5 +1,3 @@
-<% this = List.last(@monthly) %>
-<% last = Enum.at(@monthly, -2) %>
 <.header>
   Sales Statistics
   <:subtitle>How the store is doing: revenue, categories, stock and bestsellers.</:subtitle>
@@ -19,27 +17,27 @@
       <.icon name="hero-banknotes" class="size-5" /> Revenue this month
     </dt>
     <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">
-      {format_price(this.revenue)}
+      {format_price(@this.revenue)}
     </dd>
-    <dd class="mt-1 text-xs text-gray-500">Last month: {format_price(last.revenue)}</dd>
+    <dd class="mt-1 text-xs text-gray-500">Last month: {format_price(@last.revenue)}</dd>
   </div>
   <div class="card p-5">
     <dt class="flex items-center gap-2 text-sm text-gray-500">
       <.icon name="hero-receipt-percent" class="size-5" /> Transactions this month
     </dt>
-    <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">{this.count}</dd>
-    <dd class="mt-1 text-xs text-gray-500">Last month: {last.count}</dd>
+    <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">{@this.count}</dd>
+    <dd class="mt-1 text-xs text-gray-500">Last month: {@last.count}</dd>
   </div>
   <div class="card p-5">
     <dt class="flex items-center gap-2 text-sm text-gray-500">
       <.icon name="hero-shopping-bag" class="size-5" /> Average sale this month
     </dt>
     <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">
-      {if this.count > 0, do: format_price(Decimal.div(this.revenue, this.count)), else: "–"}
+      {if @this.count > 0, do: format_price(Decimal.div(@this.revenue, @this.count)), else: "–"}
     </dd>
     <dd class="mt-1 text-xs text-gray-500">
-      Last month: {if last.count > 0,
-        do: format_price(Decimal.div(last.revenue, last.count)),
+      Last month: {if @last.count > 0,
+        do: format_price(Decimal.div(@last.revenue, @last.count)),
         else: "–"}
     </dd>
   </div>
