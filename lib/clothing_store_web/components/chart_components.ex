@@ -173,7 +173,7 @@ defmodule ClothingStoreWeb.ChartComponents do
 
   def chart_table(assigns) do
     ~H"""
-    <details class="mt-4 text-sm">
+    <details class="mt-4 text-sm print:hidden">
       <summary class="cursor-pointer font-medium text-gray-600 hover:text-gray-900">
         Show as table
       </summary>

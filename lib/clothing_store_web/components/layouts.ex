@@ -134,7 +134,7 @@ defmodule ClothingStoreWeb.Layouts do
       )
 
     ~H"""
-    <footer class="mt-16 bg-gray-800 text-sm text-gray-300">
+    <footer class="mt-16 bg-gray-800 print:hidden text-sm text-gray-300">
       <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
           <a href="/" class="flex items-center gap-2">

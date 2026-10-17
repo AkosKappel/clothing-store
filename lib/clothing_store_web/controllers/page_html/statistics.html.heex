@@ -3,7 +3,15 @@
 <.header>
   Sales Statistics
   <:subtitle>How the store is doing: revenue, categories, stock and bestsellers.</:subtitle>
+  <:actions>
+    <.button type="button" variant="secondary" icon="hero-printer" data-print class="print:hidden">
+      Print report
+    </.button>
+  </:actions>
 </.header>
+<p class="mb-6 hidden text-sm text-gray-600 print:block">
+  Monthly report for {Calendar.strftime(@this_month, "%B %Y")}, printed {Date.utc_today()}.
+</p>
 
 <dl class="grid grid-cols-2 gap-4 lg:grid-cols-4">
   <div class="card p-5">

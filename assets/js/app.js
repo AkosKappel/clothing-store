@@ -72,6 +72,11 @@ document.addEventListener("change", event => {
   if (event.target.matches("[data-autosubmit]")) event.target.form?.requestSubmit()
 })
 
+// Buttons marked data-print open the print dialog (the statistics report)
+document.addEventListener("click", event => {
+  if (event.target.closest("[data-print]")) window.print()
+})
+
 // Single-key shortcuts: an element with data-shortcut="n" is clicked (links) or
 // focused (inputs) when that key is pressed outside a text field.
 document.addEventListener("keydown", event => {

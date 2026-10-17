@@ -73,6 +73,12 @@
   }
 }
 
+/* printed pages (the statistics report): keep chart colours, no shadows, no split cards */
+@media print {
+  body { print-color-adjust: exact; background: white; }
+  .card { box-shadow: none; break-inside: avoid; }
+}
+
 /* About page: garment-label look. Ink gray-800, body gray-700, tag red-600, thread gray-400. */
 @layer components {
   .about-wide { font-stretch: 112.5%; }
