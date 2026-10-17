@@ -2,6 +2,7 @@ defmodule ClothingStoreWeb.ProductController do
   use ClothingStoreWeb, :controller
 
   alias ClothingStore.{Products, Transactions}
+  alias ClothingStoreWeb.CSV
 
   # sales window for the stock forecast on the product page
   @forecast_days 30
@@ -18,6 +19,21 @@ defmodule ClothingStoreWeb.ProductController do
       filters: filters,
       categories: categories,
       tags: tags
+    )
+  end
+
+  @doc "The filtered inventory as CSV, in the inventory's sort order."
+  def export(conn, params) do
+    rows =
+      for p <- Products.list_products(filter_params(params)) do
+        [p.id, p.title, p.category, Enum.join(p.tags, ", "), p.price, p.stock, p.updated_at]
+      end
+
+    send_download(
+      conn,
+      {:binary, CSV.encode([~w(id title category tags price stock updated_at) | rows])},
+      filename: "inventory-#{Date.utc_today()}.csv",
+      content_type: "text/csv"
     )
   end
 

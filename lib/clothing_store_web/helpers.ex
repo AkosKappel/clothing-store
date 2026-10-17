@@ -55,6 +55,21 @@ defmodule ClothingStoreWeb.Helpers do
   # photo is required and validated (local /images/ path or allowlisted host)
   def image_link(image_path), do: image_path
 
+  @doc """
+  A `"YYYY-MM"` query param as `{param, first_day_of_month}`; anything else is
+  `{nil, nil}`, meaning every month.
+  """
+  def parse_month(month) when is_binary(month) do
+    with true <- Regex.match?(~r/^\d{4}-\d{2}$/, month),
+         {:ok, date} <- Date.from_iso8601(month <> "-01") do
+      {month, date}
+    else
+      _ -> {nil, nil}
+    end
+  end
+
+  def parse_month(_month), do: {nil, nil}
+
   def current_path(assigns) do
     cond do
       # LiveViews, see ClothingStoreWeb.CurrentPath

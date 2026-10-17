@@ -37,6 +37,15 @@ defmodule ClothingStore.Transactions do
     }
   end
 
+  @doc "Every transaction of `month` (or all when `nil`), oldest first, with line items and products."
+  def list_transactions(month) do
+    Transaction
+    |> in_month(month)
+    |> order_by([t], asc: t.inserted_at, asc: t.id)
+    |> preload(products_transactions: :product)
+    |> Repo.all()
+  end
+
   defp in_month(query, nil), do: query
 
   defp in_month(query, %Date{} = month) do

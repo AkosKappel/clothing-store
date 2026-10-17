@@ -5,6 +5,16 @@
       do: "Sales in #{Calendar.strftime(@month, "%B %Y")}.",
       else: "Every sale, newest first."}
   </:subtitle>
+  <:actions>
+    <.button
+      href={~p"/transactions.csv?#{if @selected_month, do: [month: @selected_month], else: []}"}
+      variant="secondary"
+      icon="hero-arrow-down-tray"
+      download
+    >
+      Export CSV
+    </.button>
+  </:actions>
 </.header>
 
 <section class="card mb-6 flex flex-wrap items-end justify-between gap-4 p-5">

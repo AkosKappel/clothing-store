@@ -2,6 +2,7 @@ defmodule ClothingStoreWeb.PageController do
   use ClothingStoreWeb, :controller
 
   alias ClothingStore.{About, Demo, Products, Transactions}
+  alias ClothingStoreWeb.{CSV, Helpers}
 
   def about(conn, _params) do
     links = Demo.links()
@@ -33,7 +34,7 @@ defmodule ClothingStoreWeb.PageController do
   @per_page 20
 
   def transactions(conn, params) do
-    {selected_month, month} = parse_month(params["month"])
+    {selected_month, month} = Helpers.parse_month(params["month"])
     result = Transactions.page_transactions(month, parse_page(params["page"]), @per_page)
     months = result.entries |> Enum.map(&month_of/1) |> Enum.uniq()
 
@@ -49,6 +50,31 @@ defmodule ClothingStoreWeb.PageController do
     )
   end
 
+  @doc "One row per line item of the month's transactions (or all of them), as CSV."
+  def transactions_csv(conn, params) do
+    {selected_month, month} = Helpers.parse_month(params["month"])
+
+    rows =
+      for t <- Transactions.list_transactions(month), item <- t.products_transactions do
+        [
+          t.id,
+          t.inserted_at,
+          item.product_id,
+          item.product.title,
+          item.quantity,
+          item.unit_price,
+          Decimal.mult(item.unit_price, item.quantity)
+        ]
+      end
+
+    header = ~w(transaction_id date product_id product quantity unit_price line_total)
+
+    send_download(conn, {:binary, CSV.encode([header | rows])},
+      filename: "transactions-#{selected_month || "all"}.csv",
+      content_type: "text/csv"
+    )
+  end
+
   defp month_of(transaction),
     do: transaction.inserted_at |> DateTime.to_date() |> Date.beginning_of_month()
 
@@ -61,18 +87,6 @@ defmodule ClothingStoreWeb.PageController do
   end
 
   defp parse_page(_page), do: 1
-
-  # "YYYY-MM"; anything else shows every transaction
-  defp parse_month(month) when is_binary(month) do
-    with true <- Regex.match?(~r/^\d{4}-\d{2}$/, month),
-         {:ok, date} <- Date.from_iso8601(month <> "-01") do
-      {month, date}
-    else
-      _ -> {nil, nil}
-    end
-  end
-
-  defp parse_month(_month), do: {nil, nil}
 
   def statistics(conn, _params) do
     this_month = Date.utc_today() |> Date.beginning_of_month()

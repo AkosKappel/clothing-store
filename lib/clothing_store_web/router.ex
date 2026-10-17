@@ -48,6 +48,8 @@ defmodule ClothingStoreWeb.Router do
     end
 
     get "/transactions", PageController, :transactions
+    get "/transactions.csv", PageController, :transactions_csv
+    get "/inventory.csv", ProductController, :export
     get "/statistics", PageController, :statistics
 
     resources "/products", ProductController, except: [:new, :edit]

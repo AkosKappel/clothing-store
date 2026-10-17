@@ -36,6 +36,9 @@ defmodule ClothingStoreWeb.ProductHTML do
     single ++ tags
   end
 
+  @doc "The active filters and sort as query params, for the CSV export link."
+  def export_params(filters), do: Enum.reject(filters, fn {_key, value} -> blank?(value) end)
+
   defp blank?(value),
     do: value in [nil, "", [], "All"] or (is_binary(value) and String.trim(value) == "")
 end

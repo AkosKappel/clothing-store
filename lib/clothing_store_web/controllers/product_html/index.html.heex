@@ -2,6 +2,14 @@
   Inventory
   <:subtitle>Every product with its stock. Search, filter and sort the catalogue.</:subtitle>
   <:actions>
+    <.button
+      href={~p"/inventory.csv?#{export_params(@filters)}"}
+      variant="secondary"
+      icon="hero-arrow-down-tray"
+      download
+    >
+      Export CSV
+    </.button>
     <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
   </:actions>
 </.header>
