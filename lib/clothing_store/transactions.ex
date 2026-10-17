@@ -65,6 +65,26 @@ defmodule ClothingStore.Transactions do
     |> Map.new()
   end
 
+  @doc "Units of a product sold in the last `days` days."
+  def units_sold(product_id, days, now \\ DateTime.utc_now()) do
+    since = DateTime.add(now, -days, :day)
+
+    from(pt in ProductTransaction,
+      join: t in assoc(pt, :transaction),
+      where: pt.product_id == ^product_id and t.inserted_at >= ^since,
+      select: coalesce(sum(pt.quantity), 0)
+    )
+    |> Repo.one()
+  end
+
+  @doc """
+  When a product with `stock` left runs out if it keeps selling like it sold
+  `sold` units in the last `days` days: days left, or `nil` when it didn't sell.
+  """
+  def days_of_stock_left(_stock, 0, _days), do: nil
+  def days_of_stock_left(0, _sold, _days), do: 0
+  def days_of_stock_left(stock, sold, days), do: max(floor(stock * days / sold), 1)
+
   def list_bestsellers(n) do
     Transaction
     |> join(:inner, [t], pt in assoc(t, :products_transactions))

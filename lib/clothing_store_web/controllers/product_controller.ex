@@ -1,7 +1,10 @@
 defmodule ClothingStoreWeb.ProductController do
   use ClothingStoreWeb, :controller
 
-  alias ClothingStore.Products
+  alias ClothingStore.{Products, Transactions}
+
+  # sales window for the stock forecast on the product page
+  @forecast_days 30
 
   def index(conn, params) do
     filters = filter_params(params)
@@ -44,7 +47,15 @@ defmodule ClothingStoreWeb.ProductController do
 
   def show(conn, %{"id" => id}) do
     product = Products.get_product!(id)
-    render(conn, :show, page_title: product.title, product: product)
+    sold = Transactions.units_sold(product.id, @forecast_days)
+
+    render(conn, :show,
+      page_title: product.title,
+      product: product,
+      forecast_days: @forecast_days,
+      sold: sold,
+      days_left: Transactions.days_of_stock_left(product.stock, sold, @forecast_days)
+    )
   end
 
   def update(conn, %{"id" => id, "product" => product_params}) do

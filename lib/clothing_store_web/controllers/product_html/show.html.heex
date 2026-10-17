@@ -41,6 +41,15 @@
         </.form>
       </div>
     </:item>
+    <:item title="Forecast">
+      <p>
+        {ngettext("1 sold", "%{count} sold", @sold)} in the last {@forecast_days} days.
+        <span :if={@product.stock > 0 && @days_left}>
+          At that pace it runs out in about {ngettext("1 day", "%{count} days", @days_left)}.
+        </span>
+        <span :if={@product.stock > 0 && !@days_left}>No recent sales, so no run-out date.</span>
+      </p>
+    </:item>
     <:item title="Category"><.category_badge category={@product.category} /></:item>
     <:item title="Tags">
       <div class="flex flex-wrap gap-1.5">
