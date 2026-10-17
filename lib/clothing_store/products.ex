@@ -4,6 +4,7 @@ defmodule ClothingStore.Products do
   """
 
   import Ecto.Query, warn: false
+  alias ClothingStore.ActivityFeed
   alias ClothingStore.Products.Product
   alias ClothingStore.Repo
 
@@ -249,6 +250,7 @@ defmodule ClothingStore.Products do
         {:error, changeset} -> Repo.rollback(changeset)
       end
     end)
+    |> log_event("created", nil)
     |> notify_subscribers(:product_created)
   end
 
@@ -366,6 +368,7 @@ defmodule ClothingStore.Products do
     product
     |> Product.changeset(attrs)
     |> Repo.update()
+    |> log_event("updated", product)
     |> notify_subscribers(:product_updated)
   end
 
@@ -378,7 +381,7 @@ defmodule ClothingStore.Products do
   Adds #{@restock_amount} to a product's stock, capped at the largest stock a product may have.
   The increment runs in the database, so two restocks at once both count.
   """
-  def restock_product(%Product{id: id}) do
+  def restock_product(%Product{id: id} = product) do
     max = Product.max_amount()
 
     from(p in Product,
@@ -388,8 +391,13 @@ defmodule ClothingStore.Products do
     )
     |> Repo.update_all(set: [updated_at: DateTime.utc_now(:second)])
     |> case do
-      {1, [product]} -> notify_subscribers({:ok, product}, :product_updated)
-      {0, []} -> {:error, :not_found}
+      {1, [restocked]} ->
+        {:ok, restocked}
+        |> log_event("restocked", product)
+        |> notify_subscribers(:product_updated)
+
+      {0, []} ->
+        {:error, :not_found}
     end
   end
 
@@ -407,6 +415,7 @@ defmodule ClothingStore.Products do
   """
   def delete_product(%Product{} = product) do
     Repo.delete(product)
+    |> log_event("deleted", product)
     |> notify_subscribers(:product_deleted)
   end
 
@@ -422,6 +431,16 @@ defmodule ClothingStore.Products do
   def change_product(%Product{} = product, attrs \\ %{}) do
     Product.changeset(product, attrs)
   end
+
+  defp log_event({:ok, product} = result, kind, before) do
+    changes =
+      if kind in ["updated", "restocked"], do: ActivityFeed.changes(before, product), else: %{}
+
+    ActivityFeed.product_event(kind, product, changes)
+    result
+  end
+
+  defp log_event(error, _kind, _before), do: error
 
   defp notify_subscribers({:ok, product}, event) do
     Phoenix.PubSub.broadcast(ClothingStore.PubSub, "products", {event, product})

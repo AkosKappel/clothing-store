@@ -52,6 +52,7 @@ defmodule ClothingStoreWeb.Router do
       live "/products/:id/edit", ProductLive.Form, :edit
       live "/transactions", TransactionsLive, :index
       live "/statistics", StatisticsLive, :index
+      live "/activity", ActivityLive, :index
     end
 
     get "/transactions.csv", PageController, :transactions_csv

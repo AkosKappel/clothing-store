@@ -6,12 +6,13 @@ defmodule ClothingStoreWeb.ProductLive.Index do
   """
   use ClothingStoreWeb, :live_view
 
-  import ClothingStoreWeb.Helpers
+  import ClothingStoreWeb.{ActivityComponents, Helpers}
 
-  alias ClothingStore.Products
+  alias ClothingStore.{ActivityFeed, Products}
   alias ClothingStoreWeb.Presence
 
   @per_page 24
+  @recent_activity 4
   # how long a product changed by someone else stays highlighted (matches .live-highlight)
   @highlight_ms 2_500
 
@@ -20,12 +21,14 @@ defmodule ClothingStoreWeb.ProductLive.Index do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
       Phoenix.PubSub.subscribe(ClothingStore.PubSub, Presence.online_topic())
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "activity")
     end
 
     {:ok,
      socket
      |> assign(page_title: "Dashboard", view: "grid", highlighted: %{}, announcement: nil)
      |> assign(:online, Presence.online_count())
+     |> stream(:activity, ActivityFeed.recent(@recent_activity), limit: @recent_activity)
      |> stream_configure(:products, dom_id: &"product-#{&1.id}")
      |> load_first_page()}
   end
@@ -95,7 +98,18 @@ defmodule ClothingStoreWeb.ProductLive.Index do
     end
   end
 
-  def handle_info(:demo_reset, socket), do: {:noreply, load_first_page(socket)}
+  def handle_info(:demo_reset, socket) do
+    {:noreply,
+     socket
+     |> load_first_page()
+     |> stream(:activity, ActivityFeed.recent(@recent_activity),
+       reset: true,
+       limit: @recent_activity
+     )}
+  end
+
+  def handle_info({:activity, event}, socket),
+    do: {:noreply, stream_insert(socket, :activity, event, at: 0, limit: @recent_activity)}
 
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket),
     do: {:noreply, assign(socket, :online, Presence.online_count())}

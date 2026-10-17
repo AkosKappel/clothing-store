@@ -21,6 +21,21 @@
   </:actions>
 </.header>
 
+<section class="card mb-6 px-5 py-3" aria-labelledby="recent-activity-title">
+  <div class="flex items-center justify-between gap-3">
+    <h2
+      id="recent-activity-title"
+      class="flex items-center gap-2 text-sm font-semibold text-gray-900"
+    >
+      <.icon name="hero-bolt-mini" class="size-4 text-red-600" /> Recent activity
+    </h2>
+    <.link navigate={~p"/activity"} class="text-sm font-semibold text-red-700 hover:underline">
+      See all
+    </.link>
+  </div>
+  <.activity_list id="recent-activity" events={@streams.activity} />
+</section>
+
 <div class="mb-4 flex items-center justify-between gap-3">
   <p class="text-sm text-gray-600">{ngettext("1 product", "%{count} products", @total)}</p>
   <div class="inline-flex rounded-md shadow-xs" role="group" aria-label="Layout">

@@ -101,6 +101,8 @@ defmodule ClothingStore.Transactions do
           {:transaction_created, transaction}
         )
 
+        ClothingStore.ActivityFeed.sale_event(sold, transaction.total_price)
+
         {:ok, transaction}
 
       {:error, reason} ->

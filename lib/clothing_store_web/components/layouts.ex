@@ -139,6 +139,7 @@ defmodule ClothingStoreWeb.Layouts do
         {"Low stock", ~p"/products?low_stock=true&sort=stock_asc", "hero-exclamation-triangle"},
         {"Transactions", ~p"/transactions", "hero-banknotes"},
         {"Statistics", ~p"/statistics", "hero-chart-bar"},
+        {"Activity", ~p"/activity", "hero-bolt"},
         {"System status", ~p"/system", "hero-cpu-chip"},
         {"Settings", ~p"/users/settings", "hero-cog-6-tooth"},
         {"About", ~p"/about", "hero-information-circle"}
