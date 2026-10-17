@@ -84,17 +84,31 @@ catalogue = [
    "A brown wool tweed overcoat with horn buttons, warm enough for real winters."}
 ]
 
+# products tagged "sale" run a 20 % discount from a few days ago to a few days ahead
+today = Date.utc_today()
+
 for {slug, title, category, price, stock, tags, description} <- catalogue do
+  discount =
+    if "sale" in tags,
+      do: %{
+        discount_percent: 20,
+        discount_starts_on: Date.add(today, -3),
+        discount_ends_on: Date.add(today, 4)
+      },
+      else: %{}
+
   {:ok, _} =
-    Products.create_product(%{
-      title: title,
-      description: description,
-      category: category,
-      photo: "/images/products/#{slug}.webp",
-      price: Decimal.new(price),
-      stock: stock,
-      tags: tags
-    })
+    Products.create_product(
+      Map.merge(discount, %{
+        title: title,
+        description: description,
+        category: category,
+        photo: "/images/products/#{slug}.webp",
+        price: Decimal.new(price),
+        stock: stock,
+        tags: tags
+      })
+    )
 end
 
 # A year of sales. A fixed random seed makes every reset produce the same pattern;
@@ -147,6 +161,7 @@ Repo.insert_all(
       product_id: product.id,
       quantity: quantity,
       unit_price: product.price,
+      full_price: product.price,
       inserted_at: at,
       updated_at: at
     }

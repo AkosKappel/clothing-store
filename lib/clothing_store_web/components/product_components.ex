@@ -4,6 +4,8 @@ defmodule ClothingStoreWeb.ProductComponents do
 
   import ClothingStoreWeb.CoreComponents
 
+  alias ClothingStore.Products.Product
+
   @low_stock ClothingStore.Products.low_stock()
 
   # One colour per seed category, in the order of the validated default chart
@@ -162,6 +164,25 @@ defmodule ClothingStoreWeb.ProductComponents do
         </li>
       </ul>
 
+      <fieldset class="rounded-md border border-gray-200 p-4">
+        <legend class="px-1 text-sm font-semibold text-gray-800">Discount (optional)</legend>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <.input
+            field={@form[:discount_percent]}
+            type="number"
+            label="Percent off"
+            min="1"
+            max="90"
+            step="1"
+          />
+          <.input field={@form[:discount_starts_on]} type="date" label="From" />
+          <.input field={@form[:discount_ends_on]} type="date" label="Until (inclusive)" />
+        </div>
+        <p class="mt-2 text-xs text-gray-500">
+          Sales during these days use the discounted price. Leave the percent empty for no discount.
+        </p>
+      </fieldset>
+
       <:actions>
         <div class="ml-auto flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
           <.button href={@cancel_to} variant="secondary">Cancel</.button>
@@ -179,6 +200,34 @@ defmodule ClothingStoreWeb.ProductComponents do
   # only a photo that passed validation, so the preview never requests an arbitrary URL
   defp photo_preview?(%Phoenix.HTML.FormField{value: value, errors: errors}),
     do: is_binary(value) and value != "" and errors == []
+
+  @doc """
+  A product's price: while a discount runs, the sale price, the struck list price
+  and the percentage off.
+  """
+  attr :product, ClothingStore.Products.Product, required: true
+  attr :class, :any, default: nil
+
+  def price(assigns) do
+    assigns = assign(assigns, :on_sale, Product.on_sale?(assigns.product))
+
+    ~H"""
+    <span class={["inline-flex flex-wrap items-baseline justify-end gap-x-1.5", @class]}>
+      <span class={[
+        "font-semibold whitespace-nowrap",
+        if(@on_sale, do: "text-red-700", else: "text-gray-900")
+      ]}>
+        {ClothingStoreWeb.Helpers.format_price(Product.sale_price(@product))}
+      </span>
+      <s :if={@on_sale} class="text-sm whitespace-nowrap text-gray-500">
+        <span class="sr-only">was</span> {ClothingStoreWeb.Helpers.format_price(@product.price)}
+      </s>
+      <.badge :if={@on_sale} class="bg-red-50 text-red-800 ring-red-600/20">
+        −{@product.discount_percent} %
+      </.badge>
+    </span>
+    """
+  end
 
   @doc "A QR code of `url` as inline SVG, labelled for screen readers."
   attr :url, :string, required: true

@@ -11,6 +11,9 @@ defmodule ClothingStore.Products.Product do
     field :stock, :integer
     field :tags, {:array, :string}, default: []
     field :deleted_at, :utc_datetime
+    field :discount_percent, :integer
+    field :discount_starts_on, :date
+    field :discount_ends_on, :date
 
     has_many :products_transactions, ClothingStore.Products.ProductTransaction
     has_many :transactions, through: [:products_transactions, :transaction]
@@ -34,7 +37,18 @@ defmodule ClothingStore.Products.Product do
   @doc false
   def changeset(product, attrs) do
     product
-    |> cast(attrs, [:photo, :title, :description, :category, :price, :stock, :tags])
+    |> cast(attrs, [
+      :photo,
+      :title,
+      :description,
+      :category,
+      :price,
+      :stock,
+      :tags,
+      :discount_percent,
+      :discount_starts_on,
+      :discount_ends_on
+    ])
     |> validate_required([:photo, :title, :description, :category, :price, :stock])
     |> validate_length(:title, max: 100)
     |> validate_length(:category, max: 50)
@@ -49,6 +63,46 @@ defmodule ClothingStore.Products.Product do
     |> validate_tags()
     |> validate_number(:price, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
     |> validate_number(:stock, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
+    |> validate_discount()
+  end
+
+  # a discount needs all three fields, and the end can't come before the start
+  defp validate_discount(changeset) do
+    if get_field(changeset, :discount_percent) do
+      changeset
+      |> validate_number(:discount_percent, greater_than: 0, less_than_or_equal_to: 90)
+      |> validate_required([:discount_starts_on, :discount_ends_on],
+        message: "is needed for a discount"
+      )
+      |> validate_change(:discount_ends_on, fn :discount_ends_on, ends_on ->
+        starts_on = get_field(changeset, :discount_starts_on)
+
+        if starts_on && Date.before?(ends_on, starts_on),
+          do: [discount_ends_on: "can't be before the start"],
+          else: []
+      end)
+    else
+      changeset
+    end
+  end
+
+  @doc "Whether the product's discount runs on `date`."
+  def on_sale?(%__MODULE__{discount_percent: percent} = product, date \\ Date.utc_today()) do
+    is_integer(percent) and not is_nil(product.discount_starts_on) and
+      not is_nil(product.discount_ends_on) and
+      not Date.before?(date, product.discount_starts_on) and
+      not Date.after?(date, product.discount_ends_on)
+  end
+
+  @doc "The price a customer pays on `date`: the list price less any running discount."
+  def sale_price(%__MODULE__{price: price} = product, date \\ Date.utc_today()) do
+    if on_sale?(product, date),
+      do:
+        price
+        |> Decimal.mult(100 - product.discount_percent)
+        |> Decimal.div(100)
+        |> Decimal.round(2),
+      else: price
   end
 
   defp validate_photo(changeset) do

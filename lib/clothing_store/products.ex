@@ -10,7 +10,9 @@ defmodule ClothingStore.Products do
 
   # the public demo resets nightly; this keeps visitors from filling the database until then
   @max_products 200
-  @snapshot_fields ~w(title description category price stock tags photo)a
+  @snapshot_fields ~w(title description category price stock tags photo discount_percent discount_starts_on discount_ends_on)a
+  # what restoring a version puts back: everything but the stock
+  @revertable Enum.map(@snapshot_fields -- [:stock], &to_string/1)
   # pg_advisory_xact_lock key that serializes creates, so the cap can't be overshot
   @create_lock 7_201_001
 
@@ -465,12 +467,25 @@ defmodule ClothingStore.Products do
     |> Repo.all()
   end
 
+  @doc """
+  The prices a product had, newest first, as `{price, since}`, from its versions
+  (newest first): the first version and each change of the price.
+  """
+  def price_history(versions) do
+    for %Version{} = version <- Enum.reverse(versions),
+        version.action == "created" or Map.has_key?(version.changes, "price"),
+        reduce: [] do
+      history ->
+        [{Decimal.new(to_string(version.snapshot["price"])), version.inserted_at} | history]
+    end
+  end
+
   @doc "Puts back a version's title, description, category, price, tags and photo (not the stock)."
   def revert_to_version(%Product{} = product, version_id) do
     with {:ok, version_id} <- Ecto.Type.cast(:id, version_id),
          %Version{snapshot: snapshot} <-
            Repo.get_by(Version, id: version_id, product_id: product.id) do
-      update_product(product, Map.take(snapshot, ~w(title description category price tags photo)))
+      update_product(product, Map.take(snapshot, @revertable))
     else
       _ -> {:error, :not_found}
     end

@@ -10,7 +10,7 @@ defmodule ClothingStore.ActivityFeed do
   alias ClothingStore.Repo
 
   # fields worth showing in the feed when they change
-  @tracked ~w(title category price stock tags description photo)a
+  @tracked ~w(title category price stock tags description photo discount_percent discount_starts_on discount_ends_on)a
 
   @doc "The latest `limit` events, newest first."
   def recent(limit \\ 50) do

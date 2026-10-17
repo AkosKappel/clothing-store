@@ -90,6 +90,11 @@ defmodule ClothingStoreWeb.ActivityComponents do
   @doc "One change as text: `stock 5 → 3`, `price 79,90 € → 69,90 €`, `description edited`."
   def change_text({field, _values}) when field in ["description", "photo"], do: "#{field} changed"
 
+  def change_text({"discount_percent", [old, new]}),
+    do: "discount #{percent_text(old)} → #{percent_text(new)}"
+
+  def change_text({"discount_" <> _dates, _values}), do: "discount dates changed"
+
   def change_text({"price", [old, new]}),
     do:
       "price #{format_price(Decimal.new(to_string(old)))} → #{format_price(Decimal.new(to_string(new)))}"
@@ -98,6 +103,9 @@ defmodule ClothingStoreWeb.ActivityComponents do
     do: "tags #{Enum.join(old, ", ") |> blank_dash()} → #{Enum.join(new, ", ") |> blank_dash()}"
 
   def change_text({field, [old, new]}), do: "#{field} #{old} → #{new}"
+
+  defp percent_text(nil), do: "none"
+  defp percent_text(percent), do: "#{percent} %"
 
   defp blank_dash(""), do: "–"
   defp blank_dash(text), do: text

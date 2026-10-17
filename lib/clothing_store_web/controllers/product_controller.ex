@@ -64,6 +64,7 @@ defmodule ClothingStoreWeb.ProductController do
   def show(conn, %{"id" => id}) do
     product = Products.get_product!(id)
     daily = Transactions.daily_units(product.id, @forecast_days)
+    versions = Products.list_versions(product.id)
     sold = daily |> Enum.map(&elem(&1, 1)) |> Enum.sum()
 
     render(conn, :show,
@@ -71,7 +72,8 @@ defmodule ClothingStoreWeb.ProductController do
       product: product,
       forecast_days: @forecast_days,
       daily: daily,
-      versions: Products.list_versions(product.id),
+      versions: versions,
+      price_history: Products.price_history(versions),
       sold: sold,
       days_left: Transactions.days_of_stock_left(product.stock, sold, @forecast_days),
       reorder: Transactions.reorder_quantity(product.stock, sold)

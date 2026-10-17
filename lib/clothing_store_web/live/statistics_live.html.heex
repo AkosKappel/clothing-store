@@ -20,6 +20,9 @@
       {format_price(@this.revenue)}
     </dd>
     <dd class="mt-1 text-xs text-gray-500">Last month: {format_price(@last.revenue)}</dd>
+    <dd :if={Decimal.gt?(@discounts, 0)} class="mt-1 text-xs text-red-700">
+      Discounts given: −{format_price(@discounts)}
+    </dd>
   </div>
   <div class="card p-5">
     <dt class="flex items-center gap-2 text-sm text-gray-500">

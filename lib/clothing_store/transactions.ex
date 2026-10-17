@@ -61,9 +61,11 @@ defmodule ClothingStore.Transactions do
           {take_stock(product, quantity, now), quantity}
         end)
 
+      today = DateTime.to_date(now)
+
       total =
         Enum.reduce(sold, Decimal.new(0), fn {product, quantity}, sum ->
-          Decimal.add(sum, Decimal.mult(product.price, quantity))
+          Decimal.add(sum, Decimal.mult(Product.sale_price(product, today), quantity))
         end)
 
       transaction =
@@ -76,7 +78,8 @@ defmodule ClothingStore.Transactions do
             transaction_id: transaction.id,
             product_id: product.id,
             quantity: quantity,
-            unit_price: product.price,
+            unit_price: Product.sale_price(product, today),
+            full_price: product.price,
             inserted_at: now,
             updated_at: now
           }
@@ -252,6 +255,23 @@ defmodule ClothingStore.Transactions do
       {revenue, count} = Map.get(totals, month, {Decimal.new(0), 0})
       %{month: month, revenue: revenue, count: count}
     end
+  end
+
+  @doc "What discounts took off the list prices of the sales in `month` (its first day)."
+  def discounts_given(%Date{} = month) do
+    from(pt in ProductTransaction,
+      join: t in assoc(pt, :transaction),
+      select: sum(fragment("(? - ?) * ?", pt.full_price, pt.unit_price, pt.quantity))
+    )
+    |> in_month_of_transaction(month)
+    |> Repo.one()
+    |> Kernel.||(Decimal.new(0))
+  end
+
+  defp in_month_of_transaction(query, month) do
+    from = DateTime.new!(Date.beginning_of_month(month), ~T[00:00:00], "Etc/UTC")
+    to = DateTime.new!(month |> Date.end_of_month() |> Date.add(1), ~T[00:00:00], "Etc/UTC")
+    where(query, [_pt, t], t.inserted_at >= ^from and t.inserted_at < ^to)
   end
 
   @doc """

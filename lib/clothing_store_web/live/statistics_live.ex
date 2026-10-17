@@ -40,6 +40,7 @@ defmodule ClothingStoreWeb.StatisticsLive do
       this: List.last(monthly),
       last: Enum.at(monthly, -2),
       categories: Transactions.revenue_by_category(since),
+      discounts: Transactions.discounts_given(this_month),
       stock_alerts: Products.stock_alerts(),
       bestsellers: Transactions.list_bestsellers(3),
       this_month_bestsellers:

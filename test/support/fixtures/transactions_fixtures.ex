@@ -19,7 +19,8 @@ defmodule ClothingStore.TransactionsFixtures do
         product_id: product.id,
         transaction_id: transaction.id,
         quantity: quantity,
-        unit_price: product.price
+        unit_price: product.price,
+        full_price: product.price
       })
     end
 

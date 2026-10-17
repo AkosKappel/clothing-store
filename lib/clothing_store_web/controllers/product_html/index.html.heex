@@ -181,7 +181,7 @@
     </div>
   </:col>
   <:col :let={product} label="Price" class="text-right whitespace-nowrap">
-    {format_price(product.price)}
+    <.price product={product} />
   </:col>
   <:col :let={product} label="Stock" class="text-right whitespace-nowrap">
     <.stock_badge stock={product.stock} />

@@ -64,4 +64,23 @@ defmodule ClothingStoreWeb.HistoryTest do
     conn = post(conn, ~p"/products/#{product}/versions/#{version.id}/revert")
     assert Phoenix.Flash.get(conn.assigns.flash, :error) =~ "can't be restored"
   end
+
+  test "a running discount shows the sale price everywhere", %{conn: conn} do
+    today = Date.utc_today()
+
+    product =
+      product_fixture(
+        title: "Trench coat",
+        price: "100.00",
+        discount_percent: 30,
+        discount_starts_on: today,
+        discount_ends_on: today
+      )
+
+    for path <- [~p"/products/#{product}", ~p"/products"] do
+      html = conn |> get(path) |> html_response(200)
+      assert html =~ "70,00 €"
+      assert html =~ "−30 %"
+    end
+  end
 end
