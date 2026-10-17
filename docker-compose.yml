@@ -43,7 +43,7 @@ services:
         limits:
           memory: 512M
     environment:
-      DATABASE_URL: ecto://${DB_USERNAME:-tagline}:${DB_PASSWORD}@db/${DB_DATABASE:-tagline}
+      DATABASE_URL: ecto://${DB_USERNAME:-tagline}:${DB_PASSWORD:?set DB_PASSWORD in .env}@db/${DB_DATABASE:-tagline}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:?set SECRET_KEY_BASE in .env}
       PHX_HOST: ${PHX_HOST:-tagline.tailb52c43.ts.net}
       PORT: "4000"

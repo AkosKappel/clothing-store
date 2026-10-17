@@ -533,6 +533,20 @@ defmodule ClothingStore.UsersTest do
       assert "can't be changed for the demo account" in errors_on(changeset).password
     end
 
+    test "can't confirm an e-mail change token", %{user: user} do
+      token =
+        extract_user_token(fn url ->
+          Users.deliver_user_update_email_instructions(
+            %{user | email: unique_user_email()},
+            user.email,
+            url
+          )
+        end)
+
+      assert Users.update_user_email(user, token) == :error
+      assert Repo.get!(User, user.id).email == user.email
+    end
+
     test "gets no reset e-mail", %{user: user} do
       assert {:error, :locked} =
                Users.deliver_user_reset_password_instructions(user, &"[TOKEN]#{&1}")

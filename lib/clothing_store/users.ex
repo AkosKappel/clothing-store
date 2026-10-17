@@ -152,7 +152,9 @@ defmodule ClothingStore.Users do
   def update_user_email(user, token) do
     context = "change:#{user.email}"
 
-    with {:ok, query} <- UserToken.verify_change_email_token_query(token, context),
+    # apply_user_email/3 already refuses the demo account; this guards a stray token too
+    with false <- Demo.locked?(user),
+         {:ok, query} <- UserToken.verify_change_email_token_query(token, context),
          %UserToken{sent_to: email} <- Repo.one(query),
          {:ok, _} <- Repo.transaction(user_email_multi(user, email, context)) do
       :ok
