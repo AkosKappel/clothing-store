@@ -14,7 +14,7 @@
     </span>
   </:subtitle>
   <:actions>
-    <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
+    <.button navigate={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
       {gettext("New product")}
       <kbd class="ml-1 hidden rounded-sm bg-black/20 px-1.5 font-sans text-xs sm:inline">N</kbd>
     </.button>
@@ -67,7 +67,7 @@
     "Add the first product, or wait for the nightly reset to bring back the demo catalogue."
   )}
   <:actions>
-    <.button href={~p"/products/new"} icon="hero-plus">{gettext("New product")}</.button>
+    <.button navigate={~p"/products/new"} icon="hero-plus">{gettext("New product")}</.button>
   </:actions>
 </.empty_state>
 
@@ -84,7 +84,7 @@
   <li :for={{dom_id, product} <- @streams.products} id={dom_id}>
     <.link
       :if={@view == "grid"}
-      href={~p"/products/#{product.id}"}
+      navigate={~p"/products/#{product.id}"}
       class={[
         "card group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600",
         Map.has_key?(@highlighted, product.id) && "live-highlight"
@@ -113,7 +113,7 @@
     </.link>
     <.link
       :if={@view == "list"}
-      href={~p"/products/#{product.id}"}
+      navigate={~p"/products/#{product.id}"}
       class={[
         "group flex items-center gap-4 px-4 py-3 hover:bg-gray-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-red-600",
         Map.has_key?(@highlighted, product.id) && "live-highlight"

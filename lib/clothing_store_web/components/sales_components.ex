@@ -100,7 +100,7 @@ defmodule ClothingStoreWeb.SalesComponents do
         <:col :let={{{product, _sold}, rank}} label={gettext("Product")}>
           <span class="mr-2 inline-block w-5 font-semibold text-gray-500">{rank}.</span>
           <.link
-            href={~p"/products/#{product}"}
+            navigate={~p"/products/#{product}"}
             class="font-medium text-gray-900 hover:text-red-700 hover:underline"
           >
             {product.title}

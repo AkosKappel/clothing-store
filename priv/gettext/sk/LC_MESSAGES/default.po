@@ -36,7 +36,7 @@ msgstr "%{month}: %{revenue} z %{sales}"
 msgid "%{stock} in stock"
 msgstr "%{stock} na sklade"
 
-#: lib/clothing_store_web/controllers/product_controller.ex:108
+#: lib/clothing_store_web/controllers/product_controller.ex:62
 #, elixir-autogen, elixir-format
 msgid "%{title} is back."
 msgstr "%{title} je späť."
@@ -46,7 +46,8 @@ msgstr "%{title} je späť."
 msgid "%{title} was deleted"
 msgstr "%{title} bol odstránený"
 
-#: lib/clothing_store_web/controllers/product_controller.ex:176
+#: lib/clothing_store_web/controllers/product_controller.ex:130
+#: lib/clothing_store_web/live/product_live/show.ex:29
 #, elixir-autogen, elixir-format
 msgid "%{title} was deleted."
 msgstr "%{title} bol odstránený."
@@ -66,7 +67,7 @@ msgstr "%{title}: celkom %{total}"
 msgid "%{title}: %{total} in total, most on %{date} (%{best})"
 msgstr "%{title}: celkom %{total}, najviac %{date} (%{best})"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:166
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:170
 #, elixir-autogen, elixir-format
 msgid "(current)"
 msgstr "(aktuálna)"
@@ -81,7 +82,7 @@ msgstr "(splnené)"
 msgid "(not yet)"
 msgstr "(zatiaľ nie)"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:137
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:142
 #, elixir-autogen, elixir-format
 msgid "(remove this filter)"
 msgstr "(odstrániť tento filter)"
@@ -110,7 +111,7 @@ msgstr[0] "ďalší 1 má nízku zásobu"
 msgstr[1] "ďalšie %{count} majú nízku zásobu"
 msgstr[2] "ďalších %{count} má nízku zásobu"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:128
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:133
 #: lib/clothing_store_web/live/product_live/index.html.heex:40
 #: lib/clothing_store_web/live/statistics_live.html.heex:65
 #, elixir-autogen, elixir-format
@@ -129,7 +130,7 @@ msgstr[0] "1 predaj"
 msgstr[1] "%{count} predaje"
 msgstr[2] "%{count} predajov"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:84
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:88
 #, elixir-autogen, elixir-format
 msgid "1 sold in the last %{days} days."
 msgid_plural "%{count} sold in the last %{days} days."
@@ -145,7 +146,7 @@ msgstr[0] "1 návštevník online"
 msgstr[1] "%{count} návštevníci online"
 msgstr[2] "%{count} návštevníkov online"
 
-#: lib/clothing_store_web/components/layouts.ex:321
+#: lib/clothing_store_web/components/layouts.ex:331
 #, elixir-autogen, elixir-format
 msgid "A Phoenix LiveView manager dashboard for a clothing store: inventory, sales statistics and live updates. A portfolio demo with sample data."
 msgstr "Manažérsky dashboard v Phoenix LiveView pre obchod s oblečením: inventár, štatistiky predaja a živé aktualizácie. Portfóliové demo s ukážkovými dátami."
@@ -155,7 +156,7 @@ msgstr "Manažérsky dashboard v Phoenix LiveView pre obchod s oblečením: inve
 msgid "A link to confirm your email change has been sent to the new address."
 msgstr "Odkaz na potvrdenie zmeny e-mailu bol odoslaný na novú adresu."
 
-#: lib/clothing_store_web/components/layouts.ex:234
+#: lib/clothing_store_web/components/layouts.ex:236
 #, elixir-autogen, elixir-format
 msgid "A manager dashboard for a clothing store, built as a portfolio demo. Everything is sample data and resets every night at %{time} (%{timezone})."
 msgstr "Manažérsky dashboard pre obchod s oblečením, vytvorený ako portfóliové demo. Všetky dáta sú ukážkové a každú noc o %{time} (%{timezone}) sa obnovia."
@@ -182,7 +183,7 @@ msgstr "O projekte"
 msgid "About the project"
 msgstr "O projekte"
 
-#: lib/clothing_store_web/components/layouts.ex:247
+#: lib/clothing_store_web/components/layouts.ex:249
 #: lib/clothing_store_web/controllers/error_html.ex:74
 #, elixir-autogen, elixir-format
 msgid "About this project"
@@ -226,7 +227,7 @@ msgstr "Pridať veľkosť"
 msgid "Add or update products from a CSV file, for example an edited inventory export."
 msgstr "Pridajte alebo aktualizujte produkty zo súboru CSV, napríklad z upraveného exportu inventára."
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:228
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:233
 #, elixir-autogen, elixir-format
 msgid "Add the first product to start tracking stock."
 msgstr "Pridajte prvý produkt a začnite sledovať zásoby."
@@ -241,7 +242,7 @@ msgstr "Pridajte prvý produkt alebo počkajte, kým nočné obnovenie vráti de
 msgid "Add, edit and delete products"
 msgstr "Pridávajte, upravujte a odstraňujte produkty"
 
-#: lib/clothing_store_web/controllers/product_html.ex:43
+#: lib/clothing_store_web/controllers/product_html.ex:52
 #, elixir-autogen, elixir-format
 msgid "Added to the catalogue"
 msgstr "Pridaný do katalógu"
@@ -275,12 +276,12 @@ msgstr[0] "Tento produkt práve upravuje iný návštevník. Ak uložíte obaja,
 msgstr[1] "Tento produkt práve upravujú %{count} ďalší návštevníci. Ak uložíte všetci, platí posledné uloženie."
 msgstr[2] "Tento produkt práve upravuje %{count} ďalších návštevníkov. Ak uložíte všetci, platí posledné uloženie."
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:70
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:75
 #, elixir-autogen, elixir-format
 msgid "Any"
 msgstr "Ľubovoľná"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:120
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:125
 #, elixir-autogen, elixir-format
 msgid "Apply filters"
 msgstr "Použiť filtre"
@@ -300,7 +301,7 @@ msgstr "Aspoň %{count} znakov"
 msgid "At most %{rows} rows and %{kb} KB. If any row is invalid, nothing is imported."
 msgstr "Najviac %{rows} riadkov a %{kb} KB. Ak je niektorý riadok neplatný, nič sa neimportuje."
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:91
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:95
 #, elixir-autogen, elixir-format
 msgid "At that pace it runs out in about 1 day."
 msgid_plural "At that pace it runs out in about %{count} days."
@@ -346,7 +347,7 @@ msgstr "Najpredávanejšie"
 msgid "Both passwords match"
 msgstr "Obe heslá sa zhodujú"
 
-#: lib/clothing_store_web/components/layouts.ex:288
+#: lib/clothing_store_web/components/layouts.ex:290
 #, elixir-autogen, elixir-format
 msgid "Built with"
 msgstr "Vytvorené pomocou"
@@ -364,15 +365,15 @@ msgid "Cancel"
 msgstr "Zrušiť"
 
 #: lib/clothing_store_web/components/product_components.ex:125
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:51
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:177
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:116
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:54
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:182
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:120
 #: lib/clothing_store_web/live/statistics_live.html.heex:122
 #, elixir-autogen, elixir-format
 msgid "Category"
 msgstr "Kategória"
 
-#: lib/clothing_store_web/controllers/product_html.ex:22
+#: lib/clothing_store_web/controllers/product_html.ex:31
 #, elixir-autogen, elixir-format
 msgid "Category: %{category}"
 msgstr "Kategória: %{category}"
@@ -429,8 +430,8 @@ msgstr "Zvoľte si nové heslo s aspoň 12 znakmi."
 msgid "Choose one file"
 msgstr "Vyberte jeden súbor"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:118
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:219
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:123
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:224
 #, elixir-autogen, elixir-format
 msgid "Clear filters"
 msgstr "Zrušiť filtre"
@@ -491,8 +492,8 @@ msgstr "Aktuálne heslo"
 
 #: lib/clothing_store_web/components/layouts.ex:140
 #: lib/clothing_store_web/components/layouts/app.html.heex:40
-#: lib/clothing_store_web/components/layouts/root.html.heex:15
-#: lib/clothing_store_web/components/layouts/root.html.heex:27
+#: lib/clothing_store_web/components/layouts/root.html.heex:16
+#: lib/clothing_store_web/components/layouts/root.html.heex:28
 #: lib/clothing_store_web/live/product_live/index.ex:30
 #, elixir-autogen, elixir-format
 msgid "Dashboard"
@@ -514,8 +515,8 @@ msgstr "Znížiť zásobu"
 msgid "Delete"
 msgstr "Odstrániť"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:204
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:12
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:209
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:16
 #, elixir-autogen, elixir-format
 msgid "Delete %{title}?"
 msgstr "Odstrániť %{title}?"
@@ -525,13 +526,13 @@ msgstr "Odstrániť %{title}?"
 msgid "Demo"
 msgstr "Demo"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:101
+#: lib/clothing_store_web/components/layouts/app.html.heex:102
 #, elixir-autogen, elixir-format
 msgid "Demo info"
 msgstr "Informácie o deme"
 
 #: lib/clothing_store_web/components/product_components.ex:95
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:143
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:147
 #, elixir-autogen, elixir-format
 msgid "Description"
 msgstr "Popis"
@@ -541,7 +542,7 @@ msgstr "Popis"
 msgid "Discount (optional)"
 msgstr "Zľava (voliteľné)"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:29
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:33
 #, elixir-autogen, elixir-format
 msgid "Discount: −%{percent} % from %{from} to %{until}"
 msgstr "Zľava: −%{percent} % od %{from} do %{until}"
@@ -556,8 +557,8 @@ msgstr "Poskytnuté zľavy: −%{amount}"
 msgid "Done"
 msgstr "Hotovo"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:199
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:7
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:204
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:11
 #, elixir-autogen, elixir-format
 msgid "Edit"
 msgstr "Upraviť"
@@ -573,13 +574,13 @@ msgstr "Upraviť produkt"
 msgid "Edit a product or wait a few minutes for the next simulated sale."
 msgstr "Upravte produkt alebo počkajte pár minút na ďalší simulovaný predaj."
 
-#: lib/clothing_store_web/controllers/product_controller.ex:97
+#: lib/clothing_store_web/controllers/product_controller.ex:51
 #: lib/clothing_store_web/live/product_live/form.ex:83
 #, elixir-autogen, elixir-format
 msgid "Edit product"
 msgstr "Upraviť produkt"
 
-#: lib/clothing_store_web/controllers/product_html.ex:44
+#: lib/clothing_store_web/controllers/product_html.ex:53
 #, elixir-autogen, elixir-format
 msgid "Edited"
 msgstr "Upravený"
@@ -607,7 +608,7 @@ msgstr "Odkaz na zmenu e-mailu je neplatný alebo jeho platnosť vypršala."
 msgid "Email changed successfully."
 msgstr "E-mail bol úspešne zmenený."
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:152
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:156
 #, elixir-autogen, elixir-format
 msgid "Every change to this product. Restoring a version brings back its details (not the stock)."
 msgstr "Všetky zmeny tohto produktu. Obnovenie verzie vráti jej údaje (nie zásobu)."
@@ -648,7 +649,7 @@ msgstr "Filtrujte inventár podľa kategórie, ceny, zásoby a štítkov"
 msgid "Filters"
 msgstr "Filtre"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:82
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:86
 #, elixir-autogen, elixir-format
 msgid "Forecast"
 msgstr "Predpoveď"
@@ -669,7 +670,7 @@ msgstr "Zabudli ste heslo?"
 msgid "From"
 msgstr "Od"
 
-#: lib/clothing_store_web/controllers/product_html.ex:23
+#: lib/clothing_store_web/controllers/product_html.ex:32
 #, elixir-autogen, elixir-format
 msgid "From %{price} €"
 msgstr "Od %{price} €"
@@ -694,7 +695,7 @@ msgstr "Mriežka"
 msgid "Hang in there while we get back on track"
 msgstr "Chvíľu vydržte, kým sa to opäť rozbehne"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:150
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:154
 #, elixir-autogen, elixir-format
 msgid "History"
 msgstr "História"
@@ -742,12 +743,12 @@ msgid "Importing..."
 msgstr "Importuje sa..."
 
 #: lib/clothing_store_web/components/sales_components.ex:125
-#: lib/clothing_store_web/controllers/product_html.ex:25
+#: lib/clothing_store_web/controllers/product_html.ex:34
 #, elixir-autogen, elixir-format
 msgid "In stock"
 msgstr "Na sklade"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:80
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:85
 #, elixir-autogen, elixir-format
 msgid "In stock only"
 msgstr "Iba na sklade"
@@ -764,12 +765,12 @@ msgstr "Neplatný e-mail alebo heslo"
 
 #: lib/clothing_store_web/components/layouts.ex:141
 #: lib/clothing_store_web/components/layouts/app.html.heex:43
-#: lib/clothing_store_web/controllers/product_controller.ex:17
 #: lib/clothing_store_web/controllers/product_html/index.html.heex:2
 #: lib/clothing_store_web/controllers/product_html/new.html.heex:2
 #: lib/clothing_store_web/controllers/product_html/show.html.heex:1
 #: lib/clothing_store_web/live/product_live/form.ex:66
 #: lib/clothing_store_web/live/product_live/import.ex:19
+#: lib/clothing_store_web/live/product_live/inventory.ex:16
 #, elixir-autogen, elixir-format
 msgid "Inventory"
 msgstr "Inventár"
@@ -804,12 +805,12 @@ msgstr "jún"
 msgid "Keep me logged in"
 msgstr "Zostať prihlásený"
 
-#: lib/clothing_store_web/controllers/product_controller.ex:146
+#: lib/clothing_store_web/controllers/product_controller.ex:100
 #, elixir-autogen, elixir-format
 msgid "Label: %{title}"
 msgstr "Štítok: %{title}"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:77
+#: lib/clothing_store_web/components/layouts/app.html.heex:78
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr "Jazyk"
@@ -856,7 +857,7 @@ msgstr "Naživo: zmeny ostatných návštevníkov sa tu zobrazia okamžite."
 msgid "Load more"
 msgstr "Načítať ďalšie"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:121
+#: lib/clothing_store_web/components/layouts/app.html.heex:122
 #: lib/clothing_store_web/live/user_login_live.ex:8
 #: lib/clothing_store_web/live/user_login_live.ex:71
 #: lib/clothing_store_web/live/user_login_live.ex:97
@@ -864,7 +865,7 @@ msgstr "Načítať ďalšie"
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:110
+#: lib/clothing_store_web/components/layouts/app.html.heex:111
 #, elixir-autogen, elixir-format
 msgid "Log out"
 msgstr "Odhlásiť sa"
@@ -874,13 +875,13 @@ msgstr "Odhlásiť sa"
 msgid "Logged out successfully."
 msgstr "Boli ste úspešne odhlásení."
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:90
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:95
 #, elixir-autogen, elixir-format
 msgid "Low or out of stock only"
 msgstr "Iba nízka alebo žiadna zásoba"
 
 #: lib/clothing_store_web/components/layouts.ex:144
-#: lib/clothing_store_web/controllers/product_html.ex:26
+#: lib/clothing_store_web/controllers/product_html.ex:35
 #, elixir-autogen, elixir-format
 msgid "Low stock"
 msgstr "Nízka zásoba"
@@ -910,7 +911,7 @@ msgstr "Spravujte e-mailovú adresu a heslo svojho účtu."
 msgid "March"
 msgstr "marec"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:69
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:74
 #, elixir-autogen, elixir-format
 msgid "Max price (€)"
 msgstr "Max. cena (€)"
@@ -930,7 +931,7 @@ msgstr "Pamäť"
 msgid "Menu"
 msgstr "Menu"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:60
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:64
 #, elixir-autogen, elixir-format
 msgid "Min price (€)"
 msgstr "Min. cena (€)"
@@ -946,7 +947,7 @@ msgstr "Mesiac"
 msgid "Monthly report for %{month}, printed %{date}."
 msgstr "Mesačný prehľad za %{month}, vytlačený %{date}."
 
-#: lib/clothing_store_web/controllers/product_html.ex:60
+#: lib/clothing_store_web/controllers/product_html.ex:69
 #, elixir-autogen, elixir-format
 msgid "Name: A to Z"
 msgstr "Názov: A až Z"
@@ -964,9 +965,9 @@ msgid "New password"
 msgstr "Nové heslo"
 
 #: lib/clothing_store_web/components/layouts.ex:142
-#: lib/clothing_store_web/controllers/product_controller.ex:60
+#: lib/clothing_store_web/controllers/product_controller.ex:33
 #: lib/clothing_store_web/controllers/product_html/index.html.heex:19
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:230
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:235
 #: lib/clothing_store_web/live/product_live/form.ex:67
 #: lib/clothing_store_web/live/product_live/index.html.heex:18
 #: lib/clothing_store_web/live/product_live/index.html.heex:70
@@ -984,7 +985,7 @@ msgstr "Nový produkt:"
 msgid "New product: %{title}"
 msgstr "Nový produkt: %{title}"
 
-#: lib/clothing_store_web/controllers/product_html.ex:55
+#: lib/clothing_store_web/controllers/product_html.ex:64
 #, elixir-autogen, elixir-format
 msgid "Newest first"
 msgstr "Najnovšie"
@@ -999,7 +1000,7 @@ msgstr "Ďalšie obnovenie dema"
 msgid "Next page"
 msgstr "Ďalšia strana"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:197
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:201
 #, elixir-autogen, elixir-format
 msgid "No changes recorded yet (history starts with the last demo reset)."
 msgstr "Zatiaľ nie sú zaznamenané žiadne zmeny (história začína posledným obnovením dema)."
@@ -1009,18 +1010,18 @@ msgstr "Zatiaľ nie sú zaznamenané žiadne zmeny (história začína posledný
 msgid "No confirmation instructions received?"
 msgstr "Nedostali ste pokyny na potvrdenie?"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:214
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:219
 #, elixir-autogen, elixir-format
 msgid "No products match these filters"
 msgstr "Týmto filtrom nezodpovedajú žiadne produkty"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:226
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:231
 #: lib/clothing_store_web/live/product_live/index.html.heex:65
 #, elixir-autogen, elixir-format
 msgid "No products yet"
 msgstr "Zatiaľ žiadne produkty"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:98
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:102
 #, elixir-autogen, elixir-format
 msgid "No recent sales, so no run-out date."
 msgstr "Žiadne nedávne predaje, preto ani dátum vypredania."
@@ -1045,7 +1046,7 @@ msgstr "Tento mesiac zatiaľ žiadne predaje."
 msgid "No sales yet"
 msgstr "Zatiaľ žiadne predaje"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:120
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:124
 #, elixir-autogen, elixir-format
 msgid "No tags"
 msgstr "Bez štítkov"
@@ -1174,23 +1175,23 @@ msgstr "Predchádzajúca strana"
 
 #: lib/clothing_store_web/components/product_components.ex:132
 #: lib/clothing_store_web/components/sales_components.ex:111
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:186
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:26
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:191
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:30
 #, elixir-autogen, elixir-format
 msgid "Price"
 msgstr "Cena"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:36
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:40
 #, elixir-autogen, elixir-format
 msgid "Price history"
 msgstr "História cien"
 
-#: lib/clothing_store_web/controllers/product_html.ex:57
+#: lib/clothing_store_web/controllers/product_html.ex:66
 #, elixir-autogen, elixir-format
 msgid "Price: high to low"
 msgstr "Cena: od najvyššej"
 
-#: lib/clothing_store_web/controllers/product_html.ex:56
+#: lib/clothing_store_web/controllers/product_html.ex:65
 #, elixir-autogen, elixir-format
 msgid "Price: low to high"
 msgstr "Cena: od najnižšej"
@@ -1210,12 +1211,12 @@ msgstr "Vytlačiť štítok"
 msgid "Print report"
 msgstr "Vytlačiť prehľad"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:138
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:142
 #, elixir-autogen, elixir-format
 msgid "Printable label"
 msgstr "Štítok na tlač"
 
-#: lib/clothing_store_web/components/layouts.ex:266
+#: lib/clothing_store_web/components/layouts.ex:268
 #: lib/clothing_store_web/controllers/page_controller.ex:22
 #, elixir-autogen, elixir-format
 msgid "Privacy"
@@ -1227,7 +1228,7 @@ msgid "Processes"
 msgstr "Procesy"
 
 #: lib/clothing_store_web/components/sales_components.ex:100
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:158
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:163
 #, elixir-autogen, elixir-format
 msgid "Product"
 msgstr "Produkt"
@@ -1237,7 +1238,7 @@ msgstr "Produkt"
 msgid "Product Details"
 msgstr "Detail produktu"
 
-#: lib/clothing_store_web/controllers/product_controller.ex:56
+#: lib/clothing_store_web/controllers/product_controller.ex:29
 #, elixir-autogen, elixir-format
 msgid "Product created successfully."
 msgstr "Produkt bol úspešne vytvorený."
@@ -1247,12 +1248,12 @@ msgstr "Produkt bol úspešne vytvorený."
 msgid "Product dashboard"
 msgstr "Prehľad produktov"
 
-#: lib/clothing_store_web/components/layouts.ex:301
+#: lib/clothing_store_web/components/layouts.ex:303
 #, elixir-autogen, elixir-format
 msgid "Product photos from Pexels and StockSnap."
 msgstr "Fotky produktov z Pexels a StockSnap."
 
-#: lib/clothing_store_web/controllers/product_controller.ex:92
+#: lib/clothing_store_web/controllers/product_controller.ex:46
 #, elixir-autogen, elixir-format
 msgid "Product updated successfully."
 msgstr "Produkt bol úspešne upravený."
@@ -1262,7 +1263,7 @@ msgstr "Produkt bol úspešne upravený."
 msgid "Products"
 msgstr "Produkty"
 
-#: lib/clothing_store_web/components/layouts.ex:243
+#: lib/clothing_store_web/components/layouts.ex:245
 #, elixir-autogen, elixir-format
 msgid "Project"
 msgstr "Projekt"
@@ -1272,7 +1273,7 @@ msgstr "Projekt"
 msgid "QR code that opens %{title}"
 msgstr "QR kód, ktorý otvorí %{title}"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:127
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:131
 #, elixir-autogen, elixir-format
 msgid "QR code that opens %{title} on a phone"
 msgstr "QR kód, ktorý otvorí %{title} v telefóne"
@@ -1333,32 +1334,32 @@ msgstr "Odkaz na obnovenie hesla je neplatný alebo jeho platnosť vypršala."
 msgid "Resetting..."
 msgstr "Obnovuje sa..."
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:77
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:81
 #, elixir-autogen, elixir-format
 msgid "Restock +%{amount}"
 msgstr "Doplniť +%{amount}"
 
-#: lib/clothing_store_web/controllers/product_html.ex:45
+#: lib/clothing_store_web/controllers/product_html.ex:54
 #, elixir-autogen, elixir-format
 msgid "Restocked"
 msgstr "Doplnený"
 
-#: lib/clothing_store_web/controllers/product_controller.ex:159
+#: lib/clothing_store_web/controllers/product_controller.ex:113
 #, elixir-autogen, elixir-format
 msgid "Restocked: %{title} now has %{stock} in stock."
 msgstr "Doplnené: %{title} má teraz na sklade %{stock}."
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:191
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:195
 #, elixir-autogen, elixir-format
 msgid "Restore these details"
 msgstr "Obnoviť tieto údaje"
 
-#: lib/clothing_store_web/controllers/product_html.ex:46
+#: lib/clothing_store_web/controllers/product_html.ex:55
 #, elixir-autogen, elixir-format
 msgid "Restored after a delete"
 msgstr "Obnovený po odstránení"
 
-#: lib/clothing_store_web/controllers/product_controller.ex:131
+#: lib/clothing_store_web/controllers/product_controller.ex:85
 #, elixir-autogen, elixir-format
 msgid "Restored the earlier details of %{title}."
 msgstr "Obnovili sa predchádzajúce údaje produktu %{title}."
@@ -1451,7 +1452,7 @@ msgstr "Uložiť produkt"
 msgid "Saving..."
 msgstr "Ukladá sa..."
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:131
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:135
 #, elixir-autogen, elixir-format
 msgid "Scan it to open this product on a phone. Changes made there show up live on the dashboard."
 msgstr "Naskenujte ho a otvorte tento produkt v telefóne. Zmeny urobené tam sa naživo zobrazia na prehľade."
@@ -1461,12 +1462,12 @@ msgstr "Naskenujte ho a otvorte tento produkt v telefóne. Zmeny urobené tam sa
 msgid "Schedulers"
 msgstr "Plánovače"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:40
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:42
 #, elixir-autogen, elixir-format
 msgid "Search"
 msgstr "Hľadať"
 
-#: lib/clothing_store_web/components/layouts.ex:202
+#: lib/clothing_store_web/components/layouts.ex:204
 #, elixir-autogen, elixir-format
 msgid "Search products for"
 msgstr "Hľadať produkty"
@@ -1499,7 +1500,7 @@ msgid "Settings"
 msgstr "Nastavenia"
 
 #: lib/clothing_store_web/controllers/product_html/label.html.heex:4
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:123
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:127
 #, elixir-autogen, elixir-format
 msgid "Shelf label"
 msgstr "Regálový štítok"
@@ -1555,12 +1556,12 @@ msgstr "Niečo sa pokazilo"
 msgid "Something went wrong!"
 msgstr "Niečo sa pokazilo!"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:152
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:157
 #, elixir-autogen, elixir-format
 msgid "Sort"
 msgstr "Zoradiť"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:141
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:146
 #, elixir-autogen, elixir-format
 msgid "Sort by"
 msgstr "Zoradiť podľa"
@@ -1584,23 +1585,23 @@ msgstr "Štatistiky"
 
 #: lib/clothing_store_web/components/product_components.ex:143
 #: lib/clothing_store_web/components/product_components.ex:216
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:189
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:48
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:194
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:52
 #, elixir-autogen, elixir-format
 msgid "Stock"
 msgstr "Zásoba"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:54
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:58
 #, elixir-autogen, elixir-format
 msgid "Stock per size"
 msgstr "Zásoba podľa veľkosti"
 
-#: lib/clothing_store_web/controllers/product_html.ex:59
+#: lib/clothing_store_web/controllers/product_html.ex:68
 #, elixir-autogen, elixir-format
 msgid "Stock: high to low"
 msgstr "Zásoba: od najvyššej"
 
-#: lib/clothing_store_web/controllers/product_html.ex:58
+#: lib/clothing_store_web/controllers/product_html.ex:67
 #, elixir-autogen, elixir-format
 msgid "Stock: low to high"
 msgstr "Zásoba: od najnižšej"
@@ -1615,7 +1616,7 @@ msgstr "Sila:"
 msgid "Strong"
 msgstr "Silné"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:102
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:106
 #, elixir-autogen, elixir-format
 msgid "Suggested reorder: %{reorder}, enough for another %{days} days like the last ones."
 msgstr "Odporúčaná objednávka: %{reorder}, čo vystačí na ďalších %{days} dní ako tie posledné."
@@ -1627,32 +1628,32 @@ msgid "System"
 msgstr "Systém"
 
 #: lib/clothing_store_web/components/layouts.ex:149
-#: lib/clothing_store_web/components/layouts.ex:262
+#: lib/clothing_store_web/components/layouts.ex:264
 #, elixir-autogen, elixir-format
 msgid "System status"
 msgstr "Stav systému"
 
 #: lib/clothing_store_web/components/product_components.ex:173
 #: lib/clothing_store_web/components/product_components.ex:181
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:94
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:180
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:117
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:99
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:185
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:121
 #, elixir-autogen, elixir-format
 msgid "Tags"
 msgstr "Štítky"
 
-#: lib/clothing_store_web/components/layouts.ex:269
+#: lib/clothing_store_web/components/layouts.ex:271
 #: lib/clothing_store_web/controllers/page_controller.ex:27
 #, elixir-autogen, elixir-format
 msgid "Terms of use"
 msgstr "Podmienky používania"
 
-#: lib/clothing_store_web/controllers/product_controller.ex:118
+#: lib/clothing_store_web/controllers/product_controller.ex:72
 #, elixir-autogen, elixir-format
 msgid "That product can't be restored any more."
 msgstr "Tento produkt už nemožno obnoviť."
 
-#: lib/clothing_store_web/controllers/product_controller.ex:137
+#: lib/clothing_store_web/controllers/product_controller.ex:91
 #, elixir-autogen, elixir-format
 msgid "That version can't be restored."
 msgstr "Túto verziu nemožno obnoviť."
@@ -1662,7 +1663,7 @@ msgstr "Túto verziu nemožno obnoviť."
 msgid "The Erlang VM behind this demo, live. Every number updates once a second over the same LiveView connection the dashboard uses."
 msgstr "Erlang VM, na ktorom toto demo beží, naživo. Každé číslo sa raz za sekundu aktualizuje cez to isté LiveView spojenie, ktoré používa prehľad."
 
-#: lib/clothing_store_web/controllers/product_controller.ex:113
+#: lib/clothing_store_web/controllers/product_controller.ex:67
 #, elixir-autogen, elixir-format
 msgid "The catalogue is full, so the product can't come back."
 msgstr "Katalóg je plný, preto produkt nemožno vrátiť."
@@ -1717,8 +1718,8 @@ msgstr "Posledných 12 mesiacov."
 msgid "The page you're looking for doesn't exist. Maybe the product was deleted, or the nightly reset removed it."
 msgstr "Hľadaná stránka neexistuje. Produkt bol možno odstránený alebo ho odstránilo nočné obnovenie."
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:207
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:14
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:212
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:18
 #, elixir-autogen, elixir-format
 msgid "The product and its stock are removed for every visitor. This can't be undone."
 msgstr "Produkt a jeho zásoba sa odstránia pre všetkých návštevníkov. Túto akciu nemožno vrátiť."
@@ -1790,7 +1791,7 @@ msgstr "Tento mesiac (%{month})"
 msgid "Title"
 msgstr "Názov"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:41
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:43
 #, elixir-autogen, elixir-format
 msgid "Title, description, category or tag (press /)"
 msgstr "Názov, popis, kategória alebo štítok (stlačte /)"
@@ -1819,7 +1820,7 @@ msgstr "Transakcie"
 msgid "Transactions this month"
 msgstr "Transakcie tento mesiac"
 
-#: lib/clothing_store_web/controllers/product_html/index.html.heex:216
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:221
 #, elixir-autogen, elixir-format
 msgid "Try a wider price range, another category or fewer tags."
 msgstr "Skúste širší cenový rozsah, inú kategóriu alebo menej štítkov."
@@ -1840,7 +1841,7 @@ msgstr "Vyskúšať demo"
 msgid "Undo"
 msgstr "Vrátiť späť"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:113
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:117
 #, elixir-autogen, elixir-format
 msgid "Units sold per day over the last %{days} days"
 msgstr "Predané kusy za deň za posledných %{days} dní"
@@ -1850,7 +1851,7 @@ msgstr "Predané kusy za deň za posledných %{days} dní"
 msgid "Until (inclusive)"
 msgstr "Do (vrátane)"
 
-#: lib/clothing_store_web/controllers/product_html.ex:24
+#: lib/clothing_store_web/controllers/product_html.ex:33
 #, elixir-autogen, elixir-format
 msgid "Up to %{price} €"
 msgstr "Do %{price} €"
@@ -1920,12 +1921,12 @@ msgstr "Vitajte v deme"
 msgid "Welcome to the demo! Data resets every night."
 msgstr "Vitajte v deme! Dáta sa každú noc obnovia."
 
-#: lib/clothing_store_web/components/layouts.ex:257
+#: lib/clothing_store_web/components/layouts.ex:259
 #, elixir-autogen, elixir-format
 msgid "What can I try here?"
 msgstr "Čo tu môžem vyskúšať?"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:98
+#: lib/clothing_store_web/components/layouts/app.html.heex:99
 #, elixir-autogen, elixir-format
 msgid "What is this demo?"
 msgstr "Čo je toto demo?"
@@ -2011,7 +2012,7 @@ msgstr "cena %{old} → %{new}"
 msgid "restocked"
 msgstr "doplnený"
 
-#: lib/clothing_store_web/controllers/product_html/show.html.heex:42
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:46
 #, elixir-autogen, elixir-format
 msgid "since %{date}"
 msgstr "od %{date}"
@@ -2036,17 +2037,17 @@ msgstr "štítky %{old} → %{new}"
 msgid "title"
 msgstr "názov"
 
-#: lib/clothing_store_web/components/layouts.ex:208
+#: lib/clothing_store_web/components/layouts.ex:210
 #, elixir-autogen, elixir-format
 msgid "to close"
 msgstr "zavrieť"
 
-#: lib/clothing_store_web/components/layouts.ex:207
+#: lib/clothing_store_web/components/layouts.ex:209
 #, elixir-autogen, elixir-format
 msgid "to move,"
 msgstr "presun,"
 
-#: lib/clothing_store_web/components/layouts.ex:207
+#: lib/clothing_store_web/components/layouts.ex:209
 #, elixir-autogen, elixir-format
 msgid "to open,"
 msgstr "otvoriť,"

@@ -24,7 +24,7 @@ defmodule ClothingStoreWeb.Layouts do
     ~H"""
     <li>
       <.link
-        href={@href}
+        navigate={@href}
         aria-current={@active && "page"}
         class={[
           "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors",
@@ -181,26 +181,28 @@ defmodule ClothingStoreWeb.Layouts do
           role="presentation"
           data-palette-item={String.downcase(label)}
         >
-          <a
+          <.link
             id={"palette-option-#{index}"}
             role="option"
-            href={path}
+            navigate={path}
             tabindex="-1"
             class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 aria-selected:bg-red-50 aria-selected:text-red-800"
           >
             <.icon name={icon} class="size-5 text-gray-500" /> {label}
-          </a>
+          </.link>
         </li>
         <li role="presentation" data-palette-search>
-          <a
+          <%!-- app.js sets the href to the search for what was typed --%>
+          <.link
             id="palette-option-search"
+            navigate={~p"/products"}
             role="option"
             tabindex="-1"
             class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 aria-selected:bg-red-50 aria-selected:text-red-800"
           >
             <.icon name="hero-magnifying-glass" class="size-5 text-gray-500" />
             <span>{gettext("Search products for")} “<span data-palette-query></span>”</span>
-          </a>
+          </.link>
         </li>
       </ul>
       <p class="border-t border-gray-100 px-4 py-2 text-xs text-gray-500">
@@ -314,6 +316,14 @@ defmodule ClothingStoreWeb.Layouts do
   """
   def theme_class(theme) when theme in ["dark", "light"], do: theme
   def theme_class(_theme), do: nil
+
+  @doc """
+  The `color-scheme` meta for the same cookie. The browser paints the page
+  background from it before the stylesheet loads, so a page load in dark mode
+  doesn't flash white.
+  """
+  def color_scheme(theme) when theme in ["dark", "light"], do: theme
+  def color_scheme(_theme), do: "light dark"
 
   @doc "The page's `meta_description` assign, or a summary of the demo for link previews."
   def meta_description(assigns) do

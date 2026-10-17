@@ -270,7 +270,7 @@ defmodule ClothingStoreWeb.ProductComponents do
 
       <:actions>
         <div class="ml-auto flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
-          <.button href={@cancel_to} variant="secondary">{gettext("Cancel")}</.button>
+          <.button navigate={@cancel_to} variant="secondary">{gettext("Cancel")}</.button>
           <.button type="submit" icon="hero-check" phx-disable-with={gettext("Saving...")}>
             {gettext("Save product")}
           </.button>

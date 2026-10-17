@@ -66,6 +66,8 @@ document.addEventListener("click", event => {
   const theme = themes[(themes.indexOf(currentTheme()) + 1) % themes.length]
   document.documentElement.classList.remove("light", "dark")
   if (theme !== "system") document.documentElement.classList.add(theme)
+  document.querySelector("meta[name=color-scheme]")
+    ?.setAttribute("content", theme === "system" ? "light dark" : theme)
   const secure = location.protocol === "https:" ? "; Secure" : ""
   document.cookie = `theme=${theme}; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
   showTheme(theme)
@@ -141,54 +143,64 @@ document.addEventListener("click", event => {
 
 // Command palette (Layouts.command_palette/1): Ctrl+K or Cmd+K opens it, typing
 // filters the pages, the last entry searches the inventory for what was typed.
-const palette = document.getElementById("command-palette")
-if (palette) {
-  const input = palette.querySelector("#command-palette-input")
-  const search = palette.querySelector("[data-palette-search]")
-  // the options are the links; hiding filters their list items
-  const visible = () => [...palette.querySelectorAll("[role=option]")].filter(option => !option.parentElement.hidden)
+// LiveView navigation re-renders the layout, so the palette is looked up per event.
+const palette = () => document.getElementById("command-palette")
+// the options are the links; hiding filters their list items
+const visibleOptions = dialog =>
+  [...dialog.querySelectorAll("[role=option]")].filter(option => !option.parentElement.hidden)
 
-  const select = item => {
-    palette.querySelectorAll("[role=option]").forEach(option => option.setAttribute("aria-selected", "false"))
-    item?.setAttribute("aria-selected", "true")
-    item ? input.setAttribute("aria-activedescendant", item.id) : input.removeAttribute("aria-activedescendant")
-    item?.scrollIntoView({block: "nearest"})
-  }
+const selectOption = (dialog, item) => {
+  const input = dialog.querySelector("#command-palette-input")
+  dialog.querySelectorAll("[role=option]").forEach(option => option.setAttribute("aria-selected", "false"))
+  item?.setAttribute("aria-selected", "true")
+  item ? input.setAttribute("aria-activedescendant", item.id) : input.removeAttribute("aria-activedescendant")
+  item?.scrollIntoView({block: "nearest"})
+}
 
-  const filter = () => {
-    const query = input.value.trim()
-    palette.querySelectorAll("[data-palette-item]").forEach(item => {
-      item.hidden = !item.dataset.paletteItem.includes(query.toLowerCase())
-    })
-    search.hidden = query === ""
-    search.querySelector("[data-palette-query]").textContent = query
-    search.querySelector("[role=option]").href = `/products?q=${encodeURIComponent(query)}`
-    select(visible()[0])
-  }
+const filterPalette = dialog => {
+  const query = dialog.querySelector("#command-palette-input").value.trim()
+  const search = dialog.querySelector("[data-palette-search]")
+  dialog.querySelectorAll("[data-palette-item]").forEach(item => {
+    item.hidden = !item.dataset.paletteItem.includes(query.toLowerCase())
+  })
+  search.hidden = query === ""
+  search.querySelector("[data-palette-query]").textContent = query
+  search.querySelector("[role=option]").href = `/products?q=${encodeURIComponent(query)}`
+  selectOption(dialog, visibleOptions(dialog)[0])
+}
 
-  input.addEventListener("input", filter)
-  input.addEventListener("keydown", event => {
-    const items = visible()
+document.addEventListener("input", event => {
+  if (event.target.id === "command-palette-input") filterPalette(palette())
+})
+
+document.addEventListener("keydown", event => {
+  const dialog = palette()
+  if (!dialog) return
+
+  if (event.key.toLowerCase() === "k" && (event.ctrlKey || event.metaKey)) {
+    event.preventDefault()
+    if (dialog.open) return dialog.close()
+    dialog.querySelector("#command-palette-input").value = ""
+    filterPalette(dialog)
+    dialog.showModal()
+  } else if (event.target.id === "command-palette-input") {
+    const items = visibleOptions(dialog)
     const current = items.findIndex(option => option.getAttribute("aria-selected") === "true")
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault()
       const step = event.key === "ArrowDown" ? 1 : -1
-      select(items[(current + step + items.length) % items.length])
+      selectOption(dialog, items[(current + step + items.length) % items.length])
     } else if (event.key === "Enter" && items[current]) {
       event.preventDefault()
       items[current].click()
     }
-  })
+  }
+})
 
-  document.addEventListener("keydown", event => {
-    if (event.key.toLowerCase() !== "k" || !(event.ctrlKey || event.metaKey)) return
-    event.preventDefault()
-    if (palette.open) return palette.close()
-    input.value = ""
-    filter()
-    palette.showModal()
-  })
-}
+// a chosen page navigates without a reload, so close the palette first
+document.addEventListener("click", event => {
+  if (event.target.closest("#command-palette [role=option]")) palette().close()
+})
 
 // Single-key shortcuts: an element with data-shortcut="n" is clicked (links) or
 // focused (inputs) when that key is pressed outside a text field.
