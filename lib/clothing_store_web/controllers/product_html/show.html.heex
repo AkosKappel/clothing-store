@@ -67,6 +67,24 @@
         <span :if={@product.tags == []} class="text-gray-400">No tags</span>
       </div>
     </:item>
+    <:item title="Shelf label">
+      <div class="flex items-center gap-4">
+        <.qr_code
+          url={url(~p"/products/#{@product}")}
+          label={"QR code that opens #{@product.title} on a phone"}
+          class="size-24 shrink-0 rounded-sm ring-1 ring-gray-200"
+        />
+        <p class="text-sm text-gray-600">
+          Scan it to open this product on a phone. Changes made there show up live on the dashboard.
+          <.link
+            href={~p"/products/#{@product}/label"}
+            class="mt-1 block font-semibold text-red-700 hover:underline"
+          >
+            Printable label
+          </.link>
+        </p>
+      </div>
+    </:item>
     <:item title="Description">
       <p class="whitespace-pre-line">{@product.description}</p>
     </:item>

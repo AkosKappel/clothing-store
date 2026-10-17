@@ -68,6 +68,7 @@ defmodule ClothingStore.MixProject do
       {:jason, "~> 1.4"},
       {:dns_cluster, "~> 0.3"},
       {:bandit, "~> 1.12"},
+      {:eqrcode, "~> 0.2"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.14", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}

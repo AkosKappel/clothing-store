@@ -180,6 +180,29 @@ defmodule ClothingStoreWeb.ProductComponents do
   defp photo_preview?(%Phoenix.HTML.FormField{value: value, errors: errors}),
     do: is_binary(value) and value != "" and errors == []
 
+  @doc "A QR code of `url` as inline SVG, labelled for screen readers."
+  attr :url, :string, required: true
+  attr :label, :string, required: true
+  attr :class, :any, default: nil
+
+  def qr_code(assigns) do
+    assigns = assign(assigns, :svg, qr_svg(assigns.url))
+
+    ~H"""
+    <div role="img" aria-label={@label} class={["[&>svg]:size-full", @class]}>{@svg}</div>
+    """
+  end
+
+  # the SVG is generated from our own URL, never from visitor input
+  # sobelow_skip ["XSS.Raw"]
+  defp qr_svg(url) do
+    url
+    |> EQRCode.encode()
+    |> EQRCode.svg(viewbox: true)
+    |> String.replace(~r/\A<\?xml[^>]*>\s*/, "")
+    |> Phoenix.HTML.raw()
+  end
+
   def stock_text(0), do: "Out of stock"
   def stock_text(stock) when stock <= @low_stock, do: "Low: #{stock} left"
   def stock_text(stock), do: "#{stock} in stock"

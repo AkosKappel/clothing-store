@@ -94,6 +94,11 @@ defmodule ClothingStoreWeb.ProductController do
     end
   end
 
+  def label(conn, %{"id" => id}) do
+    product = Products.get_product!(id)
+    render(conn, :label, page_title: "Label: #{product.title}", product: product)
+  end
+
   def restock(conn, %{"id" => id}) do
     product = Products.get_product!(id)
 

@@ -146,6 +146,22 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     end
   end
 
+  describe "QR code" do
+    test "the product page and its printable label carry a QR code of the product URL", %{
+      conn: conn
+    } do
+      product = product_fixture(title: "Linen shirt")
+
+      html = conn |> get(~p"/products/#{product}") |> html_response(200)
+      assert html =~ "QR code that opens Linen shirt on a phone"
+      assert html =~ "<svg"
+
+      html = conn |> get(~p"/products/#{product}/label") |> html_response(200)
+      assert html =~ "Print label"
+      refute html =~ "<?xml"
+    end
+  end
+
   describe "restock product" do
     test "adds stock and shows the button only while stock is low", %{conn: conn} do
       product = product_fixture(stock: 2)
