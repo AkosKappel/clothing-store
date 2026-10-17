@@ -1,74 +1,130 @@
 defmodule ClothingStoreWeb.ProductLive.Index do
+  @moduledoc """
+  The dashboard: products as a photo grid or a compact list (`?view=list`),
+  loaded 24 at a time as the visitor scrolls. Changes by other visitors stream
+  in live: new products at the top, edits in place with a short highlight.
+  """
   use ClothingStoreWeb, :live_view
 
   import ClothingStoreWeb.Helpers
 
   alias ClothingStore.Products
 
+  @per_page 24
   # how long a product changed by someone else stays highlighted (matches .live-highlight)
   @highlight_ms 2_500
 
   @impl true
   def mount(_params, _session, socket) do
-    # Fetch the initial list of products
-    products = Products.list_products()
-
-    # Subscribe to the "products" topic for real-time updates
-    if connected?(socket) do
-      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
-    end
+    if connected?(socket), do: Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
 
     {:ok,
-     assign(socket,
-       products: products,
-       highlighted: MapSet.new(),
-       announcement: nil,
-       page_title: "Dashboard"
-     )}
+     socket
+     |> assign(page_title: "Dashboard", view: "grid", highlighted: %{}, announcement: nil)
+     |> stream_configure(:products, dom_id: &"product-#{&1.id}")
+     |> load_first_page()}
+  end
+
+  @impl true
+  def handle_params(params, _uri, socket) do
+    view = if params["view"] == "list", do: "list", else: "grid"
+
+    # stream items render once, so switching the layout re-renders the loaded ones
+    if view == socket.assigns.view,
+      do: {:noreply, socket},
+      else: {:noreply, socket |> assign(:view, view) |> reload_loaded()}
+  end
+
+  @impl true
+  def handle_event("load_more", _params, %{assigns: %{end_of_list: true}} = socket),
+    do: {:noreply, socket}
+
+  def handle_event("load_more", _params, socket) do
+    products = Products.page_products(socket.assigns.loaded, @per_page)
+
+    {:noreply,
+     socket
+     |> stream(:products, products)
+     |> track_loaded(products)}
   end
 
   @impl true
   def handle_info({:product_created, product}, socket) do
-    # Add the new product to the list
-    socket = update(socket, :products, fn products -> [product | products] end)
-    {:noreply, highlight(socket, product, "New product: #{product.title}")}
+    socket =
+      socket
+      |> update(:total, &(&1 + 1))
+      |> update(:loaded, &(&1 + 1))
+      |> update(:ids, &MapSet.put(&1, product.id))
+
+    {:noreply, highlight(socket, product, "New product: #{product.title}", at: 0)}
   end
 
-  @impl true
-  def handle_info({:product_updated, updated_product}, socket) do
-    # Update the product in the list
-    socket = update(socket, :products, &Enum.map(&1, fn p -> replace(p, updated_product) end))
-
-    {:noreply, highlight(socket, updated_product, "#{updated_product.title} was updated")}
+  def handle_info({:product_updated, product}, socket) do
+    # products further down appear with their new data once they're scrolled to
+    if MapSet.member?(socket.assigns.ids, product.id),
+      do: {:noreply, highlight(socket, product, "#{product.title} was updated", [])},
+      else: {:noreply, socket}
   end
 
-  @impl true
-  def handle_info({:product_deleted, deleted_product}, socket) do
-    # Remove the deleted product from the list
+  def handle_info({:product_deleted, product}, socket) do
+    loaded? = MapSet.member?(socket.assigns.ids, product.id)
+
     {:noreply,
      socket
-     |> update(:products, fn products -> Enum.reject(products, &(&1.id == deleted_product.id)) end)
-     |> assign(:announcement, "#{deleted_product.title} was deleted")}
+     |> stream_delete(:products, product)
+     |> update(:total, &(&1 - 1))
+     |> update(:loaded, &if(loaded?, do: &1 - 1, else: &1))
+     |> update(:ids, &MapSet.delete(&1, product.id))
+     |> update(:highlighted, &Map.delete(&1, product.id))
+     |> assign(:announcement, "#{product.title} was deleted")}
   end
 
-  @impl true
   def handle_info({:unhighlight, id}, socket) do
-    {:noreply, update(socket, :highlighted, &MapSet.delete(&1, id))}
+    case Map.pop(socket.assigns.highlighted, id) do
+      {nil, _highlighted} ->
+        {:noreply, socket}
+
+      {product, highlighted} ->
+        {:noreply,
+         socket |> assign(:highlighted, highlighted) |> stream_insert(:products, product)}
+    end
   end
 
-  @impl true
-  def handle_info(:demo_reset, socket) do
-    {:noreply, assign(socket, :products, Products.list_products())}
+  def handle_info(:demo_reset, socket), do: {:noreply, load_first_page(socket)}
+
+  defp load_first_page(socket) do
+    products = Products.page_products(0, @per_page)
+
+    socket
+    |> assign(total: Products.count_products(), loaded: 0, ids: MapSet.new(), highlighted: %{})
+    |> stream(:products, products, reset: true)
+    |> track_loaded(products)
   end
 
-  defp replace(%{id: id}, %{id: id} = updated), do: updated
-  defp replace(product, _updated), do: product
+  defp reload_loaded(socket) do
+    products = Products.page_products(0, max(socket.assigns.loaded, @per_page))
 
-  defp highlight(socket, product, announcement) do
+    socket
+    |> assign(loaded: 0, ids: MapSet.new())
+    |> stream(:products, products, reset: true)
+    |> track_loaded(products)
+  end
+
+  defp track_loaded(socket, products) do
+    loaded = socket.assigns.loaded + length(products)
+
+    socket
+    |> assign(:loaded, loaded)
+    |> update(:ids, &Enum.into(products, &1, fn product -> product.id end))
+    |> assign(:end_of_list, loaded >= socket.assigns.total or products == [])
+  end
+
+  defp highlight(socket, product, announcement, opts) do
     Process.send_after(self(), {:unhighlight, product.id}, @highlight_ms)
 
     socket
-    |> update(:highlighted, &MapSet.put(&1, product.id))
+    |> update(:highlighted, &Map.put(&1, product.id, product))
+    |> stream_insert(:products, product, opts)
     |> assign(:announcement, announcement)
   end
 end

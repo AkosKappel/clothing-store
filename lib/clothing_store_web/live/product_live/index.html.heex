@@ -17,7 +17,33 @@
   </:actions>
 </.header>
 
-<.empty_state :if={@products == []} image={~p"/images/logo.svg"} title="No products yet">
+<div class="mb-4 flex items-center justify-between gap-3">
+  <p class="text-sm text-gray-600">{ngettext("1 product", "%{count} products", @total)}</p>
+  <div class="inline-flex rounded-md shadow-xs" role="group" aria-label="Layout">
+    <.link
+      :for={
+        {view, label, icon} <- [
+          {"grid", "Grid", "hero-squares-2x2-mini"},
+          {"list", "List", "hero-list-bullet-mini"}
+        ]
+      }
+      patch={if view == "grid", do: ~p"/", else: ~p"/?view=list"}
+      aria-pressed={to_string(@view == view)}
+      role="button"
+      class={[
+        "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium ring-1 ring-gray-300 ring-inset first:rounded-l-md last:-ml-px last:rounded-r-md focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-red-600",
+        if(@view == view,
+          do: "bg-gray-800 text-white ring-gray-800",
+          else: "bg-white text-gray-700 hover:bg-gray-50"
+        )
+      ]}
+    >
+      <.icon name={icon} class="size-4" /> {label}
+    </.link>
+  </div>
+</div>
+
+<.empty_state :if={@total == 0} image={~p"/images/logo.svg"} title="No products yet">
   Add the first product, or wait for the nightly reset to bring back the demo catalogue.
   <:actions>
     <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
@@ -25,16 +51,22 @@
 </.empty_state>
 
 <ul
-  :if={@products != []}
   id="products"
-  class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+  phx-update="stream"
+  phx-viewport-bottom={!@end_of_list && "load_more"}
+  class={
+    if @view == "grid",
+      do: "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3",
+      else: "card divide-y divide-gray-100"
+  }
 >
-  <li :for={product <- @products} id={"product-#{product.id}"}>
+  <li :for={{dom_id, product} <- @streams.products} id={dom_id}>
     <.link
+      :if={@view == "grid"}
       href={~p"/products/#{product.id}"}
       class={[
         "card group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600",
-        MapSet.member?(@highlighted, product.id) && "live-highlight"
+        Map.has_key?(@highlighted, product.id) && "live-highlight"
       ]}
     >
       <img
@@ -60,7 +92,36 @@
         </div>
       </div>
     </.link>
+    <.link
+      :if={@view == "list"}
+      href={~p"/products/#{product.id}"}
+      class={[
+        "group flex items-center gap-4 px-4 py-3 hover:bg-gray-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-red-600",
+        Map.has_key?(@highlighted, product.id) && "live-highlight"
+      ]}
+    >
+      <img
+        src={image_link(product.photo)}
+        alt=""
+        class="size-12 shrink-0 rounded-md bg-gray-100 object-cover"
+        loading="lazy"
+      />
+      <h2 class="min-w-0 flex-1 truncate font-semibold text-gray-900 group-hover:text-red-700">
+        {product.title}
+      </h2>
+      <span class="hidden md:block"><.category_badge category={product.category} /></span>
+      <span class="w-24 text-right font-semibold whitespace-nowrap text-gray-900">
+        {format_price(product.price)}
+      </span>
+      <span class="hidden w-32 text-right sm:block"><.stock_badge stock={product.stock} /></span>
+    </.link>
   </li>
 </ul>
+
+<div :if={!@end_of_list} class="mt-8 flex justify-center">
+  <.button type="button" variant="secondary" phx-click="load_more" icon="hero-arrow-down">
+    Load more
+  </.button>
+</div>
 
 <p id="live-announcement" class="sr-only" aria-live="polite">{@announcement}</p>

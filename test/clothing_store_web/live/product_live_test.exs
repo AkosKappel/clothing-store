@@ -45,4 +45,28 @@ defmodule ClothingStoreWeb.ProductLiveTest do
     send(lv.pid, :demo_reset)
     refute has_element?(lv, "#product-#{product.id}")
   end
+
+  test "the list view is kept in the URL", %{conn: conn} do
+    product = product_fixture(%{title: "Linen shirt"})
+    {:ok, lv, _html} = live(conn, ~p"/")
+
+    lv |> element(~s(a[role=button]), "List") |> render_click()
+    assert_patch(lv, ~p"/?view=list")
+    assert has_element?(lv, ~s(a[aria-pressed=true]), "List")
+    assert has_element?(lv, "#product-#{product.id} img.size-12")
+  end
+
+  test "products load 24 at a time", %{conn: conn} do
+    for n <- 1..30, do: product_fixture(%{title: "Product #{n}"})
+    {:ok, lv, _html} = live(conn, ~p"/")
+
+    assert lv |> render() |> count_products() == 24
+    assert has_element?(lv, "button", "Load more")
+
+    lv |> element("button", "Load more") |> render_click()
+    assert lv |> render() |> count_products() == 30
+    refute has_element?(lv, "button", "Load more")
+  end
+
+  defp count_products(html), do: length(Regex.scan(~r/id="product-\d+"/, html))
 end

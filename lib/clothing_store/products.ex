@@ -50,6 +50,18 @@ defmodule ClothingStore.Products do
     |> Repo.all()
   end
 
+  @doc "One page of the catalogue, newest first: `limit` products after the first `offset`."
+  def page_products(offset, limit) do
+    Product
+    |> sort("newest")
+    |> offset(^offset)
+    |> limit(^limit)
+    |> Repo.all()
+  end
+
+  @doc "How many products the catalogue holds."
+  def count_products, do: Repo.aggregate(Product, :count)
+
   @sorts [
     {"newest", "Newest first"},
     {"price_asc", "Price: low to high"},
@@ -155,7 +167,7 @@ defmodule ClothingStore.Products do
   end
 
   @doc "Whether the catalogue holds as many products as the demo allows."
-  def catalogue_full?, do: Repo.aggregate(Product, :count) >= @max_products
+  def catalogue_full?, do: count_products() >= @max_products
 
   @doc """
   Returns the list of unique categories.
