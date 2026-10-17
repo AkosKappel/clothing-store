@@ -57,6 +57,8 @@ $check_only && { echo "deploy: checks passed"; exit 0; }
 # --- test gate --------------------------------------------------------------
 if ! $skip_tests; then
   docker compose up -d --wait db
+  # deps/ is gitignored and may predate mix.lock
+  mise exec -- mix deps.get
   mise exec -- mix precommit
 fi
 
