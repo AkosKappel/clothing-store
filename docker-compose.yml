@@ -59,8 +59,16 @@ services:
       DEMO_REPOSITORY_URL: ${DEMO_REPOSITORY_URL:-}
       DEMO_LINKEDIN_URL: ${DEMO_LINKEDIN_URL:-}
       DEMO_PORTFOLIO_URL: ${DEMO_PORTFOLIO_URL:-}
+      # distribution cookie for `bin/clothing_store rpc`; empty uses the one baked into the image
+      RELEASE_COOKIE: ${RELEASE_COOKIE:-}
       # the BEAM's schedulers see all host CPUs; keep them modest next to other apps
       ERL_FLAGS: "+S 2:2"
+    # the release only writes its runtime config to /tmp (RELEASE_TMP, rel/env.sh.eex)
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
     networks:
       - app-network
     depends_on:

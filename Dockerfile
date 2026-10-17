@@ -41,8 +41,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 open
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 MIX_ENV=prod
 
 WORKDIR /app
-RUN chown nobody /app
-COPY --from=builder --chown=nobody:root /app/_build/prod/rel/clothing_store ./
+# the release stays owned by root, so the app (nobody) can't change its own code
+COPY --from=builder /app/_build/prod/rel/clothing_store ./
 USER nobody
 
 EXPOSE 4000
