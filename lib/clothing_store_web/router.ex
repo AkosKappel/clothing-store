@@ -51,15 +51,19 @@ defmodule ClothingStoreWeb.Router do
       live "/products/new", ProductLive.Form, :new
       live "/products/import", ProductLive.Import, :new
       live "/products/:id/edit", ProductLive.Form, :edit
+      live "/products", ProductLive.Inventory, :index
+      live "/products/:id", ProductLive.Show, :show
       live "/transactions", TransactionsLive, :index
       live "/statistics", StatisticsLive, :index
       live "/activity", ActivityLive, :index
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
 
     get "/transactions.csv", PageController, :transactions_csv
     get "/inventory.csv", ProductController, :export
 
-    resources "/products", ProductController, except: [:new, :edit]
+    resources "/products", ProductController, only: [:create, :update, :delete]
     post "/products/:id/restock", ProductController, :restock
     get "/products/:id/label", ProductController, :label
     post "/products/:id/restore", ProductController, :restore
@@ -105,16 +109,6 @@ defmodule ClothingStoreWeb.Router do
 
     post "/users/log_in", UserSessionController, :create
     post "/users/demo_log_in", UserSessionController, :demo
-  end
-
-  scope "/", ClothingStoreWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    live_session :require_authenticated_user,
-      on_mount: [{ClothingStoreWeb.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-    end
   end
 
   scope "/", ClothingStoreWeb do

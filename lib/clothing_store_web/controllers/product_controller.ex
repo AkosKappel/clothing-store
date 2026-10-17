@@ -1,31 +1,13 @@
 defmodule ClothingStoreWeb.ProductController do
   use ClothingStoreWeb, :controller
 
-  alias ClothingStore.{Products, Transactions}
-  alias ClothingStoreWeb.CSV
-
-  # sales window for the stock forecast on the product page
-  @forecast_days 30
-
-  def index(conn, params) do
-    filters = filter_params(params)
-    products = Products.list_products(filters)
-    categories = Products.list_categories()
-    tags = Products.list_tags()
-
-    render(conn, :index,
-      page_title: gettext("Inventory"),
-      products: products,
-      filters: filters,
-      categories: categories,
-      tags: tags
-    )
-  end
+  alias ClothingStore.Products
+  alias ClothingStoreWeb.{CSV, ProductHTML}
 
   @doc "The filtered inventory as CSV, in the inventory's sort order."
   def export(conn, params) do
     rows =
-      for p <- Products.list_products(filter_params(params)) do
+      for p <- Products.list_products(ProductHTML.filter_params(params)) do
         [p.id, p.title, p.category, Enum.join(p.tags, ", "), p.price, p.stock, p.updated_at]
       end
 
@@ -35,15 +17,6 @@ defmodule ClothingStoreWeb.ProductController do
       filename: "inventory-#{Date.utc_today()}.csv",
       content_type: "text/csv"
     )
-  end
-
-  # only string filters (and a list of tag strings) reach the query and the form
-  defp filter_params(params) do
-    params
-    |> Map.take(~w(q category min_price max_price in_stock low_stock sort))
-    |> Map.filter(fn {_key, value} -> is_binary(value) end)
-    |> Map.update("q", nil, &String.slice(&1, 0, 100))
-    |> Map.put("tags", Products.parse_tags(params["tags"]))
   end
 
   def create(conn, %{"product" => product_params}) do
@@ -59,25 +32,6 @@ defmodule ClothingStoreWeb.ProductController do
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, page_title: gettext("New product"), changeset: changeset)
     end
-  end
-
-  def show(conn, %{"id" => id}) do
-    product = Products.get_product!(id)
-    daily = Transactions.daily_units(product.id, @forecast_days)
-    versions = Products.list_versions(product.id)
-    sold = daily |> Enum.map(&elem(&1, 1)) |> Enum.sum()
-
-    render(conn, :show,
-      page_title: product.title,
-      product: product,
-      forecast_days: @forecast_days,
-      daily: daily,
-      versions: versions,
-      price_history: Products.price_history(versions),
-      sold: sold,
-      days_left: Transactions.days_of_stock_left(product.stock, sold, @forecast_days),
-      reorder: Transactions.reorder_quantity(product.stock, sold)
-    )
   end
 
   def update(conn, %{"id" => id, "product" => product_params}) do

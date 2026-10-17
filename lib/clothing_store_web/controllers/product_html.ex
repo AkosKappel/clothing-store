@@ -4,6 +4,15 @@ defmodule ClothingStoreWeb.ProductHTML do
 
   embed_templates "product_html/*"
 
+  @doc "The inventory filters from the query: only string values, and a list of tag strings."
+  def filter_params(params) do
+    params
+    |> Map.take(~w(q category min_price max_price in_stock low_stock sort))
+    |> Map.filter(fn {_key, value} -> is_binary(value) end)
+    |> Map.update("q", nil, &String.slice(&1, 0, 100))
+    |> Map.put("tags", ClothingStore.Products.parse_tags(params["tags"]))
+  end
+
   @doc "Whether any inventory filter is set (sorting is not a filter)."
   def filtered?(filters) do
     Enum.any?(Map.delete(filters, "sort"), fn {_key, value} -> blank?(value) == false end)

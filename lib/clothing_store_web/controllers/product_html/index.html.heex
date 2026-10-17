@@ -12,10 +12,10 @@
     >
       {gettext("Export CSV")}
     </.button>
-    <.button href={~p"/products/import"} variant="secondary" icon="hero-arrow-up-tray">
+    <.button navigate={~p"/products/import"} variant="secondary" icon="hero-arrow-up-tray">
       {gettext("Import CSV")}
     </.button>
-    <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
+    <.button navigate={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
       {gettext("New product")}
       <kbd class="ml-1 hidden rounded-sm bg-black/20 px-1.5 font-sans text-xs sm:inline">N</kbd>
     </.button>
@@ -32,6 +32,8 @@
     id="filters-form"
     action={~p"/products"}
     method="get"
+    phx-change="filter"
+    phx-submit="filter"
     class="mt-4 space-y-5"
   >
     <.input
@@ -43,6 +45,7 @@
       data-shortcut="/"
       aria-keyshortcuts="/"
       maxlength="100"
+      phx-debounce="300"
     />
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <.input
@@ -55,6 +58,7 @@
       <.input
         field={f[:min_price]}
         type="number"
+        phx-debounce="300"
         min="0"
         step="0.01"
         label={gettext("Min price (€)")}
@@ -64,6 +68,7 @@
       <.input
         field={f[:max_price]}
         type="number"
+        phx-debounce="300"
         min="0"
         step="0.01"
         label={gettext("Max price (€)")}
@@ -111,7 +116,7 @@
     <div class="flex flex-wrap items-center justify-end gap-3 border-t border-gray-100 pt-4">
       <.button
         :if={filtered?(@filters)}
-        href={~p"/products"}
+        patch={~p"/products"}
         variant="secondary"
         icon="hero-x-mark"
       >
@@ -129,7 +134,7 @@
     </p>
     <.link
       :for={{label, params} <- filter_chips(@filters)}
-      href={~p"/products?#{params}"}
+      patch={~p"/products?#{params}"}
       class="inline-flex items-center gap-1 rounded-full bg-gray-100 py-1 pr-1.5 pl-3 text-xs font-medium text-gray-700 ring-1 ring-gray-200 ring-inset hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-red-600"
     >
       {label}
@@ -165,7 +170,7 @@
       />
       <div class="min-w-0">
         <.link
-          href={~p"/products/#{product}"}
+          navigate={~p"/products/#{product}"}
           class="font-semibold text-gray-900 hover:text-red-700 hover:underline"
         >
           {product.title}
@@ -191,7 +196,7 @@
   </:col>
   <:action :let={product}>
     <.button
-      href={~p"/products/#{product}/edit"}
+      navigate={~p"/products/#{product}/edit"}
       variant="secondary"
       size="sm"
       icon="hero-pencil-square"
@@ -215,7 +220,7 @@
     >
       {gettext("Try a wider price range, another category or fewer tags.")}
       <:actions>
-        <.button href={~p"/products"} variant="secondary" icon="hero-x-mark">
+        <.button patch={~p"/products"} variant="secondary" icon="hero-x-mark">
           {gettext("Clear filters")}
         </.button>
       </:actions>
@@ -227,7 +232,7 @@
     >
       {gettext("Add the first product to start tracking stock.")}
       <:actions>
-        <.button href={~p"/products/new"} icon="hero-plus">{gettext("New product")}</.button>
+        <.button navigate={~p"/products/new"} icon="hero-plus">{gettext("New product")}</.button>
       </:actions>
     </.empty_state>
   </:empty>

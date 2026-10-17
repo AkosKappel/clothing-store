@@ -3,7 +3,11 @@
   {@product.title}
   <:subtitle>{gettext("Product Details")} · #{@product.id}</:subtitle>
   <:actions>
-    <.button href={~p"/products/#{@product}/edit"} variant="secondary" icon="hero-pencil-square">
+    <.button
+      navigate={~p"/products/#{@product}/edit"}
+      variant="secondary"
+      icon="hero-pencil-square"
+    >
       {gettext("Edit")}
     </.button>
     <.delete_dialog
