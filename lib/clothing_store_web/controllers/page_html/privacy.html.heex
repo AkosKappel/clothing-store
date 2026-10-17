@@ -1,0 +1,53 @@
+<article class="mx-auto max-w-3xl text-gray-700">
+  <.header>
+    Privacy
+    <:subtitle>What this demo stores about you: very little.</:subtitle>
+  </.header>
+
+  <div class="card space-y-8 p-6 leading-[1.65] sm:p-8">
+    <section aria-labelledby="privacy-data">
+      <h2 id="privacy-data" class="about-subheading">No personal data</h2>
+      <p class="mt-2">
+        There is no sign-up. Everyone uses the same shared demo account, so the app never asks
+        for your name or e-mail address. Products, transactions and settings you change are sample
+        data and are visible to every other visitor.
+      </p>
+    </section>
+
+    <section aria-labelledby="privacy-cookies">
+      <h2 id="privacy-cookies" class="about-subheading">Cookies</h2>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <li>
+          <code>_clothing_store_key</code>: the session cookie that keeps you logged in and protects forms against forgery.
+        </li>
+        <li>
+          <code>_clothing_store_web_user_remember_me</code>: set only when you tick "Keep me logged in".
+        </li>
+        <li>
+          <code>welcome_seen</code>: remembers that you have seen the welcome dialog, so it doesn't open on every visit.
+        </li>
+      </ul>
+      <p class="mt-2">
+        All of them are strictly necessary for the app to work. There are no tracking,
+        advertising or analytics cookies.
+      </p>
+    </section>
+
+    <section aria-labelledby="privacy-logs">
+      <h2 id="privacy-logs" class="about-subheading">Server logs</h2>
+      <p class="mt-2">
+        The web server logs each request (IP address, time, requested page, referrer and
+        browser) to protect the demo against abuse and to count visits. The logs rotate
+        automatically and are never shared.
+      </p>
+    </section>
+
+    <section aria-labelledby="privacy-reset">
+      <h2 id="privacy-reset" class="about-subheading">Nightly reset</h2>
+      <p class="mt-2">
+        Every night at {reset_time(@reset)} ({@reset.timezone}) the database is rebuilt from the
+        sample data, which removes everything visitors changed during the day.
+      </p>
+    </section>
+  </div>
+</article>

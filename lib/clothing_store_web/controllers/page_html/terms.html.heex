@@ -1,0 +1,44 @@
+<article class="mx-auto max-w-3xl text-gray-700">
+  <.header>
+    Terms of use
+    <:subtitle>A few ground rules for the shared demo.</:subtitle>
+  </.header>
+
+  <div class="card space-y-8 p-6 leading-[1.65] sm:p-8">
+    <section aria-labelledby="terms-demo">
+      <h2 id="terms-demo" class="about-subheading">It's a demo</h2>
+      <p class="mt-2">
+        Modern Fashion Store is a portfolio project. Nothing is for sale, no orders are shipped,
+        and all products, prices and sales are made up. The service comes without any warranty
+        and may be offline or reset at any time.
+      </p>
+    </section>
+
+    <section aria-labelledby="terms-shared">
+      <h2 id="terms-shared" class="about-subheading">The data is shared</h2>
+      <p class="mt-2">
+        Every visitor uses the same demo account and sees the same catalogue. Don't enter
+        personal information, passwords or anything you wouldn't want others to read. Changes
+        are removed by the nightly reset at {reset_time(@reset)} ({@reset.timezone}).
+      </p>
+    </section>
+
+    <section aria-labelledby="terms-fair">
+      <h2 id="terms-fair" class="about-subheading">Fair use</h2>
+      <p class="mt-2">
+        Please keep content friendly and don't try to overload or break the server. Requests are
+        rate-limited, and the catalogue holds at most {@max_products} products.
+      </p>
+    </section>
+
+    <section aria-labelledby="terms-photos">
+      <h2 id="terms-photos" class="about-subheading">Photos and code</h2>
+      <p class="mt-2">
+        Product photos come from Pexels under the Pexels license.
+      </p>
+      <p :if={@repository} class="mt-2">
+        The source code is public: <.link href={@repository} class="about-link">view it on GitHub</.link>.
+      </p>
+    </section>
+  </div>
+</article>

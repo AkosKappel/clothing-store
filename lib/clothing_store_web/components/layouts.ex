@@ -167,6 +167,12 @@ defmodule ClothingStoreWeb.Layouts do
                 What can I try here?
               </button>
             </li>
+            <li>
+              <.link href={~p"/privacy"} class="hover:text-white hover:underline">Privacy</.link>
+            </li>
+            <li>
+              <.link href={~p"/terms"} class="hover:text-white hover:underline">Terms of use</.link>
+            </li>
             <li :for={{key, url} <- @links}>
               <a
                 href={url}

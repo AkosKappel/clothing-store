@@ -108,6 +108,8 @@ defmodule ClothingStoreWeb.Router do
     pipe_through [:browser]
 
     get "/about", PageController, :about
+    get "/privacy", PageController, :privacy
+    get "/terms", PageController, :terms
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,
