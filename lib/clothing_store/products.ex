@@ -9,6 +9,8 @@ defmodule ClothingStore.Products do
 
   # the public demo resets nightly; this keeps visitors from filling the database until then
   @max_products 200
+  # pg_advisory_xact_lock key that serializes creates, so the cap can't be overshot
+  @create_lock 7_201_001
 
   @max_id 9_223_372_036_854_775_807
 
@@ -225,10 +227,16 @@ defmodule ClothingStore.Products do
 
   """
   def create_product(attrs \\ %{}) do
-    %Product{}
-    |> Product.changeset(attrs)
-    |> check_catalogue_limit()
-    |> Repo.insert()
+    changeset = Product.changeset(%Product{}, attrs)
+
+    Repo.transaction(fn ->
+      Repo.query!("SELECT pg_advisory_xact_lock($1)", [@create_lock])
+
+      case changeset |> check_catalogue_limit() |> Repo.insert() do
+        {:ok, product} -> product
+        {:error, changeset} -> Repo.rollback(changeset)
+      end
+    end)
     |> notify_subscribers(:product_created)
   end
 
