@@ -171,23 +171,25 @@ defmodule ClothingStoreWeb.Layouts do
       <ul id="command-palette-list" role="listbox" class="max-h-80 overflow-y-auto p-2">
         <li
           :for={{{label, path, icon}, index} <- Enum.with_index(@pages)}
-          id={"palette-option-#{index}"}
-          role="option"
+          role="presentation"
           data-palette-item={String.downcase(label)}
-          class="group"
         >
           <a
+            id={"palette-option-#{index}"}
+            role="option"
             href={path}
             tabindex="-1"
-            class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 group-aria-selected:bg-red-50 group-aria-selected:text-red-800 hover:bg-gray-100"
+            class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 aria-selected:bg-red-50 aria-selected:text-red-800"
           >
             <.icon name={icon} class="size-5 text-gray-500" /> {label}
           </a>
         </li>
-        <li id="palette-option-search" role="option" data-palette-search class="group">
+        <li role="presentation" data-palette-search>
           <a
+            id="palette-option-search"
+            role="option"
             tabindex="-1"
-            class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 group-aria-selected:bg-red-50 group-aria-selected:text-red-800 hover:bg-gray-100"
+            class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 aria-selected:bg-red-50 aria-selected:text-red-800"
           >
             <.icon name="hero-magnifying-glass" class="size-5 text-gray-500" />
             <span>Search products for “<span data-palette-query></span>”</span>

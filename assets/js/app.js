@@ -43,6 +43,17 @@ document.addEventListener("click", event => {
   toggle.setAttribute("aria-expanded", open)
 })
 
+// Escape closes the open mobile menu and puts focus back on its button
+document.addEventListener("keydown", event => {
+  const menu = document.getElementById("menu")
+  const toggle = document.getElementById("menu-toggle")
+  if (event.key !== "Escape" || !menu || menu.classList.contains("hidden") || !toggle?.offsetParent) return
+
+  menu.classList.add("hidden")
+  toggle.setAttribute("aria-expanded", "false")
+  toggle.focus()
+})
+
 // Pending state for regular (non-LiveView) forms: reuse LiveView's
 // phx-submit-loading class so buttons show the same spinner, and ignore
 // repeated submits while the request is in flight.
@@ -104,7 +115,8 @@ const palette = document.getElementById("command-palette")
 if (palette) {
   const input = palette.querySelector("#command-palette-input")
   const search = palette.querySelector("[data-palette-search]")
-  const visible = () => [...palette.querySelectorAll("[role=option]")].filter(item => !item.hidden)
+  // the options are the links; hiding filters their list items
+  const visible = () => [...palette.querySelectorAll("[role=option]")].filter(option => !option.parentElement.hidden)
 
   const select = item => {
     palette.querySelectorAll("[role=option]").forEach(option => option.setAttribute("aria-selected", "false"))
@@ -120,21 +132,21 @@ if (palette) {
     })
     search.hidden = query === ""
     search.querySelector("[data-palette-query]").textContent = query
-    search.querySelector("a").href = `/products?q=${encodeURIComponent(query)}`
+    search.querySelector("[role=option]").href = `/products?q=${encodeURIComponent(query)}`
     select(visible()[0])
   }
 
   input.addEventListener("input", filter)
   input.addEventListener("keydown", event => {
     const items = visible()
-    const current = items.findIndex(item => item.getAttribute("aria-selected") === "true")
+    const current = items.findIndex(option => option.getAttribute("aria-selected") === "true")
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault()
       const step = event.key === "ArrowDown" ? 1 : -1
       select(items[(current + step + items.length) % items.length])
     } else if (event.key === "Enter" && items[current]) {
       event.preventDefault()
-      items[current].querySelector("a").click()
+      items[current].click()
     }
   })
 

@@ -1,5 +1,11 @@
 <% current_path = ClothingStoreWeb.Helpers.current_path(assigns) %>
 <header class="relative bg-gray-800 print:hidden text-white [view-transition-name:site-header]">
+  <a
+    href="#main"
+    class="sr-only z-50 rounded-md bg-white px-4 py-2 font-semibold text-gray-900 shadow-lg focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus-visible:outline-2 focus-visible:outline-red-600"
+  >
+    Skip to content
+  </a>
   <nav
     class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8"
     aria-label="Main"
@@ -73,7 +79,11 @@
   </nav>
 </header>
 
-<main class="min-h-[70vh] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+<main
+  id="main"
+  tabindex="-1"
+  class="min-h-[70vh] focus:outline-none px-4 py-8 sm:px-6 lg:px-8 lg:py-10"
+>
   <div class="mx-auto max-w-7xl">
     <.flash_group flash={@flash} />
     {@inner_content}
