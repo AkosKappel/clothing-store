@@ -113,7 +113,7 @@ defmodule ClothingStore.Transactions do
   # the stock check and the decrement are one statement, so two sales can't oversell
   defp take_stock(%Product{id: id}, quantity, now) do
     from(p in Product,
-      where: p.id == ^id and p.stock >= ^quantity,
+      where: p.id == ^id and p.stock >= ^quantity and is_nil(p.deleted_at),
       select: p,
       update: [inc: [stock: ^(-quantity)], set: [updated_at: ^now]]
     )

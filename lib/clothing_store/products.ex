@@ -5,11 +5,12 @@ defmodule ClothingStore.Products do
 
   import Ecto.Query, warn: false
   alias ClothingStore.ActivityFeed
-  alias ClothingStore.Products.Product
+  alias ClothingStore.Products.{Product, Version}
   alias ClothingStore.Repo
 
   # the public demo resets nightly; this keeps visitors from filling the database until then
   @max_products 200
+  @snapshot_fields ~w(title description category price stock tags photo)a
   # pg_advisory_xact_lock key that serializes creates, so the cap can't be overshot
   @create_lock 7_201_001
 
@@ -18,12 +19,15 @@ defmodule ClothingStore.Products do
   # a product with this many or fewer left counts as low on stock
   @low_stock 5
 
+  @doc "Products that aren't deleted, the base of every catalogue query."
+  def active, do: from(p in Product, where: is_nil(p.deleted_at))
+
   @doc "The stock level at or below which a product is low on stock."
   def low_stock, do: @low_stock
 
   @doc "How many products are out of stock and how many are low (but not out)."
   def stock_alerts do
-    from(p in Product,
+    from(p in active(),
       select: %{
         out: filter(count(p.id), p.stock == 0),
         low: filter(count(p.id), p.stock > 0 and p.stock <= ^@low_stock)
@@ -45,7 +49,7 @@ defmodule ClothingStore.Products do
 
   """
   def list_products(filters \\ %{}) do
-    Product
+    active()
     |> apply_filters(filters)
     |> sort(filters["sort"])
     |> Repo.all()
@@ -53,7 +57,7 @@ defmodule ClothingStore.Products do
 
   @doc "One page of the catalogue, newest first: `limit` products after the first `offset`."
   def page_products(offset, limit) do
-    Product
+    active()
     |> sort("newest")
     |> offset(^offset)
     |> limit(^limit)
@@ -61,7 +65,7 @@ defmodule ClothingStore.Products do
   end
 
   @doc "How many products the catalogue holds."
-  def count_products, do: Repo.aggregate(Product, :count)
+  def count_products, do: Repo.aggregate(active(), :count)
 
   @sorts [
     {"newest", "Newest first"},
@@ -182,7 +186,7 @@ defmodule ClothingStore.Products do
   def list_categories do
     [
       "All"
-      | Product
+      | active()
         |> select([p], p.category)
         |> distinct(true)
         |> Repo.all()
@@ -199,7 +203,7 @@ defmodule ClothingStore.Products do
 
   """
   def list_tags do
-    Product
+    active()
     |> select([p], fragment("DISTINCT unnest(tags)"))
     |> Repo.all()
     |> Enum.sort()
@@ -222,7 +226,7 @@ defmodule ClothingStore.Products do
   def get_product!(id) do
     # ids from the URL beyond bigint would crash the query; no product has one
     case Ecto.Type.cast(:id, id) do
-      {:ok, id} when id in 1..@max_id -> Repo.get!(Product, id)
+      {:ok, id} when id in 1..@max_id -> Repo.get!(active(), id)
       _ -> raise Ecto.NoResultsError, queryable: Product
     end
   end
@@ -296,7 +300,7 @@ defmodule ClothingStore.Products do
       errors != [] ->
         {:error, errors}
 
-      Repo.aggregate(Product, :count) + creates > @max_products ->
+      count_products() + creates > @max_products ->
         {:error, [{1, "The import would go over the demo's limit of #{@max_products} products"}]}
 
       true ->
@@ -327,7 +331,7 @@ defmodule ClothingStore.Products do
 
   defp import_target(id) do
     case Ecto.Type.cast(:id, id) do
-      {:ok, id} when id in 1..@max_id -> Repo.get(Product, id)
+      {:ok, id} when id in 1..@max_id -> Repo.get(active(), id)
       _ -> nil
     end
   end
@@ -384,7 +388,7 @@ defmodule ClothingStore.Products do
   def restock_product(%Product{id: id} = product) do
     max = Product.max_amount()
 
-    from(p in Product,
+    from(p in active(),
       where: p.id == ^id,
       select: p,
       update: [set: [stock: fragment("LEAST(? + ?, ?)", p.stock, ^@restock_amount, ^max)]]
@@ -414,9 +418,62 @@ defmodule ClothingStore.Products do
 
   """
   def delete_product(%Product{} = product) do
-    Repo.delete(product)
+    product
+    |> Ecto.Changeset.change(deleted_at: DateTime.utc_now(:second))
+    |> Repo.update()
     |> log_event("deleted", product)
     |> notify_subscribers(:product_deleted)
+  end
+
+  @purge_after_minutes 10
+
+  @doc "How long a deleted product can be restored."
+  def purge_after_minutes, do: @purge_after_minutes
+
+  @doc """
+  Brings back a product deleted less than #{@purge_after_minutes} minutes ago, if the
+  catalogue has room for it.
+  """
+  def restore_product(id) do
+    with {:ok, id} when id in 1..@max_id <- Ecto.Type.cast(:id, id),
+         %Product{deleted_at: %DateTime{}} = product <- Repo.get(Product, id),
+         false <- catalogue_full?() do
+      product
+      |> Ecto.Changeset.change(deleted_at: nil)
+      |> Repo.update()
+      |> log_event("restored", product)
+      |> notify_subscribers(:product_created)
+    else
+      true -> {:error, :catalogue_full}
+      _ -> {:error, :not_found}
+    end
+  end
+
+  @doc "Deletes for good the products deleted more than `minutes` ago, with their sales."
+  def purge_deleted(minutes \\ @purge_after_minutes) do
+    cutoff = DateTime.add(DateTime.utc_now(), -minutes, :minute)
+    {count, _} = Repo.delete_all(from(p in Product, where: p.deleted_at < ^cutoff))
+    count
+  end
+
+  @doc "A product's versions, newest first."
+  def list_versions(product_id, limit \\ 30) do
+    Version
+    |> where([v], v.product_id == ^product_id)
+    |> order_by(desc: :inserted_at, desc: :id)
+    |> limit(^limit)
+    |> Repo.all()
+  end
+
+  @doc "Puts back a version's title, description, category, price, tags and photo (not the stock)."
+  def revert_to_version(%Product{} = product, version_id) do
+    with {:ok, version_id} <- Ecto.Type.cast(:id, version_id),
+         %Version{snapshot: snapshot} <-
+           Repo.get_by(Version, id: version_id, product_id: product.id) do
+      update_product(product, Map.take(snapshot, ~w(title description category price tags photo)))
+    else
+      _ -> {:error, :not_found}
+    end
   end
 
   @doc """
@@ -432,11 +489,23 @@ defmodule ClothingStore.Products do
     Product.changeset(product, attrs)
   end
 
+  # the feed gets every event; the history gets each state the product was in
   defp log_event({:ok, product} = result, kind, before) do
     changes =
       if kind in ["updated", "restocked"], do: ActivityFeed.changes(before, product), else: %{}
 
     ActivityFeed.product_event(kind, product, changes)
+
+    if kind != "deleted" and (kind != "updated" or changes != %{}) do
+      Repo.insert!(%Version{
+        product_id: product.id,
+        action: kind,
+        snapshot:
+          product |> Map.take(@snapshot_fields) |> Map.new(fn {k, v} -> {to_string(k), v} end),
+        changes: changes
+      })
+    end
+
     result
   end
 

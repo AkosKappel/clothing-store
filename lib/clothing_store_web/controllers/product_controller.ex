@@ -71,6 +71,7 @@ defmodule ClothingStoreWeb.ProductController do
       product: product,
       forecast_days: @forecast_days,
       daily: daily,
+      versions: Products.list_versions(product.id),
       sold: sold,
       days_left: Transactions.days_of_stock_left(product.stock, sold, @forecast_days),
       reorder: Transactions.reorder_quantity(product.stock, sold)
@@ -91,6 +92,41 @@ defmodule ClothingStoreWeb.ProductController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, page_title: "Edit product", product: product, changeset: changeset)
+    end
+  end
+
+  def restore(conn, %{"id" => id}) do
+    case Products.restore_product(id) do
+      {:ok, product} ->
+        conn
+        |> put_flash(:info, "#{product.title} is back.")
+        |> redirect(to: ~p"/products/#{product}")
+
+      {:error, :catalogue_full} ->
+        conn
+        |> put_flash(:error, "The catalogue is full, so the product can't come back.")
+        |> redirect(to: ~p"/products")
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "That product can't be restored any more.")
+        |> redirect(to: ~p"/products")
+    end
+  end
+
+  def revert(conn, %{"id" => id, "version_id" => version_id}) do
+    product = Products.get_product!(id)
+
+    case Products.revert_to_version(product, version_id) do
+      {:ok, product} ->
+        conn
+        |> put_flash(:info, "Restored the earlier details of #{product.title}.")
+        |> redirect(to: ~p"/products/#{product}")
+
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "That version can't be restored.")
+        |> redirect(to: ~p"/products/#{product}")
     end
   end
 
@@ -118,7 +154,8 @@ defmodule ClothingStoreWeb.ProductController do
     {:ok, _product} = Products.delete_product(product)
 
     conn
-    |> put_flash(:info, "Product deleted successfully.")
+    |> put_flash(:info, "#{product.title} was deleted.")
+    |> put_flash(:undo, to_string(product.id))
     |> redirect(to: ~p"/products")
   end
 end

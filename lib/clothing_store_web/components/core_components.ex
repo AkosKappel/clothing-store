@@ -53,6 +53,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   attr :title, :string, default: nil, doc: "defaults to a title for the kind"
   attr :kind, :atom, values: [:info, :warning, :error], doc: "used for styling and flash lookup"
   attr :auto_dismiss, :boolean, default: false, doc: "fade out after a few seconds (see app.css)"
+  attr :undo, :string, default: nil, doc: "id of a deleted product: adds an Undo button"
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
   slot :inner_block, doc: "the optional inner block that renders the flash message"
@@ -74,6 +75,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         "pointer-events-auto relative flex w-full gap-3 overflow-hidden rounded-lg p-4 shadow-lg ring-1",
         "motion-safe:transition motion-safe:starting:translate-y-2 motion-safe:starting:opacity-0",
         @auto_dismiss && "toast-auto-dismiss",
+        @undo && "toast-long",
         @style.box
       ]}
       {@rest}
@@ -82,6 +84,20 @@ defmodule ClothingStoreWeb.CoreComponents do
       <div class="min-w-0 flex-1 text-sm">
         <p class="font-semibold">{@title || @style.title}</p>
         <p class="mt-0.5">{msg}</p>
+        <.form
+          :if={@undo}
+          for={%{}}
+          action={"/products/#{@undo}/restore"}
+          method="post"
+          class="mt-2"
+        >
+          <button
+            type="submit"
+            class="inline-flex items-center gap-1 rounded-md bg-white/70 px-2.5 py-1 text-xs font-semibold ring-1 ring-current/20 ring-inset hover:bg-white"
+          >
+            <.icon name="hero-arrow-uturn-left-mini" class="size-4" /> Undo
+          </button>
+        </.form>
       </div>
       <button
         type="button"
@@ -118,7 +134,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       id={@id}
       class="pointer-events-none fixed right-4 bottom-4 z-50 flex w-[calc(100%-2rem)] flex-col gap-3 sm:w-96"
     >
-      <.flash kind={:info} flash={@flash} auto_dismiss />
+      <.flash kind={:info} flash={@flash} auto_dismiss undo={Phoenix.Flash.get(@flash, :undo)} />
       <.flash kind={:warning} flash={@flash} auto_dismiss />
       <.flash kind={:error} flash={@flash} />
       <.flash

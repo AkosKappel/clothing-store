@@ -90,3 +90,51 @@
     </:item>
   </.list>
 </div>
+
+<section class="card mt-6 p-6" aria-labelledby="history-title">
+  <h2 id="history-title" class="font-semibold text-gray-900">History</h2>
+  <p class="mt-1 text-sm text-gray-500">
+    Every change to this product. Restoring a version brings back its details (not the stock).
+  </p>
+  <ol class="mt-4 divide-y divide-gray-100">
+    <li
+      :for={{version, index} <- Enum.with_index(@versions)}
+      id={"version-#{version.id}"}
+      class="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
+    >
+      <div class="min-w-0">
+        <p class="font-medium text-gray-900">
+          {version_title(version.action)}
+          <span :if={index == 0} class="ml-1 text-xs font-normal text-gray-500">(current)</span>
+        </p>
+        <p :if={version.changes != %{}} class="text-gray-600">
+          {Enum.map_join(
+            version.changes,
+            " · ",
+            &ClothingStoreWeb.ActivityComponents.change_text/1
+          )}
+        </p>
+        <time
+          datetime={DateTime.to_iso8601(version.inserted_at)}
+          title={format_date(version.inserted_at)}
+          class="text-xs text-gray-500"
+        >
+          {relative_time(version.inserted_at)}
+        </time>
+      </div>
+      <.form
+        :if={index > 0}
+        for={%{}}
+        action={~p"/products/#{@product}/versions/#{version.id}/revert"}
+        method="post"
+      >
+        <.button type="submit" size="sm" variant="secondary" icon="hero-arrow-uturn-left">
+          Restore these details
+        </.button>
+      </.form>
+    </li>
+  </ol>
+  <p :if={@versions == []} class="mt-4 text-sm text-gray-500">
+    No changes recorded yet (history starts with the last demo reset).
+  </p>
+</section>

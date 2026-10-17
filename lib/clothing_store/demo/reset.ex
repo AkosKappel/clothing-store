@@ -23,7 +23,7 @@ defmodule ClothingStore.Demo.Reset do
       Repo.transaction(
         fn ->
           Repo.query!("""
-          TRUNCATE activity_events, products_transactions, transactions, products, users_tokens, users
+          TRUNCATE activity_events, product_versions, products_transactions, transactions, products, users_tokens, users
           RESTART IDENTITY CASCADE
           """)
 

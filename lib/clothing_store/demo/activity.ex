@@ -11,7 +11,6 @@ defmodule ClothingStore.Demo.Activity do
   import Ecto.Query
 
   alias ClothingStore.{Products, Repo, Transactions}
-  alias ClothingStore.Products.Product
 
   def start_link(opts), do: GenServer.start_link(__MODULE__, opts, name: __MODULE__)
 
@@ -53,7 +52,7 @@ defmodule ClothingStore.Demo.Activity do
 
     restock =
       if :rand.uniform() < 0.2 do
-        Product
+        Products.active()
         |> where([p], p.stock <= ^Products.low_stock())
         |> order_by([p], asc: p.stock, asc: p.id)
         |> limit(1)
@@ -65,7 +64,7 @@ defmodule ClothingStore.Demo.Activity do
   end
 
   defp random_products(count) do
-    Product
+    Products.active()
     |> where([p], p.stock > 0)
     |> order_by(fragment("random()"))
     |> limit(^count)

@@ -49,6 +49,12 @@ defmodule ClothingStoreWeb.ActivityComponents do
     """
   end
 
+  defp event_text(%{event: %{kind: "restored"}} = assigns) do
+    ~H"""
+    <.product_link event={@event} /> was restored after a delete
+    """
+  end
+
   defp event_text(%{event: %{kind: "deleted"}} = assigns) do
     ~H"""
     <span class="font-medium">{@event.product_title}</span> was deleted
@@ -98,6 +104,7 @@ defmodule ClothingStoreWeb.ActivityComponents do
 
   defp kind_icon("created"), do: "hero-plus-mini"
   defp kind_icon("deleted"), do: "hero-trash-mini"
+  defp kind_icon("restored"), do: "hero-arrow-uturn-left-mini"
   defp kind_icon("restocked"), do: "hero-arrow-up-tray-mini"
   defp kind_icon("sale"), do: "hero-shopping-bag-mini"
   defp kind_icon(_updated), do: "hero-pencil-mini"

@@ -15,12 +15,19 @@ defmodule ClothingStore.Application do
         {Phoenix.PubSub, name: ClothingStore.PubSub},
         ClothingStoreWeb.Presence,
         {Finch, name: ClothingStore.Finch}
-      ] ++ demo_children() ++ [ClothingStoreWeb.Endpoint]
+      ] ++ purger() ++ demo_children() ++ [ClothingStoreWeb.Endpoint]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ClothingStore.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  # off in tests, which own their database connections
+  defp purger do
+    if Application.get_env(:clothing_store, :purge_deleted, true),
+      do: [ClothingStore.Products.Purger],
+      else: []
   end
 
   defp demo_children do

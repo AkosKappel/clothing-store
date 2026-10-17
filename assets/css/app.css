@@ -46,6 +46,9 @@
      hovering or focusing one pauses both */
   .toast-auto-dismiss { animation: toast-out 300ms ease-in 6s forwards; }
   .toast-progress { animation: toast-progress 6s linear forwards; }
+  /* a toast with an Undo button stays for 10 s */
+  .toast-long.toast-auto-dismiss { animation-delay: 10s; }
+  .toast-long .toast-progress { animation-duration: 10s; }
   .toast-auto-dismiss:is(:hover, :focus-within),
   .toast-auto-dismiss:is(:hover, :focus-within) .toast-progress { animation-play-state: paused; }
   @media (prefers-reduced-motion: reduce) {

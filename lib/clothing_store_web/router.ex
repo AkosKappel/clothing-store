@@ -61,6 +61,8 @@ defmodule ClothingStoreWeb.Router do
     resources "/products", ProductController, except: [:new, :edit]
     post "/products/:id/restock", ProductController, :restock
     get "/products/:id/label", ProductController, :label
+    post "/products/:id/restore", ProductController, :restore
+    post "/products/:id/versions/:version_id/revert", ProductController, :revert
   end
 
   scope "/", ClothingStoreWeb do

@@ -10,6 +10,7 @@ defmodule ClothingStore.Products.Product do
     field :price, :decimal
     field :stock, :integer
     field :tags, {:array, :string}, default: []
+    field :deleted_at, :utc_datetime
 
     has_many :products_transactions, ClothingStore.Products.ProductTransaction
     has_many :transactions, through: [:products_transactions, :transaction]
