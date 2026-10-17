@@ -9,6 +9,7 @@ defmodule ClothingStoreWeb.ProductLive.Index do
   import ClothingStoreWeb.Helpers
 
   alias ClothingStore.Products
+  alias ClothingStoreWeb.Presence
 
   @per_page 24
   # how long a product changed by someone else stays highlighted (matches .live-highlight)
@@ -16,11 +17,15 @@ defmodule ClothingStoreWeb.ProductLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, "products")
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, Presence.online_topic())
+    end
 
     {:ok,
      socket
      |> assign(page_title: "Dashboard", view: "grid", highlighted: %{}, announcement: nil)
+     |> assign(:online, Presence.online_count())
      |> stream_configure(:products, dom_id: &"product-#{&1.id}")
      |> load_first_page()}
   end
@@ -91,6 +96,9 @@ defmodule ClothingStoreWeb.ProductLive.Index do
   end
 
   def handle_info(:demo_reset, socket), do: {:noreply, load_first_page(socket)}
+
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket),
+    do: {:noreply, assign(socket, :online, Presence.online_count())}
 
   defp load_first_page(socket) do
     products = Products.page_products(0, @per_page)

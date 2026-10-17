@@ -13,6 +13,7 @@ defmodule ClothingStore.Application do
         ClothingStore.Repo,
         {DNSCluster, query: Application.get_env(:clothing_store, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: ClothingStore.PubSub},
+        ClothingStoreWeb.Presence,
         {Finch, name: ClothingStore.Finch}
       ] ++ demo_children() ++ [ClothingStoreWeb.Endpoint]
 

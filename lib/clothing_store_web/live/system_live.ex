@@ -67,6 +67,7 @@ defmodule ClothingStoreWeb.SystemLive do
     %{
       uptime_s: div(uptime_ms, 1000),
       processes: :erlang.system_info(:process_count),
+      online: ClothingStoreWeb.Presence.online_count(),
       memory_mb: :erlang.memory(:total) / 1_048_576,
       schedulers: :erlang.system_info(:schedulers_online),
       run_queue: :erlang.statistics(:total_run_queue_lengths),
@@ -78,6 +79,7 @@ defmodule ClothingStoreWeb.SystemLive do
   defp tiles(stats) do
     [
       {"Uptime", duration(stats.uptime_s), "hero-clock"},
+      {"Visitors online", stats.online, "hero-users"},
       {"Processes", format_int(stats.processes), "hero-cpu-chip"},
       {"Memory", "#{:erlang.float_to_binary(stats.memory_mb, decimals: 1)} MB",
        "hero-circle-stack"},

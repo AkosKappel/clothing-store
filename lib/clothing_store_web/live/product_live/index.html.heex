@@ -8,6 +8,10 @@
       </span>
       Live: changes made by other visitors appear here instantly.
     </span>
+    <span id="online-count" class="ml-2 inline-flex items-center gap-1 text-gray-500">
+      <.icon name="hero-users-mini" class="size-4" />
+      {ngettext("1 visitor online", "%{count} visitors online", @online)}
+    </span>
   </:subtitle>
   <:actions>
     <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">

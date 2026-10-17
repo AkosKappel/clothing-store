@@ -40,7 +40,11 @@ defmodule ClothingStoreWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     # on_mount assigns current_user, which the app layout's nav needs
-    live_session :dashboard, on_mount: [{ClothingStoreWeb.UserAuth, :ensure_authenticated}] do
+    live_session :dashboard,
+      on_mount: [
+        {ClothingStoreWeb.UserAuth, :ensure_authenticated},
+        {ClothingStoreWeb.Presence, :track}
+      ] do
       live "/", ProductLive.Index, :index
       # the forms validate live and then post to ProductController, which nginx rate-limits
       live "/products/new", ProductLive.Form, :new

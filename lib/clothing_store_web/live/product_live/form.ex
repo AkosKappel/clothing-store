@@ -8,6 +8,7 @@ defmodule ClothingStoreWeb.ProductLive.Form do
 
   alias ClothingStore.Products
   alias ClothingStore.Products.Product
+  alias ClothingStoreWeb.Presence
 
   @impl true
   def render(assigns) do
@@ -18,6 +19,20 @@ defmodule ClothingStoreWeb.ProductLive.Form do
         {@page_heading}
         <:subtitle>{@subtitle}</:subtitle>
       </.header>
+
+      <p
+        :if={@other_editors > 0}
+        id="other-editors"
+        role="status"
+        class="mb-6 flex gap-3 rounded-md bg-amber-50 p-4 text-sm text-amber-900 ring-1 ring-amber-600/20"
+      >
+        <.icon name="hero-users-mini" class="size-5 shrink-0 text-amber-600" />
+        {ngettext(
+          "Another visitor is editing this product right now. If you both save, the last save wins.",
+          "%{count} other visitors are editing this product right now. If you all save, the last save wins.",
+          @other_editors
+        )}
+      </p>
 
       <.product_form
         form={@form}
@@ -36,7 +51,9 @@ defmodule ClothingStoreWeb.ProductLive.Form do
   @impl true
   def mount(params, _session, socket) do
     {:ok,
-     socket |> assign(:trigger_submit, false) |> apply_action(socket.assigns.live_action, params)}
+     socket
+     |> assign(trigger_submit: false, other_editors: 0)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :new, _params) do
@@ -56,6 +73,7 @@ defmodule ClothingStoreWeb.ProductLive.Form do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     product = Products.get_product!(id)
+    socket = track_editing(socket, product)
 
     assign(socket,
       product: product,
@@ -103,6 +121,29 @@ defmodule ClothingStoreWeb.ProductLive.Form do
         {:noreply, assign(socket, :trigger_submit, true)}
     end
   end
+
+  @impl true
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket),
+    do: {:noreply, count_other_editors(socket)}
+
+  defp track_editing(socket, product) do
+    if connected?(socket) do
+      topic = Presence.editing_topic(product.id)
+      Phoenix.PubSub.subscribe(ClothingStore.PubSub, topic)
+      Presence.track(self(), topic, socket.assigns.presence_key, %{})
+      socket |> assign(:editing_topic, topic) |> count_other_editors()
+    else
+      socket
+    end
+  end
+
+  defp count_other_editors(socket),
+    do:
+      assign(
+        socket,
+        :other_editors,
+        Presence.others(socket.assigns.editing_topic, socket.assigns.presence_key)
+      )
 
   defp assign_form(socket, params, action) do
     params = Map.update(params, "tags", [], &Products.parse_tags/1)
