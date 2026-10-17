@@ -40,7 +40,7 @@ defmodule ClothingStoreWeb.InventoryLiveTest do
     assert render(lv) =~ "Linen shirt (blue)"
 
     {:ok, _} = Products.delete_product(Products.get_product!(product.id))
-    assert_redirect(lv, ~p"/products")
+    assert_redirect(lv, ~p"/")
   end
 
   test "the nav links navigate without a page load", %{conn: conn} do

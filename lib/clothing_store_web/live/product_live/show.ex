@@ -27,7 +27,7 @@ defmodule ClothingStoreWeb.ProductLive.Show do
     {:noreply,
      socket
      |> put_flash(:info, gettext("%{title} was deleted.", title: product.title))
-     |> push_navigate(to: ~p"/products")}
+     |> push_navigate(to: ~p"/")}
   end
 
   def handle_info({:product_updated, %{id: id}}, %{assigns: %{product: %{id: id}}} = socket),
