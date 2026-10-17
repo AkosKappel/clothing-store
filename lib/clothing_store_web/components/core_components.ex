@@ -525,6 +525,39 @@ defmodule ClothingStoreWeb.CoreComponents do
   end
 
   @doc """
+  A four-step strength meter for a new password, announced politely to screen readers.
+  `score` is `ClothingStoreWeb.Helpers.password_score/1`.
+  """
+  attr :id, :string, required: true
+  attr :score, :integer, required: true
+
+  def password_strength(assigns) do
+    assigns =
+      assign(assigns,
+        label: Enum.at(["", "Weak", "Fair", "Good", "Strong"], assigns.score),
+        color:
+          Enum.at(
+            ["", "bg-red-500", "bg-amber-500", "bg-lime-500", "bg-emerald-600"],
+            assigns.score
+          )
+      )
+
+    ~H"""
+    <div :if={@score > 0} id={@id} class="mt-2 flex items-center gap-3">
+      <div class="grid flex-1 grid-cols-4 gap-1" aria-hidden="true">
+        <span
+          :for={step <- 1..4}
+          class={["h-1.5 rounded-full", if(step <= @score, do: @color, else: "bg-gray-200")]}
+        />
+      </div>
+      <p class="w-28 text-right text-xs text-gray-600" aria-live="polite">
+        Strength: <span class="font-semibold">{@label}</span>
+      </p>
+    </div>
+    """
+  end
+
+  @doc """
   Renders a page header with title, optional subtitle and actions.
   """
   attr :class, :any, default: nil

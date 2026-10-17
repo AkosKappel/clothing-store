@@ -72,6 +72,27 @@ document.addEventListener("change", event => {
   if (event.target.matches("[data-autosubmit]")) event.target.form?.requestSubmit()
 })
 
+// Stepper buttons next to number inputs (the product stock): step the input, then
+// let LiveView validate as if the visitor had typed it.
+document.addEventListener("click", event => {
+  const button = event.target.closest("[data-step-target]")
+  const input = button && document.getElementById(button.dataset.stepTarget)
+  if (!input) return
+
+  Number(button.dataset.step) > 0 ? input.stepUp() : input.stepDown()
+  input.dispatchEvent(new Event("input", {bubbles: true}))
+})
+
+// Enter in the tags input finishes a tag (it becomes a chip) instead of submitting the form
+document.addEventListener("keydown", event => {
+  const input = event.target
+  if (event.key !== "Enter" || !input.matches?.("[data-tag-input]")) return
+
+  event.preventDefault()
+  if (input.value.trim() !== "" && !input.value.trim().endsWith(",")) input.value = input.value.trim() + ", "
+  input.dispatchEvent(new Event("input", {bubbles: true}))
+})
+
 // Buttons marked data-print open the print dialog (the statistics report)
 document.addEventListener("click", event => {
   if (event.target.closest("[data-print]")) window.print()

@@ -27,6 +27,7 @@ defmodule ClothingStoreWeb.ProductLive.Form do
         phx-change="validate"
         phx-submit="save"
         phx-trigger-action={@trigger_submit}
+        removable_tags
       />
     </div>
     """
@@ -71,6 +72,12 @@ defmodule ClothingStoreWeb.ProductLive.Form do
   @impl true
   def handle_event("validate", %{"product" => params}, socket) do
     {:noreply, assign_form(socket, params, :validate)}
+  end
+
+  def handle_event("remove_tag", %{"tag" => tag}, socket) do
+    form = socket.assigns.form
+    tags = form[:tags].value |> List.wrap() |> List.delete(tag)
+    {:noreply, assign_form(socket, Map.put(form.params, "tags", tags), :validate)}
   end
 
   def handle_event("save", %{"product" => params}, socket) do

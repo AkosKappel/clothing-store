@@ -1,7 +1,7 @@
 defmodule ClothingStoreWeb.UserSettingsLive do
   use ClothingStoreWeb, :live_view
 
-  import ClothingStoreWeb.Helpers, only: [password_requirements: 2]
+  import ClothingStoreWeb.Helpers, only: [password_requirements: 2, password_score: 1]
 
   alias ClothingStore.Users
 
@@ -92,6 +92,10 @@ defmodule ClothingStoreWeb.UserSettingsLive do
               type="password"
               label="Confirm new password"
               autocomplete="new-password"
+            />
+            <.password_strength
+              id="password-strength"
+              score={password_score(@password_form[:password].value)}
             />
             <.requirements
               id="password-requirements"

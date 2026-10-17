@@ -1,7 +1,7 @@
 defmodule ClothingStoreWeb.UserResetPasswordLive do
   use ClothingStoreWeb, :live_view
 
-  import ClothingStoreWeb.Helpers, only: [password_requirements: 2]
+  import ClothingStoreWeb.Helpers, only: [password_requirements: 2, password_score: 1]
 
   alias ClothingStore.Users
 
@@ -34,6 +34,7 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
             autocomplete="new-password"
             required
           />
+          <.password_strength id="password-strength" score={password_score(@form[:password].value)} />
           <.requirements
             id="password-requirements"
             items={

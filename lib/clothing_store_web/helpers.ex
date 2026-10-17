@@ -52,6 +52,27 @@ defmodule ClothingStoreWeb.Helpers do
     ]
   end
 
+  @doc """
+  A rough strength score for a new password, 0 (empty) to 4: length counts most,
+  then the mix of lower case, upper case, digits and symbols.
+  """
+  def password_score(password) when password in [nil, ""], do: 0
+
+  def password_score(password) do
+    length = String.length(password)
+
+    classes =
+      Enum.count([~r/\p{Ll}/u, ~r/\p{Lu}/u, ~r/\d/, ~r/[^\p{L}\d]/u], &Regex.match?(&1, password))
+
+    score =
+      Enum.count(
+        [length >= User.password_min_length(), length >= 16, classes >= 2, classes >= 3],
+        & &1
+      )
+
+    max(score, 1)
+  end
+
   # photo is required and validated (local /images/ path or allowlisted host)
   def image_link(image_path), do: image_path
 

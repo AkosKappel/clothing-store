@@ -42,6 +42,22 @@ defmodule ClothingStoreWeb.ProductFormLiveTest do
     assert html =~ ~s(id="photo-preview" src="#{@valid.photo}")
   end
 
+  test "tags show as chips that can be removed", %{conn: conn} do
+    product = product_fixture(tags: ["summer", "sale"])
+    {:ok, lv, html} = live(conn, ~p"/products/#{product}/edit")
+    assert html =~ "Remove tag summer"
+
+    html = lv |> element("button[phx-value-tag=summer]") |> render_click()
+    refute html =~ "Remove tag summer"
+    assert html =~ "Remove tag sale"
+    assert html =~ ~s(value="sale")
+  end
+
+  test "the stock input has stepper buttons", %{conn: conn} do
+    {:ok, _lv, html} = live(conn, ~p"/products/new")
+    assert html =~ ~s(data-step-target="product_stock")
+  end
+
   test "a valid new product is posted to the controller and saved", %{conn: conn} do
     {:ok, lv, _html} = live(conn, ~p"/products/new")
 

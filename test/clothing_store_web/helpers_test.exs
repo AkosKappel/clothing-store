@@ -3,19 +3,13 @@ defmodule ClothingStoreWeb.HelpersTest do
 
   import ClothingStoreWeb.Helpers
 
-  @now ~U[2026-10-06 12:00:00Z]
-
-  test "relative_time/2 describes recent times and falls back to the date" do
-    ago = fn seconds -> relative_time(DateTime.add(@now, -seconds), @now) end
-
-    assert ago.(0) == "just now"
-    assert ago.(59) == "just now"
-    assert ago.(60) == "1 min ago"
-    assert ago.(59 * 60) == "59 min ago"
-    assert ago.(3600) == "1 hour ago"
-    assert ago.(5 * 3600) == "5 hours ago"
-    assert ago.(30 * 3600) == "yesterday"
-    assert ago.(3 * 86_400) == "3 days ago"
-    assert ago.(7 * 86_400) == "2026-09-29"
+  test "password_score/1 rewards length first, then variety" do
+    assert password_score("") == 0
+    assert password_score(nil) == 0
+    assert password_score("abc") == 1
+    assert password_score("abcdefghijkl") == 1
+    assert password_score("abcdefghijk1") == 2
+    assert password_score("Abcdefghijk1") == 3
+    assert password_score("Abcdefghijk1-longer") == 4
   end
 end

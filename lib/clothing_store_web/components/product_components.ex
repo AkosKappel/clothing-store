@@ -57,6 +57,7 @@ defmodule ClothingStoreWeb.ProductComponents do
   attr :form, Phoenix.HTML.Form, required: true
   attr :action, :string, required: true
   attr :cancel_to, :string, required: true
+  attr :removable_tags, :boolean, default: false, doc: "× buttons on tag chips (LiveView only)"
   attr :rest, :global, include: ~w(phx-trigger-action)
 
   def product_form(assigns) do
@@ -111,7 +112,27 @@ defmodule ClothingStoreWeb.ProductComponents do
           step="0.01"
           required
         />
-        <.input field={@form[:stock]} type="number" label="Stock" min="0" step="1" required />
+        <div class="flex items-start gap-1.5">
+          <div class="min-w-0 flex-1">
+            <.input field={@form[:stock]} type="number" label="Stock" min="0" step="1" required />
+          </div>
+          <button
+            :for={
+              {step, icon, label} <- [
+                {-1, "hero-minus-mini", "Decrease stock"},
+                {1, "hero-plus-mini", "Increase stock"}
+              ]
+            }
+            type="button"
+            data-step={step}
+            data-step-target={@form[:stock].id}
+            aria-label={label}
+            title={label}
+            class="mt-7 rounded-md p-2 text-gray-700 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          >
+            <.icon name={icon} class="size-5" />
+          </button>
+        </div>
       </div>
 
       <.input
@@ -119,8 +140,27 @@ defmodule ClothingStoreWeb.ProductComponents do
         type="text"
         label="Tags"
         value={@form[:tags].value |> List.wrap() |> Enum.join(", ")}
-        hint="Comma separated, up to 10, for example: summer, sale"
+        hint="Comma separated or Enter after each, up to 10, for example: summer, sale"
+        data-tag-input
       />
+      <ul :if={tag_list(@form) != []} class="-mt-3 flex flex-wrap gap-1.5" aria-label="Tags">
+        <li
+          :for={tag <- tag_list(@form)}
+          class="inline-flex items-center gap-1 rounded-full bg-gray-100 py-0.5 pr-1 pl-2.5 text-xs font-medium text-gray-700 ring-1 ring-gray-200 ring-inset"
+        >
+          {tag}
+          <button
+            :if={@removable_tags}
+            type="button"
+            phx-click="remove_tag"
+            phx-value-tag={tag}
+            class="rounded-full p-0.5 hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-red-600"
+            aria-label={"Remove tag #{tag}"}
+          >
+            <.icon name="hero-x-mark-mini" class="size-3.5" />
+          </button>
+        </li>
+      </ul>
 
       <:actions>
         <div class="ml-auto flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
@@ -133,6 +173,8 @@ defmodule ClothingStoreWeb.ProductComponents do
     </.simple_form>
     """
   end
+
+  defp tag_list(form), do: form[:tags].value |> List.wrap() |> Enum.filter(&is_binary/1)
 
   # only a photo that passed validation, so the preview never requests an arbitrary URL
   defp photo_preview?(%Phoenix.HTML.FormField{value: value, errors: errors}),
