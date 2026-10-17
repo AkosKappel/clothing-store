@@ -98,6 +98,56 @@ document.addEventListener("click", event => {
   if (event.target.closest("[data-print]")) window.print()
 })
 
+// Command palette (Layouts.command_palette/1): Ctrl+K or Cmd+K opens it, typing
+// filters the pages, the last entry searches the inventory for what was typed.
+const palette = document.getElementById("command-palette")
+if (palette) {
+  const input = palette.querySelector("#command-palette-input")
+  const search = palette.querySelector("[data-palette-search]")
+  const visible = () => [...palette.querySelectorAll("[role=option]")].filter(item => !item.hidden)
+
+  const select = item => {
+    palette.querySelectorAll("[role=option]").forEach(option => option.setAttribute("aria-selected", "false"))
+    item?.setAttribute("aria-selected", "true")
+    item ? input.setAttribute("aria-activedescendant", item.id) : input.removeAttribute("aria-activedescendant")
+    item?.scrollIntoView({block: "nearest"})
+  }
+
+  const filter = () => {
+    const query = input.value.trim()
+    palette.querySelectorAll("[data-palette-item]").forEach(item => {
+      item.hidden = !item.dataset.paletteItem.includes(query.toLowerCase())
+    })
+    search.hidden = query === ""
+    search.querySelector("[data-palette-query]").textContent = query
+    search.querySelector("a").href = `/products?q=${encodeURIComponent(query)}`
+    select(visible()[0])
+  }
+
+  input.addEventListener("input", filter)
+  input.addEventListener("keydown", event => {
+    const items = visible()
+    const current = items.findIndex(item => item.getAttribute("aria-selected") === "true")
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault()
+      const step = event.key === "ArrowDown" ? 1 : -1
+      select(items[(current + step + items.length) % items.length])
+    } else if (event.key === "Enter" && items[current]) {
+      event.preventDefault()
+      items[current].querySelector("a").click()
+    }
+  })
+
+  document.addEventListener("keydown", event => {
+    if (event.key.toLowerCase() !== "k" || !(event.ctrlKey || event.metaKey)) return
+    event.preventDefault()
+    if (palette.open) return palette.close()
+    input.value = ""
+    filter()
+    palette.showModal()
+  })
+}
+
 // Single-key shortcuts: an element with data-shortcut="n" is clicked (links) or
 // focused (inputs) when that key is pressed outside a text field.
 document.addEventListener("keydown", event => {

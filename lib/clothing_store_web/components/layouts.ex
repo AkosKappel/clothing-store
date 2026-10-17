@@ -124,6 +124,83 @@ defmodule ClothingStoreWeb.Layouts do
     """
   end
 
+  @doc """
+  Ctrl+K / Cmd+K jump list for logged-in visitors: type to filter the pages, or
+  press Enter on the last entry to search the inventory. `app.js` drives it; it
+  lives in the root layout, so LiveView navigation never replaces it.
+  """
+  def command_palette(assigns) do
+    assigns =
+      assign(assigns, :pages, [
+        {"Dashboard", ~p"/", "hero-squares-2x2"},
+        {"Inventory", ~p"/products", "hero-cube"},
+        {"New product", ~p"/products/new", "hero-plus"},
+        {"Import products", ~p"/products/import", "hero-arrow-up-tray"},
+        {"Low stock", ~p"/products?low_stock=true&sort=stock_asc", "hero-exclamation-triangle"},
+        {"Transactions", ~p"/transactions", "hero-banknotes"},
+        {"Statistics", ~p"/statistics", "hero-chart-bar"},
+        {"System status", ~p"/system", "hero-cpu-chip"},
+        {"Settings", ~p"/users/settings", "hero-cog-6-tooth"},
+        {"About", ~p"/about", "hero-information-circle"}
+      ])
+
+    ~H"""
+    <dialog
+      id="command-palette"
+      aria-label="Jump to a page"
+      closedby="any"
+      class="mx-auto mt-[12vh] w-[calc(100%-2rem)] max-w-lg rounded-xl bg-white p-0 shadow-2xl backdrop:bg-gray-900/50"
+    >
+      <form action={~p"/products"} method="get" class="border-b border-gray-200">
+        <label class="flex items-center gap-3 px-4">
+          <.icon name="hero-magnifying-glass" class="size-5 text-gray-400" />
+          <span class="sr-only">Page or product</span>
+          <input
+            id="command-palette-input"
+            name="q"
+            type="search"
+            autocomplete="off"
+            placeholder="Jump to a page or search products"
+            role="combobox"
+            aria-controls="command-palette-list"
+            aria-expanded="true"
+            class="w-full border-0 py-4 text-gray-900 placeholder:text-gray-400 focus:ring-0"
+          />
+        </label>
+      </form>
+      <ul id="command-palette-list" role="listbox" class="max-h-80 overflow-y-auto p-2">
+        <li
+          :for={{{label, path, icon}, index} <- Enum.with_index(@pages)}
+          id={"palette-option-#{index}"}
+          role="option"
+          data-palette-item={String.downcase(label)}
+          class="group"
+        >
+          <a
+            href={path}
+            tabindex="-1"
+            class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 group-aria-selected:bg-red-50 group-aria-selected:text-red-800 hover:bg-gray-100"
+          >
+            <.icon name={icon} class="size-5 text-gray-500" /> {label}
+          </a>
+        </li>
+        <li id="palette-option-search" role="option" data-palette-search class="group">
+          <a
+            tabindex="-1"
+            class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-800 group-aria-selected:bg-red-50 group-aria-selected:text-red-800 hover:bg-gray-100"
+          >
+            <.icon name="hero-magnifying-glass" class="size-5 text-gray-500" />
+            <span>Search products for “<span data-palette-query></span>”</span>
+          </a>
+        </li>
+      </ul>
+      <p class="border-t border-gray-100 px-4 py-2 text-xs text-gray-500">
+        <kbd>↑</kbd> <kbd>↓</kbd> to move, <kbd>Enter</kbd> to open, <kbd>Esc</kbd> to close
+      </p>
+    </dialog>
+    """
+  end
+
   @doc "Site footer: what the demo is, links (empty `DEMO_*` links are left out), stack and author."
   def site_footer(assigns) do
     assigns =

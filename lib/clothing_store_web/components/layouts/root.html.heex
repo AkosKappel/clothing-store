@@ -30,6 +30,7 @@
       open_on_load={!@conn.cookies["welcome_seen"]}
       logged_in={@conn.assigns[:current_user] != nil}
     />
+    <.command_palette :if={@conn.assigns[:current_user]} />
     {@inner_content}
   </body>
 </html>
