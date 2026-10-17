@@ -131,7 +131,8 @@ defmodule ClothingStore.ProductsTest do
       for ok <- [
             "/images/products/white-t-shirt.webp",
             "https://images.pexels.com/photos/1/a.jpeg?w=600",
-            "https://images.unsplash.com/photo-1?auto=format"
+            "https://images.unsplash.com/photo-1?auto=format",
+            "https://Images.Pexels.com/photos/1/a.jpeg"
           ] do
         assert errors_on_attrs(%{photo: ok}) == %{}, ok
       end

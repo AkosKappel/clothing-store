@@ -69,8 +69,11 @@ defmodule ClothingStore.Products.Product do
 
   defp allowed_photo?("https://" <> _ = url) do
     case URI.new(url) do
-      {:ok, %URI{scheme: "https", host: host, port: 443, userinfo: nil}} -> host in @photo_hosts
-      _ -> false
+      {:ok, %URI{scheme: "https", host: host, port: 443, userinfo: nil}} ->
+        String.downcase(host) in @photo_hosts
+
+      _ ->
+        false
     end
   end
 
