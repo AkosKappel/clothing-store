@@ -65,7 +65,7 @@ config :phoenix, :json_library, Jason
 
 config :clothing_store, :demo,
   account: [email: "admin@eshop.com", password: "Qwerty123456"],
-  reset: [enabled: false, time: "03:00", timezone: "Europe/Bratislava"],
+  reset: [enabled: false, time: "03:15", timezone: "Europe/Bratislava"],
   # shown on the About page; empty links are left out
   author: "Ákos Kappel",
   links: [

@@ -194,6 +194,6 @@ Also, any of the filters can be combined together, for example, you can select a
 ## Bonus
 
 The app runs as a Docker release on a home server, behind nginx (security headers and rate limiting) and is published to the internet with a Tailscale Funnel sidecar container, at [tagline.tailb52c43.ts.net](https://tagline.tailb52c43.ts.net).
-It is a public demo: **Try the demo** logs you in as the shared demo account (server-side, its password never reaches the browser), the data resets every night (by default at 03:00 Europe/Bratislava time, configurable with the `DEMO_RESET_*` settings), the e-mail and password of the demo account can't be changed, registration is disabled, and e-mails are only logged, never sent.
+It is a public demo: **Try the demo** logs you in as the shared demo account (server-side, its password never reaches the browser), the data resets every night (by default at 03:15 Europe/Bratislava time, configurable with the `DEMO_RESET_*` settings), the e-mail and password of the demo account can't be changed, registration is disabled, and e-mails are only logged, never sent.
 The seed photos are Pexels photos served locally as WebP.
 In 2026 I upgraded the app from Phoenix 1.7, LiveView 1.0 and Tailwind 3 to the current versions listed in the [tech stack](#tech-stack).

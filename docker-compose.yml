@@ -51,7 +51,7 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@eshop.com}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
       DEMO_RESET_ENABLED: ${DEMO_RESET_ENABLED:-true}
-      DEMO_RESET_TIME: ${DEMO_RESET_TIME:-03:00}
+      DEMO_RESET_TIME: ${DEMO_RESET_TIME:-03:15}
       DEMO_RESET_TIMEZONE: ${DEMO_RESET_TIMEZONE:-Europe/Bratislava}
       # About page; empty values keep the defaults from config/config.exs
       DEMO_AUTHOR: ${DEMO_AUTHOR:-}
