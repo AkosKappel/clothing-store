@@ -8,8 +8,9 @@ alias ClothingStore.Products.ProductTransaction
 alias ClothingStore.Products
 alias ClothingStore.Users
 
-# Photos: Pexels (pexels.com/license), resized and converted to WebP in
-# priv/static/images/products/<slug>.webp.
+# Photos: Pexels (pexels.com/license), plus CC0 photos from StockSnap and the WordPress
+# photo directory (found through Openverse) for the knitwear, coats and the last few;
+# resized and converted to WebP in priv/static/images/products/<slug>.webp.
 # {slug, title, category, price, stock, tags, description}
 catalogue = [
   {"white-t-shirt", "Organic Cotton T-Shirt", "Shirts & Tops", "19.90", 42,
@@ -60,7 +61,27 @@ catalogue = [
   {"leggings", "Training Leggings", "Sportswear", "44.90", 18, ["popular"],
    "High-waisted leggings in a squat-proof, quick-drying fabric."},
   {"track-jacket", "Track Jacket", "Sportswear", "69.90", 9, [],
-   "A light grey zip-up track jacket with striped sleeves."}
+   "A light grey zip-up track jacket with striped sleeves."},
+  {"hoodie", "Fleece Hoodie", "Sportswear", "54.90", 22, ["popular", "winter"],
+   "A soft grey-blue hoodie in brushed cotton fleece with a kangaroo pocket."},
+  {"white-sneakers", "Canvas Sneakers", "Shoes", "49.90", 16, ["summer"],
+   "Classic white canvas lace-up sneakers with a rubber toe cap."},
+  {"maxi-dress", "Floral Maxi Dress", "Dresses & Skirts", "79.90", 7, ["summer", "new"],
+   "A flowing ankle-length dress in a pale floral print with long sleeves."},
+  {"knit-sweater", "Ribbed Knit Sweater", "Knitwear", "64.90", 11, ["winter"],
+   "A cream sweater in a chunky rib knit, cosy and easy to layer."},
+  {"cardigan", "Camel Cardigan", "Knitwear", "59.90", 2, ["new"],
+   "A relaxed open-front cardigan in a camel wool blend."},
+  {"denim-jacket", "Denim Jacket", "Jackets & Coats", "89.90", 13, ["popular"],
+   "A light-wash denim trucker jacket with chest pockets."},
+  {"leather-jacket", "Leather Biker Jacket", "Jackets & Coats", "229.00", 4, [],
+   "A black leather biker jacket with an asymmetric zip and quilted shoulders."},
+  {"puffer-jacket", "Hooded Puffer Jacket", "Jackets & Coats", "139.00", 8, ["winter"],
+   "A lightweight quilted puffer in sage green with a hood and recycled filling."},
+  {"trench-coat", "Classic Trench Coat", "Jackets & Coats", "179.00", 0, ["sale"],
+   "A beige double-breasted trench coat with a belted waist."},
+  {"tweed-coat", "Tweed Overcoat", "Jackets & Coats", "199.00", 5, ["winter", "new"],
+   "A brown wool tweed overcoat with horn buttons, warm enough for real winters."}
 ]
 
 for {slug, title, category, price, stock, tags, description} <- catalogue do

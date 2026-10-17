@@ -206,7 +206,7 @@ defmodule ClothingStoreWeb.Layouts do
       </div>
       <div class="border-t border-gray-700">
         <p class="mx-auto max-w-7xl px-4 py-5 text-gray-400 sm:px-6 lg:px-8">
-          &copy; {Date.utc_today().year} {@author}. Product photos from Pexels.
+          &copy; {Date.utc_today().year} {@author}. Product photos from Pexels and StockSnap.
         </p>
       </div>
     </footer>
