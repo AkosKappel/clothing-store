@@ -10,7 +10,10 @@
     >
       Export CSV
     </.button>
-    <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
+    <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
+      New product
+      <kbd class="ml-1 hidden rounded-sm bg-red-700 px-1.5 font-sans text-xs sm:inline">N</kbd>
+    </.button>
   </:actions>
 </.header>
 
@@ -30,8 +33,10 @@
       field={f[:q]}
       type="search"
       label="Search"
-      placeholder="Title, description, category or tag"
+      placeholder="Title, description, category or tag (press /)"
       value={@filters["q"]}
+      data-shortcut="/"
+      aria-keyshortcuts="/"
       maxlength="100"
     />
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

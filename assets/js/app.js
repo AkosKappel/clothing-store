@@ -72,6 +72,20 @@ document.addEventListener("change", event => {
   if (event.target.matches("[data-autosubmit]")) event.target.form?.requestSubmit()
 })
 
+// Single-key shortcuts: an element with data-shortcut="n" is clicked (links) or
+// focused (inputs) when that key is pressed outside a text field.
+document.addEventListener("keydown", event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || event.isComposing) return
+  if (event.target.closest("input, textarea, select, [contenteditable], dialog[open]")) return
+
+  const target = [...document.querySelectorAll("[data-shortcut]")]
+    .find(el => el.dataset.shortcut === event.key.toLowerCase())
+  if (!target) return
+
+  event.preventDefault()
+  target.matches("input, textarea, select") ? target.focus() : target.click()
+})
+
 // Back/forward restores pages from the cache with the pending state still on.
 window.addEventListener("pageshow", event => {
   if (event.persisted) {
