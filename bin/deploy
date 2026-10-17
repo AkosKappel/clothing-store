@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+# Deploys the committed main branch to the live containers:
+#   bin/deploy [--skip-tests] [--check]
+# Checks (main, clean tree, outside the reset window, server load), runs the test gate,
+# keeps the running image as a rollback tag, rebuilds the app, recreates nginx when its
+# files changed, waits for the health check (rolling back if it fails) and logs the deploy
+# in the infra repository. --check stops after the checks.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+skip_tests=false
+check_only=false
+for arg in "$@"; do
+  case "$arg" in
+    --skip-tests) skip_tests=true ;;
+    --check) check_only=true ;;
+    *) echo "usage: bin/deploy [--skip-tests] [--check]" >&2; exit 2 ;;
+  esac
+done
+
+infra_dir="${INFRA_DIR:-$HOME/projects/infra}"
+image=tagline-app
+max_load="${MAX_LOAD:-4}"
+
+fail() { echo "deploy: $*" >&2; exit 1; }
+env_value() { grep -E "^$1=" .env 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '"' || true; }
+
+# --- checks ---------------------------------------------------------------
+[ "$(git branch --show-current)" = main ] || fail "not on main"
+# the image is built from the working tree, so it must match the commit
+git diff --quiet HEAD -- || fail "uncommitted changes"
+[ -z "$(git status --porcelain -- lib priv assets config rel mix.exs mix.lock Dockerfile)" ] ||
+  fail "untracked files in the build context"
+
+# the nightly reset wipes the database; a restart in the middle of it is not worth the risk
+reset_time="$(env_value DEMO_RESET_TIME)"; reset_time="${reset_time:-03:15}"
+reset_tz="$(env_value DEMO_RESET_TIMEZONE)"; reset_tz="${reset_tz:-Europe/Bratislava}"
+now_min=$((10#$(TZ="$reset_tz" date +%H) * 60 + 10#$(TZ="$reset_tz" date +%M)))
+reset_min=$((10#${reset_time%%:*} * 60 + 10#${reset_time##*:}))
+distance=$(( (now_min - reset_min + 1440) % 1440 ))
+if [ "$distance" -lt 20 ] || [ "$distance" -gt 1420 ]; then
+  fail "within 20 minutes of the demo reset ($reset_time $reset_tz)"
+fi
+
+# the build shares the machine with every other live app
+load="$(cut -d' ' -f1 /proc/loadavg)"
+awk -v l="$load" -v m="$max_load" 'BEGIN { exit !(l <= m) }' ||
+  fail "load $load is above $max_load; wait, or set MAX_LOAD"
+
+new_rev="$(git rev-parse HEAD)"
+live_rev="$(docker image inspect -f '{{index .Config.Labels "org.opencontainers.image.revision"}}' "$image:latest" 2>/dev/null || true)"
+[ -n "$live_rev" ] && [ "$live_rev" != "<no value>" ] || live_rev=unknown
+echo "deploy: live ${live_rev:0:7}, deploying ${new_rev:0:7}"
+[ "$live_rev" != "$new_rev" ] || fail "already live"
+$check_only && { echo "deploy: checks passed"; exit 0; }
+
+# --- test gate --------------------------------------------------------------
+if ! $skip_tests; then
+  docker compose up -d --wait db
+  mise exec -- mix precommit
+fi
+
+# --- build and switch ---------------------------------------------------------
+rollback="$image:before-$(date +%F-%H%M)"
+docker tag "$image:latest" "$rollback"
+echo "deploy: rollback image $rollback"
+
+GIT_REVISION="$new_rev" docker compose build app
+GIT_REVISION="$new_rev" docker compose up -d
+
+if [ "$live_rev" = unknown ] ||
+  ! git diff --quiet "$live_rev" "$new_rev" -- docker/nginx.conf docker/maintenance 2>/dev/null; then
+  # a single-file bind mount keeps the old inode on restart, so recreate
+  docker compose up -d --force-recreate nginx
+fi
+
+status=starting
+for _ in $(seq 60); do
+  status="$(docker inspect -f '{{.State.Health.Status}}' tagline-app 2>/dev/null || echo missing)"
+  [ "$status" = healthy ] && break
+  sleep 3
+done
+
+if [ "$status" != healthy ]; then
+  echo "deploy: app is $status, rolling back to $rollback" >&2
+  docker compose logs --tail 40 app >&2 || true
+  docker tag "$rollback" "$image:latest"
+  docker compose up -d app
+  exit 1
+fi
+echo "deploy: ${new_rev:0:7} is live and healthy"
+
+# --- log --------------------------------------------------------------------
+history="$infra_dir/apps/tagline/history.md"
+if [ -f "$history" ]; then
+  if [ "$live_rev" = unknown ]; then
+    changes="- (previous revision unknown)"
+  else
+    # shellcheck disable=SC2016 # the backticks are Markdown
+    changes="$(git log --format='- %s (`%h`)' "$live_rev..$new_rev")"
+  fi
+  entry="## $(date +%F): Deploy \`${new_rev:0:7}\`
+
+Deployed with \`bin/deploy\` at $(date +%H:%M), from \`${live_rev:0:7}\`. Rollback image: \`$rollback\`.
+
+$changes
+"
+  # newest first: insert before the first entry
+  ENTRY="$entry" awk 'BEGIN { e = ENVIRON["ENTRY"] } !done && /^## / { print e; done = 1 } { print }' \
+    "$history" >"$history.tmp" && mv "$history.tmp" "$history"
+  git -C "$infra_dir" add apps/tagline/history.md
+  git -C "$infra_dir" commit -q -m "Log the tagline deploy of ${new_rev:0:7}"
+  echo "deploy: logged in $history"
+fi

@@ -36,7 +36,10 @@ services:
       - app-network
 
   app:
-    build: .
+    build:
+      context: .
+      args:
+        GIT_REVISION: ${GIT_REVISION:-unknown}
     image: tagline-app
     container_name: ${CONTAINER_PREFIX:-tagline}-app
     restart: unless-stopped
