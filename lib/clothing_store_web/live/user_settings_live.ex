@@ -9,8 +9,8 @@ defmodule ClothingStoreWeb.UserSettingsLive do
     ~H"""
     <div class="mx-auto max-w-3xl">
       <.header>
-        Account Settings
-        <:subtitle>Manage your account email address and password settings.</:subtitle>
+        {gettext("Account Settings")}
+        <:subtitle>{gettext("Manage your account email address and password settings.")}</:subtitle>
       </.header>
 
       <p
@@ -18,14 +18,16 @@ defmodule ClothingStoreWeb.UserSettingsLive do
         class="mb-6 flex gap-3 rounded-md bg-amber-50 p-4 text-sm text-amber-900 ring-1 ring-amber-600/20"
       >
         <.icon name="hero-lock-closed-mini" class="size-5 shrink-0 text-amber-600" />
-        This is the shared demo account, so its e-mail and password can't be changed.
+        {gettext("This is the shared demo account, so its e-mail and password can't be changed.")}
       </p>
 
       <div class="space-y-6">
         <section class="card grid gap-6 p-6 sm:p-8 md:grid-cols-3" aria-labelledby="email-title">
           <div>
-            <h2 id="email-title" class="font-semibold text-gray-900">Email address</h2>
-            <p class="mt-1 text-sm text-gray-600">We send a confirmation link to the new address.</p>
+            <h2 id="email-title" class="font-semibold text-gray-900">{gettext("Email address")}</h2>
+            <p class="mt-1 text-sm text-gray-600">
+              {gettext("We send a confirmation link to the new address.")}
+            </p>
           </div>
           <.simple_form
             for={@email_form}
@@ -37,7 +39,7 @@ defmodule ClothingStoreWeb.UserSettingsLive do
             <.input
               field={@email_form[:email]}
               type="email"
-              label="Email"
+              label={gettext("Email")}
               autocomplete="email"
               required
             />
@@ -46,14 +48,14 @@ defmodule ClothingStoreWeb.UserSettingsLive do
               name="current_password"
               id="current_password_for_email"
               type="password"
-              label="Current password"
+              label={gettext("Current password")}
               value={@email_form_current_password}
               autocomplete="current-password"
               required
             />
             <:actions>
-              <.button phx-disable-with="Changing..." icon="hero-envelope" class="ml-auto">
-                Change Email
+              <.button phx-disable-with={gettext("Changing...")} icon="hero-envelope" class="ml-auto">
+                {gettext("Change Email")}
               </.button>
             </:actions>
           </.simple_form>
@@ -61,8 +63,10 @@ defmodule ClothingStoreWeb.UserSettingsLive do
 
         <section class="card grid gap-6 p-6 sm:p-8 md:grid-cols-3" aria-labelledby="password-title">
           <div>
-            <h2 id="password-title" class="font-semibold text-gray-900">Password</h2>
-            <p class="mt-1 text-sm text-gray-600">Changing it logs out your other sessions.</p>
+            <h2 id="password-title" class="font-semibold text-gray-900">{gettext("Password")}</h2>
+            <p class="mt-1 text-sm text-gray-600">
+              {gettext("Changing it logs out your other sessions.")}
+            </p>
           </div>
           <.simple_form
             for={@password_form}
@@ -83,14 +87,14 @@ defmodule ClothingStoreWeb.UserSettingsLive do
             <.input
               field={@password_form[:password]}
               type="password"
-              label="New password"
+              label={gettext("New password")}
               autocomplete="new-password"
               required
             />
             <.input
               field={@password_form[:password_confirmation]}
               type="password"
-              label="Confirm new password"
+              label={gettext("Confirm new password")}
               autocomplete="new-password"
             />
             <.password_strength
@@ -110,15 +114,15 @@ defmodule ClothingStoreWeb.UserSettingsLive do
               field={@password_form[:current_password]}
               name="current_password"
               type="password"
-              label="Current password"
+              label={gettext("Current password")}
               id="current_password_for_password"
               value={@current_password}
               autocomplete="current-password"
               required
             />
             <:actions>
-              <.button phx-disable-with="Changing..." icon="hero-key" class="ml-auto">
-                Change Password
+              <.button phx-disable-with={gettext("Changing...")} icon="hero-key" class="ml-auto">
+                {gettext("Change Password")}
               </.button>
             </:actions>
           </.simple_form>
@@ -132,10 +136,10 @@ defmodule ClothingStoreWeb.UserSettingsLive do
     socket =
       case Users.update_user_email(socket.assigns.current_user, token) do
         :ok ->
-          put_flash(socket, :info, "Email changed successfully.")
+          put_flash(socket, :info, gettext("Email changed successfully."))
 
         :error ->
-          put_flash(socket, :error, "Email change link is invalid or it has expired.")
+          put_flash(socket, :error, gettext("Email change link is invalid or it has expired."))
       end
 
     {:ok, push_navigate(socket, to: ~p"/users/settings")}
@@ -154,7 +158,7 @@ defmodule ClothingStoreWeb.UserSettingsLive do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
-      |> assign(:page_title, "Settings")
+      |> assign(:page_title, gettext("Settings"))
 
     {:ok, socket}
   end
@@ -183,7 +187,7 @@ defmodule ClothingStoreWeb.UserSettingsLive do
           &url(~p"/users/settings/confirm_email/#{&1}")
         )
 
-        info = "A link to confirm your email change has been sent to the new address."
+        info = gettext("A link to confirm your email change has been sent to the new address.")
         {:noreply, socket |> put_flash(:info, info) |> assign(email_form_current_password: nil)}
 
       {:error, changeset} ->

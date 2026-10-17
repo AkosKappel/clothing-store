@@ -37,33 +37,38 @@ defmodule ClothingStoreWeb.ActivityComponents do
 
   defp event_text(%{event: %{kind: "sale"}} = assigns) do
     ~H"""
-    Sale: {Enum.map_join(@event.data["items"], ", ", fn [title, quantity] ->
-      "#{quantity} × #{title}"
-    end)} · <span class="font-medium">{format_price(Decimal.new(@event.data["total"]))}</span>
+    {gettext("Sale: %{items}",
+      items:
+        Enum.map_join(@event.data["items"], ", ", fn [title, quantity] ->
+          "#{quantity} × #{title}"
+        end)
+    )} · <span class="font-medium">{format_price(Decimal.new(@event.data["total"]))}</span>
     """
   end
 
   defp event_text(%{event: %{kind: "created"}} = assigns) do
     ~H"""
-    New product: <.product_link event={@event} />
+    {gettext("New product:")} <.product_link event={@event} />
     """
   end
 
   defp event_text(%{event: %{kind: "restored"}} = assigns) do
     ~H"""
-    <.product_link event={@event} /> was restored after a delete
+    <.product_link event={@event} /> {gettext("was restored after a delete")}
     """
   end
 
   defp event_text(%{event: %{kind: "deleted"}} = assigns) do
     ~H"""
-    <span class="font-medium">{@event.product_title}</span> was deleted
+    <span class="font-medium">{@event.product_title}</span> {gettext("was deleted")}
     """
   end
 
   defp event_text(assigns) do
     ~H"""
-    <.product_link event={@event} />{if @event.kind == "restocked", do: " restocked", else: ""}: {@event.data
+    <.product_link event={@event} />{if @event.kind == "restocked",
+      do: " " <> gettext("restocked"),
+      else: ""}: {@event.data
     |> Map.get("changes", %{})
     |> Enum.map_join(" · ", &change_text/1)}
     """
@@ -88,23 +93,41 @@ defmodule ClothingStoreWeb.ActivityComponents do
   end
 
   @doc "One change as text: `stock 5 → 3`, `price 79,90 € → 69,90 €`, `description edited`."
-  def change_text({field, _values}) when field in ["description", "photo"], do: "#{field} changed"
+  def change_text({field, _values}) when field in ["description", "photo"],
+    do: gettext("%{field} changed", field: field_label(field))
 
   def change_text({"discount_percent", [old, new]}),
-    do: "discount #{percent_text(old)} → #{percent_text(new)}"
+    do: gettext("discount %{old} → %{new}", old: percent_text(old), new: percent_text(new))
 
-  def change_text({"discount_" <> _dates, _values}), do: "discount dates changed"
+  def change_text({"discount_" <> _dates, _values}), do: gettext("discount dates changed")
 
   def change_text({"price", [old, new]}),
     do:
-      "price #{format_price(Decimal.new(to_string(old)))} → #{format_price(Decimal.new(to_string(new)))}"
+      gettext("price %{old} → %{new}",
+        old: format_price(Decimal.new(to_string(old))),
+        new: format_price(Decimal.new(to_string(new)))
+      )
 
   def change_text({"tags", [old, new]}),
-    do: "tags #{Enum.join(old, ", ") |> blank_dash()} → #{Enum.join(new, ", ") |> blank_dash()}"
+    do:
+      gettext("tags %{old} → %{new}",
+        old: Enum.join(old, ", ") |> blank_dash(),
+        new: Enum.join(new, ", ") |> blank_dash()
+      )
 
-  def change_text({field, [old, new]}), do: "#{field} #{old} → #{new}"
+  def change_text({field, [old, new]}),
+    do: gettext("%{field} %{old} → %{new}", field: field_label(field), old: old, new: new)
 
-  defp percent_text(nil), do: "none"
+  defp field_label("title"), do: gettext("title")
+  defp field_label("category"), do: gettext("category")
+  defp field_label("stock"), do: gettext("stock")
+  defp field_label("price"), do: gettext("price")
+  defp field_label("description"), do: gettext("description")
+  defp field_label("photo"), do: gettext("photo")
+  defp field_label("tags"), do: gettext("tags")
+  defp field_label(field), do: field
+
+  defp percent_text(nil), do: gettext("none")
   defp percent_text(percent), do: "#{percent} %"
 
   defp blank_dash(""), do: "–"

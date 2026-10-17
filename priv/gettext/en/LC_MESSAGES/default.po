@@ -1,0 +1,2135 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/clothing_store_web/helpers.ex:85
+#, elixir-autogen, elixir-format
+msgid "%{count} min ago"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:119
+#, elixir-autogen, elixir-format
+msgid "%{field} %{old} → %{new}"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:97
+#, elixir-autogen, elixir-format
+msgid "%{field} changed"
+msgstr ""
+
+#: lib/clothing_store_web/components/sales_components.ex:38
+#, elixir-autogen, elixir-format
+msgid "%{month}: %{revenue} from %{sales}"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:346
+#, elixir-autogen, elixir-format
+msgid "%{stock} in stock"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:108
+#, elixir-autogen, elixir-format
+msgid "%{title} is back."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.ex:95
+#, elixir-autogen, elixir-format
+msgid "%{title} was deleted"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:176
+#, elixir-autogen, elixir-format
+msgid "%{title} was deleted."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.ex:81
+#, elixir-autogen, elixir-format
+msgid "%{title} was updated"
+msgstr ""
+
+#: lib/clothing_store_web/components/chart_components.ex:42
+#, elixir-autogen, elixir-format
+msgid "%{title}: %{total} in total"
+msgstr ""
+
+#: lib/clothing_store_web/components/chart_components.ex:35
+#, elixir-autogen, elixir-format
+msgid "%{title}: %{total} in total, most on %{date} (%{best})"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:166
+#, elixir-autogen, elixir-format
+msgid "(current)"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:574
+#, elixir-autogen, elixir-format
+msgid "(done)"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:574
+#, elixir-autogen, elixir-format
+msgid "(not yet)"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:137
+#, elixir-autogen, elixir-format
+msgid "(remove this filter)"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:88
+#, elixir-autogen, elixir-format
+msgid "1 day ago"
+msgid_plural "%{count} days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/helpers.ex:86
+#, elixir-autogen, elixir-format
+msgid "1 hour ago"
+msgid_plural "%{count} hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:68
+#, elixir-autogen, elixir-format
+msgid "1 more is low on stock"
+msgid_plural "%{count} more are low on stock"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:128
+#: lib/clothing_store_web/live/product_live/index.html.heex:40
+#: lib/clothing_store_web/live/statistics_live.html.heex:65
+#, elixir-autogen, elixir-format
+msgid "1 product"
+msgid_plural "%{count} products"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/components/sales_components.ex:41
+#: lib/clothing_store_web/live/transactions_live.html.heex:99
+#, elixir-autogen, elixir-format
+msgid "1 sale"
+msgid_plural "%{count} sales"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:84
+#, elixir-autogen, elixir-format
+msgid "1 sold in the last %{days} days."
+msgid_plural "%{count} sold in the last %{days} days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "1 visitor online"
+msgid_plural "%{count} visitors online"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/components/layouts.ex:321
+#, elixir-autogen, elixir-format
+msgid "A Phoenix LiveView manager dashboard for a clothing store: inventory, sales statistics and live updates. A portfolio demo with sample data."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:190
+#, elixir-autogen, elixir-format
+msgid "A link to confirm your email change has been sent to the new address."
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:234
+#, elixir-autogen, elixir-format
+msgid "A manager dashboard for a clothing store, built as a portfolio demo. Everything is sample data and resets every night at %{time} (%{timezone})."
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:107
+#, elixir-autogen, elixir-format
+msgid "A path under /images/, or an https:// URL from %{hosts}."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:30
+#, elixir-autogen, elixir-format
+msgid "A row with the id of an existing product updates the columns it has; every other row adds a product (without a description or photo it gets a placeholder)."
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:151
+#: lib/clothing_store_web/components/layouts/app.html.heex:53
+#: lib/clothing_store_web/controllers/page_controller.ex:11
+#, elixir-autogen, elixir-format
+msgid "About"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:120
+#, elixir-autogen, elixir-format
+msgid "About the project"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:247
+#: lib/clothing_store_web/controllers/error_html.ex:74
+#, elixir-autogen, elixir-format
+msgid "About this project"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:12
+#, elixir-autogen, elixir-format
+msgid "Account Settings"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/user_session_controller.ex:8
+#, elixir-autogen, elixir-format
+msgid "Account created successfully!"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:692
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:148
+#: lib/clothing_store_web/live/activity_live.ex:15
+#: lib/clothing_store_web/live/activity_live.ex:44
+#, elixir-autogen, elixir-format
+msgid "Activity"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/new.html.heex:6
+#: lib/clothing_store_web/live/product_live/form.ex:69
+#, elixir-autogen, elixir-format
+msgid "Add a product to the catalogue. All fields except tags are required."
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:244
+#, elixir-autogen, elixir-format
+msgid "Add a size"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:23
+#, elixir-autogen, elixir-format
+msgid "Add or update products from a CSV file, for example an edited inventory export."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:228
+#, elixir-autogen, elixir-format
+msgid "Add the first product to start tracking stock."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:66
+#, elixir-autogen, elixir-format
+msgid "Add the first product, or wait for the nightly reset to bring back the demo catalogue."
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:97
+#, elixir-autogen, elixir-format
+msgid "Add, edit and delete products"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:43
+#, elixir-autogen, elixir-format
+msgid "Added to the catalogue"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:112
+#, elixir-autogen, elixir-format
+msgid "All data resets every night at %{time} (%{timezone})."
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:53
+#: lib/clothing_store_web/live/transactions_live.html.heex:164
+#, elixir-autogen, elixir-format
+msgid "All months"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:144
+#, elixir-autogen, elixir-format
+msgid "All time"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/error_html.ex:26
+#, elixir-autogen, elixir-format
+msgid "An unexpected error stopped this page. Please try again in a moment."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/form.ex:30
+#, elixir-autogen, elixir-format
+msgid "Another visitor is editing this product right now. If you both save, the last save wins."
+msgid_plural "%{count} other visitors are editing this product right now. If you all save, the last save wins."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:70
+#, elixir-autogen, elixir-format
+msgid "Any"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:120
+#, elixir-autogen, elixir-format
+msgid "Apply filters"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:32
+#, elixir-autogen, elixir-format
+msgid "April"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:99
+#, elixir-autogen, elixir-format
+msgid "At least %{count} characters"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:35
+#, elixir-autogen, elixir-format
+msgid "At most %{rows} rows and %{kb} KB. If any row is invalid, nothing is imported."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:91
+#, elixir-autogen, elixir-format
+msgid "At that pace it runs out in about 1 day."
+msgid_plural "At that pace it runs out in about %{count} days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/clothing_store_web/components/core_components.ex:149
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:36
+#, elixir-autogen, elixir-format
+msgid "August"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:80
+#, elixir-autogen, elixir-format
+msgid "Average sale"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:45
+#, elixir-autogen, elixir-format
+msgid "Average sale this month"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:35
+#: lib/clothing_store_web/live/user_confirmation_live.ex:31
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:35
+#: lib/clothing_store_web/live/user_reset_password_live.ex:59
+#, elixir-autogen, elixir-format
+msgid "Back to log in"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:128
+#, elixir-autogen, elixir-format
+msgid "Bestsellers"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:101
+#, elixir-autogen, elixir-format
+msgid "Both passwords match"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:288
+#, elixir-autogen, elixir-format
+msgid "Built with"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:45
+#, elixir-autogen, elixir-format
+msgid "CSV file"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:947
+#: lib/clothing_store_web/components/product_components.ex:273
+#: lib/clothing_store_web/live/product_live/import.ex:63
+#, elixir-autogen, elixir-format
+msgid "Cancel"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:125
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:51
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:177
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:116
+#: lib/clothing_store_web/live/statistics_live.html.heex:122
+#, elixir-autogen, elixir-format
+msgid "Category"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:22
+#, elixir-autogen, elixir-format
+msgid "Category: %{category}"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:58
+#, elixir-autogen, elixir-format
+msgid "Change Email"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:125
+#, elixir-autogen, elixir-format
+msgid "Change Password"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/edit.html.heex:5
+#: lib/clothing_store_web/live/product_live/form.ex:85
+#, elixir-autogen, elixir-format
+msgid "Changes are shown to every visitor straight away."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:68
+#, elixir-autogen, elixir-format
+msgid "Changing it logs out your other sessions."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:57
+#: lib/clothing_store_web/live/user_settings_live.ex:124
+#, elixir-autogen, elixir-format
+msgid "Changing..."
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:101
+#, elixir-autogen, elixir-format
+msgid "Check the transactions and the bestsellers"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:165
+#, elixir-autogen, elixir-format
+msgid "Choose a .csv file"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:133
+#, elixir-autogen, elixir-format
+msgid "Choose a CSV file first"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:13
+#, elixir-autogen, elixir-format
+msgid "Choose a new password of at least 12 characters."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:166
+#, elixir-autogen, elixir-format
+msgid "Choose one file"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:118
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:219
+#, elixir-autogen, elixir-format
+msgid "Clear filters"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:107
+#: lib/clothing_store_web/components/layouts.ex:76
+#: lib/clothing_store_web/components/layouts.ex:77
+#, elixir-autogen, elixir-format
+msgid "Close"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:212
+#, elixir-autogen, elixir-format
+msgid "Colour"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:175
+#, elixir-autogen, elixir-format
+msgid "Comma separated or Enter after each, up to 10, for example: summer, sale"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_live.ex:10
+#, elixir-autogen, elixir-format
+msgid "Confirm Account"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_live.ex:40
+#, elixir-autogen, elixir-format
+msgid "Confirm account"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_live.ex:21
+#, elixir-autogen, elixir-format
+msgid "Confirm my account"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:33
+#: lib/clothing_store_web/live/user_settings_live.ex:97
+#, elixir-autogen, elixir-format
+msgid "Confirm new password"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_live.ex:12
+#, elixir-autogen, elixir-format
+msgid "Confirm your e-mail address to finish setting up the account."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_live.ex:20
+#, elixir-autogen, elixir-format
+msgid "Confirming..."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:51
+#: lib/clothing_store_web/live/user_settings_live.ex:117
+#, elixir-autogen, elixir-format
+msgid "Current password"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:140
+#: lib/clothing_store_web/components/layouts/app.html.heex:40
+#: lib/clothing_store_web/components/layouts/root.html.heex:15
+#: lib/clothing_store_web/components/layouts/root.html.heex:27
+#: lib/clothing_store_web/live/product_live/index.ex:30
+#, elixir-autogen, elixir-format
+msgid "Dashboard"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:40
+#, elixir-autogen, elixir-format
+msgid "December"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:154
+#, elixir-autogen, elixir-format
+msgid "Decrease stock"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:922
+#: lib/clothing_store_web/components/core_components.ex:950
+#, elixir-autogen, elixir-format
+msgid "Delete"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:204
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:12
+#, elixir-autogen, elixir-format
+msgid "Delete %{title}?"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:14
+#, elixir-autogen, elixir-format
+msgid "Demo"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:101
+#, elixir-autogen, elixir-format
+msgid "Demo info"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:95
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:143
+#, elixir-autogen, elixir-format
+msgid "Description"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:250
+#, elixir-autogen, elixir-format
+msgid "Discount (optional)"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:29
+#, elixir-autogen, elixir-format
+msgid "Discount: −%{percent} % from %{from} to %{until}"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:31
+#, elixir-autogen, elixir-format
+msgid "Discounts given: −%{amount}"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:40
+#, elixir-autogen, elixir-format
+msgid "Done"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:199
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:7
+#, elixir-autogen, elixir-format
+msgid "Edit"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/edit.html.heex:4
+#: lib/clothing_store_web/live/product_live/form.ex:84
+#, elixir-autogen, elixir-format
+msgid "Edit Product"
+msgstr ""
+
+#: lib/clothing_store_web/live/activity_live.ex:31
+#, elixir-autogen, elixir-format
+msgid "Edit a product or wait a few minutes for the next simulated sale."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:97
+#: lib/clothing_store_web/live/product_live/form.ex:83
+#, elixir-autogen, elixir-format
+msgid "Edit product"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:44
+#, elixir-autogen, elixir-format
+msgid "Edited"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:19
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:19
+#: lib/clothing_store_web/live/user_login_live.ex:42
+#: lib/clothing_store_web/live/user_settings_live.ex:42
+#, elixir-autogen, elixir-format
+msgid "Email"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:27
+#, elixir-autogen, elixir-format
+msgid "Email address"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:142
+#, elixir-autogen, elixir-format
+msgid "Email change link is invalid or it has expired."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:139
+#, elixir-autogen, elixir-format
+msgid "Email changed successfully."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:152
+#, elixir-autogen, elixir-format
+msgid "Every change to this product. Restoring a version brings back its details (not the stock)."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:4
+#, elixir-autogen, elixir-format
+msgid "Every product with its stock. Search, filter and sort the catalogue."
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "Every sale, newest first."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:13
+#: lib/clothing_store_web/live/transactions_live.html.heex:15
+#, elixir-autogen, elixir-format
+msgid "Export CSV"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:592
+#, elixir-autogen, elixir-format
+msgid "Fair"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:30
+#, elixir-autogen, elixir-format
+msgid "February"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:98
+#, elixir-autogen, elixir-format
+msgid "Filter the inventory by category, price, stock and tags"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:27
+#, elixir-autogen, elixir-format
+msgid "Filters"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:82
+#, elixir-autogen, elixir-format
+msgid "Forecast"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:42
+#, elixir-autogen, elixir-format
+msgid "Forgot password"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:10
+#: lib/clothing_store_web/live/user_login_live.ex:61
+#, elixir-autogen, elixir-format
+msgid "Forgot your password?"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:261
+#, elixir-autogen, elixir-format
+msgid "From"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:23
+#, elixir-autogen, elixir-format
+msgid "From %{price} €"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/error_html.ex:73
+#, elixir-autogen, elixir-format
+msgid "Go to the dashboard"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:592
+#, elixir-autogen, elixir-format
+msgid "Good"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:45
+#, elixir-autogen, elixir-format
+msgid "Grid"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:161
+#, elixir-autogen, elixir-format
+msgid "Hang in there while we get back on track"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:150
+#, elixir-autogen, elixir-format
+msgid "History"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:4
+#, elixir-autogen, elixir-format
+msgid "How the store is doing: revenue, categories, stock and bestsellers."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:55
+#, elixir-autogen, elixir-format
+msgid "If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:54
+#, elixir-autogen, elixir-format
+msgid "If your email is in our system, you will receive instructions to reset your password shortly."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:70
+#, elixir-autogen, elixir-format
+msgid "Import"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "Import CSV"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:143
+#: lib/clothing_store_web/live/product_live/import.ex:21
+#: lib/clothing_store_web/live/product_live/import.ex:116
+#, elixir-autogen, elixir-format
+msgid "Import products"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:83
+#, elixir-autogen, elixir-format
+msgid "Imported: %{created} added, %{updated} updated."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:68
+#, elixir-autogen, elixir-format
+msgid "Importing..."
+msgstr ""
+
+#: lib/clothing_store_web/components/sales_components.ex:125
+#: lib/clothing_store_web/controllers/product_html.ex:25
+#, elixir-autogen, elixir-format
+msgid "In stock"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:80
+#, elixir-autogen, elixir-format
+msgid "In stock only"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:155
+#, elixir-autogen, elixir-format
+msgid "Increase stock"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/user_session_controller.ex:31
+#, elixir-autogen, elixir-format
+msgid "Invalid email or password"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:141
+#: lib/clothing_store_web/components/layouts/app.html.heex:43
+#: lib/clothing_store_web/controllers/product_controller.ex:17
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:2
+#: lib/clothing_store_web/controllers/product_html/new.html.heex:2
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:1
+#: lib/clothing_store_web/live/product_live/form.ex:66
+#: lib/clothing_store_web/live/product_live/import.ex:19
+#, elixir-autogen, elixir-format
+msgid "Inventory"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:29
+#, elixir-autogen, elixir-format
+msgid "January"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:35
+#, elixir-autogen, elixir-format
+msgid "July"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:157
+#, elixir-autogen, elixir-format
+msgid "Jump to a page"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:170
+#, elixir-autogen, elixir-format
+msgid "Jump to a page or search products"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:34
+#, elixir-autogen, elixir-format
+msgid "June"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "Keep me logged in"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:146
+#, elixir-autogen, elixir-format
+msgid "Label: %{title}"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:77
+#, elixir-autogen, elixir-format
+msgid "Language"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:138
+#, elixir-autogen, elixir-format
+msgid "Last month (%{month})"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:28
+#: lib/clothing_store_web/live/statistics_live.html.heex:40
+#: lib/clothing_store_web/live/statistics_live.html.heex:51
+#, elixir-autogen, elixir-format
+msgid "Last month: %{value}"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:41
+#, elixir-autogen, elixir-format
+msgid "Layout"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:102
+#, elixir-autogen, elixir-format
+msgid "Line %{line}: "
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:46
+#, elixir-autogen, elixir-format
+msgid "List"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:54
+#, elixir-autogen, elixir-format
+msgid "Live numbers from the Erlang VM that runs the Modern Fashion Store demo."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:9
+#, elixir-autogen, elixir-format
+msgid "Live: changes made by other visitors appear here instantly."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:140
+#, elixir-autogen, elixir-format
+msgid "Load more"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:121
+#: lib/clothing_store_web/live/user_login_live.ex:8
+#: lib/clothing_store_web/live/user_login_live.ex:71
+#: lib/clothing_store_web/live/user_login_live.ex:97
+#, elixir-autogen, elixir-format
+msgid "Log in"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:110
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/user_session_controller.ex:55
+#, elixir-autogen, elixir-format
+msgid "Logged out successfully."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:90
+#, elixir-autogen, elixir-format
+msgid "Low or out of stock only"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:144
+#: lib/clothing_store_web/controllers/product_html.ex:26
+#, elixir-autogen, elixir-format
+msgid "Low stock"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:345
+#, elixir-autogen, elixir-format
+msgid "Low: %{stock} left"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:11
+#, elixir-autogen, elixir-format
+msgid "Main"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:9
+#, elixir-autogen, elixir-format
+msgid "Manage the products, stock and sales of the store."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:13
+#, elixir-autogen, elixir-format
+msgid "Manage your account email address and password settings."
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:31
+#, elixir-autogen, elixir-format
+msgid "March"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:69
+#, elixir-autogen, elixir-format
+msgid "Max price (€)"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:33
+#, elixir-autogen, elixir-format
+msgid "May"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:85
+#, elixir-autogen, elixir-format
+msgid "Memory"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:30
+#, elixir-autogen, elixir-format
+msgid "Menu"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:60
+#, elixir-autogen, elixir-format
+msgid "Min price (€)"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:94
+#: lib/clothing_store_web/live/transactions_live.html.heex:49
+#, elixir-autogen, elixir-format
+msgid "Month"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "Monthly report for %{month}, printed %{date}."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:60
+#, elixir-autogen, elixir-format
+msgid "Name: A to Z"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/new.html.heex:4
+#: lib/clothing_store_web/live/product_live/form.ex:68
+#, elixir-autogen, elixir-format
+msgid "New Product"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:26
+#: lib/clothing_store_web/live/user_settings_live.ex:90
+#, elixir-autogen, elixir-format
+msgid "New password"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:142
+#: lib/clothing_store_web/controllers/product_controller.ex:60
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:19
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:230
+#: lib/clothing_store_web/live/product_live/form.ex:67
+#: lib/clothing_store_web/live/product_live/index.html.heex:18
+#: lib/clothing_store_web/live/product_live/index.html.heex:70
+#, elixir-autogen, elixir-format
+msgid "New product"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:51
+#, elixir-autogen, elixir-format
+msgid "New product:"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.ex:73
+#, elixir-autogen, elixir-format
+msgid "New product: %{title}"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:55
+#, elixir-autogen, elixir-format
+msgid "Newest first"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:87
+#, elixir-autogen, elixir-format
+msgid "Next demo reset"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:790
+#, elixir-autogen, elixir-format
+msgid "Next page"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:197
+#, elixir-autogen, elixir-format
+msgid "No changes recorded yet (history starts with the last demo reset)."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:10
+#, elixir-autogen, elixir-format
+msgid "No confirmation instructions received?"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:214
+#, elixir-autogen, elixir-format
+msgid "No products match these filters"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:226
+#: lib/clothing_store_web/live/product_live/index.html.heex:65
+#, elixir-autogen, elixir-format
+msgid "No products yet"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:98
+#, elixir-autogen, elixir-format
+msgid "No recent sales, so no run-out date."
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:140
+#, elixir-autogen, elixir-format
+msgid "No sales last month."
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:146
+#, elixir-autogen, elixir-format
+msgid "No sales recorded yet."
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:134
+#, elixir-autogen, elixir-format
+msgid "No sales this month yet."
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:117
+#, elixir-autogen, elixir-format
+msgid "No sales yet"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:120
+#, elixir-autogen, elixir-format
+msgid "No tags"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:159
+#, elixir-autogen, elixir-format
+msgid "No transactions in %{month}"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:171
+#, elixir-autogen, elixir-format
+msgid "No transactions yet"
+msgstr ""
+
+#: lib/clothing_store_web/live/activity_live.ex:28
+#, elixir-autogen, elixir-format
+msgid "Nothing has happened yet"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:99
+#, elixir-autogen, elixir-format
+msgid "Nothing was imported. Please fix these rows:"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:39
+#, elixir-autogen, elixir-format
+msgid "November"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:38
+#, elixir-autogen, elixir-format
+msgid "October"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:88
+#, elixir-autogen, elixir-format
+msgid "Off"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:100
+#, elixir-autogen, elixir-format
+msgid "Open the dashboard in a second tab and watch changes appear live"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:88
+#, elixir-autogen, elixir-format
+msgid "Open the inventory"
+msgstr ""
+
+#: lib/clothing_store_web/components/sales_components.ex:74
+#, elixir-autogen, elixir-format
+msgid "Other"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:344
+#: lib/clothing_store_web/live/statistics_live.html.heex:62
+#, elixir-autogen, elixir-format
+msgid "Out of stock"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/error_html.ex:13
+#, elixir-autogen, elixir-format
+msgid "Page not found"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:164
+#, elixir-autogen, elixir-format
+msgid "Page or product"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:771
+#, elixir-autogen, elixir-format
+msgid "Pagination"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:50
+#: lib/clothing_store_web/live/user_settings_live.ex:66
+#, elixir-autogen, elixir-format
+msgid "Password"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:88
+#, elixir-autogen, elixir-format
+msgid "Password reset successfully."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/user_session_controller.ex:14
+#, elixir-autogen, elixir-format
+msgid "Password updated successfully!"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:256
+#, elixir-autogen, elixir-format
+msgid "Percent off"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:104
+#, elixir-autogen, elixir-format
+msgid "Photo"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:117
+#, elixir-autogen, elixir-format
+msgid "Photo preview"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:161
+#, elixir-autogen, elixir-format
+msgid "Pick another month, or show every transaction."
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:41
+#, elixir-autogen, elixir-format
+msgid "Please note"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/page_html.ex:13
+#, elixir-autogen, elixir-format
+msgid "Portfolio"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:779
+#, elixir-autogen, elixir-format
+msgid "Previous page"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:132
+#: lib/clothing_store_web/components/sales_components.ex:111
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:186
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:26
+#, elixir-autogen, elixir-format
+msgid "Price"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:36
+#, elixir-autogen, elixir-format
+msgid "Price history"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:57
+#, elixir-autogen, elixir-format
+msgid "Price: high to low"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:56
+#, elixir-autogen, elixir-format
+msgid "Price: low to high"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/label.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "Print it, stick it on the shelf, scan it with a phone."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/label.html.heex:7
+#, elixir-autogen, elixir-format
+msgid "Print label"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:8
+#, elixir-autogen, elixir-format
+msgid "Print report"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:138
+#, elixir-autogen, elixir-format
+msgid "Printable label"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:266
+#: lib/clothing_store_web/controllers/page_controller.ex:22
+#, elixir-autogen, elixir-format
+msgid "Privacy"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:84
+#, elixir-autogen, elixir-format
+msgid "Processes"
+msgstr ""
+
+#: lib/clothing_store_web/components/sales_components.ex:100
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:158
+#, elixir-autogen, elixir-format
+msgid "Product"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:4
+#, elixir-autogen, elixir-format
+msgid "Product Details"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:56
+#, elixir-autogen, elixir-format
+msgid "Product created successfully."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Product dashboard"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:301
+#, elixir-autogen, elixir-format
+msgid "Product photos from Pexels and StockSnap."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:92
+#, elixir-autogen, elixir-format
+msgid "Product updated successfully."
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:114
+#, elixir-autogen, elixir-format
+msgid "Products"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:243
+#, elixir-autogen, elixir-format
+msgid "Project"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/label.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "QR code that opens %{title}"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:127
+#, elixir-autogen, elixir-format
+msgid "QR code that opens %{title} on a phone"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:30
+#, elixir-autogen, elixir-format
+msgid "Recent activity"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/error_html.ex:70
+#, elixir-autogen, elixir-format
+msgid "Reference:"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:227
+#, elixir-autogen, elixir-format
+msgid "Remove"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:226
+#, elixir-autogen, elixir-format
+msgid "Remove size %{size}"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:194
+#, elixir-autogen, elixir-format
+msgid "Remove tag %{tag}"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:43
+#, elixir-autogen, elixir-format
+msgid "Resend confirmation"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:25
+#, elixir-autogen, elixir-format
+msgid "Resend confirmation instructions"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:12
+#: lib/clothing_store_web/live/user_reset_password_live.ex:49
+#, elixir-autogen, elixir-format
+msgid "Reset Password"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:77
+#, elixir-autogen, elixir-format
+msgid "Reset password"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:106
+#, elixir-autogen, elixir-format
+msgid "Reset password link is invalid or it has expired."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_reset_password_live.ex:48
+#, elixir-autogen, elixir-format
+msgid "Resetting..."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:77
+#, elixir-autogen, elixir-format
+msgid "Restock +%{amount}"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:45
+#, elixir-autogen, elixir-format
+msgid "Restocked"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:159
+#, elixir-autogen, elixir-format
+msgid "Restocked: %{title} now has %{stock} in stock."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:191
+#, elixir-autogen, elixir-format
+msgid "Restore these details"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:46
+#, elixir-autogen, elixir-format
+msgid "Restored after a delete"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:131
+#, elixir-autogen, elixir-format
+msgid "Restored the earlier details of %{title}."
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:94
+#: lib/clothing_store_web/live/statistics_live.html.heex:122
+#: lib/clothing_store_web/live/transactions_live.html.heex:74
+#, elixir-autogen, elixir-format
+msgid "Revenue"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:104
+#, elixir-autogen, elixir-format
+msgid "Revenue by category"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:110
+#, elixir-autogen, elixir-format
+msgid "Revenue by category over the last 12 months"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:83
+#, elixir-autogen, elixir-format
+msgid "Revenue per month"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:89
+#, elixir-autogen, elixir-format
+msgid "Revenue per month over the last 12 months"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:22
+#, elixir-autogen, elixir-format
+msgid "Revenue this month"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:75
+#, elixir-autogen, elixir-format
+msgid "Review and restock"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:90
+#, elixir-autogen, elixir-format
+msgid "Run queue"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:104
+#, elixir-autogen, elixir-format
+msgid "Sale"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:40
+#, elixir-autogen, elixir-format
+msgid "Sale: %{items}"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:94
+#: lib/clothing_store_web/live/transactions_live.html.heex:68
+#, elixir-autogen, elixir-format
+msgid "Sales"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Sales Statistics"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:173
+#, elixir-autogen, elixir-format
+msgid "Sales appear here as soon as they are recorded."
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:265
+#, elixir-autogen, elixir-format
+msgid "Sales during these days use the discounted price. Leave the percent empty for no discount."
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "Sales in %{month}."
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:275
+#, elixir-autogen, elixir-format
+msgid "Save product"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:274
+#, elixir-autogen, elixir-format
+msgid "Saving..."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:131
+#, elixir-autogen, elixir-format
+msgid "Scan it to open this product on a phone. Changes made there show up live on the dashboard."
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:89
+#, elixir-autogen, elixir-format
+msgid "Schedulers"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:40
+#, elixir-autogen, elixir-format
+msgid "Search"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:202
+#, elixir-autogen, elixir-format
+msgid "Search products for"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/index.html.heex:33
+#, elixir-autogen, elixir-format
+msgid "See all"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:25
+#, elixir-autogen, elixir-format
+msgid "Send password reset instructions"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:24
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:24
+#, elixir-autogen, elixir-format
+msgid "Sending..."
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:37
+#, elixir-autogen, elixir-format
+msgid "September"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:150
+#: lib/clothing_store_web/live/user_settings_live.ex:161
+#, elixir-autogen, elixir-format
+msgid "Settings"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/label.html.heex:4
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:123
+#, elixir-autogen, elixir-format
+msgid "Shelf label"
+msgstr ""
+
+#: lib/clothing_store_web/components/chart_components.ex:241
+#, elixir-autogen, elixir-format
+msgid "Show as table"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:51
+#, elixir-autogen, elixir-format
+msgid "Show month"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:435
+#, elixir-autogen, elixir-format
+msgid "Show or hide the password"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:432
+#, elixir-autogen, elixir-format
+msgid "Show password"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:211
+#, elixir-autogen, elixir-format
+msgid "Size"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:203
+#, elixir-autogen, elixir-format
+msgid "Sizes and colours (optional)"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:7
+#, elixir-autogen, elixir-format
+msgid "Skip to content"
+msgstr ""
+
+#: lib/clothing_store_web/components/sales_components.ex:118
+#, elixir-autogen, elixir-format
+msgid "Sold"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:42
+#: lib/clothing_store_web/controllers/error_html.ex:25
+#, elixir-autogen, elixir-format
+msgid "Something went wrong"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:156
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:152
+#, elixir-autogen, elixir-format
+msgid "Sort"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:141
+#, elixir-autogen, elixir-format
+msgid "Sort by"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/page_html.ex:14
+#, elixir-autogen, elixir-format
+msgid "Source code of this project"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:125
+#, elixir-autogen, elixir-format
+msgid "Start exploring"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:147
+#: lib/clothing_store_web/components/layouts/app.html.heex:49
+#: lib/clothing_store_web/live/statistics_live.ex:19
+#, elixir-autogen, elixir-format
+msgid "Statistics"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:143
+#: lib/clothing_store_web/components/product_components.ex:216
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:189
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:48
+#, elixir-autogen, elixir-format
+msgid "Stock"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:54
+#, elixir-autogen, elixir-format
+msgid "Stock per size"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:59
+#, elixir-autogen, elixir-format
+msgid "Stock: high to low"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:58
+#, elixir-autogen, elixir-format
+msgid "Stock: low to high"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:611
+#, elixir-autogen, elixir-format
+msgid "Strength:"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:592
+#, elixir-autogen, elixir-format
+msgid "Strong"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:102
+#, elixir-autogen, elixir-format
+msgid "Suggested reorder: %{reorder}, enough for another %{days} days like the last ones."
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:17
+#: lib/clothing_store_web/live/system_live.ex:52
+#, elixir-autogen, elixir-format
+msgid "System"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:149
+#: lib/clothing_store_web/components/layouts.ex:262
+#, elixir-autogen, elixir-format
+msgid "System status"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:173
+#: lib/clothing_store_web/components/product_components.ex:181
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:94
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:180
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:117
+#, elixir-autogen, elixir-format
+msgid "Tags"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:269
+#: lib/clothing_store_web/controllers/page_controller.ex:27
+#, elixir-autogen, elixir-format
+msgid "Terms of use"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:118
+#, elixir-autogen, elixir-format
+msgid "That product can't be restored any more."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:137
+#, elixir-autogen, elixir-format
+msgid "That version can't be restored."
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:19
+#, elixir-autogen, elixir-format
+msgid "The Erlang VM behind this demo, live. Every number updates once a second over the same LiveView connection the dashboard uses."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_controller.ex:113
+#, elixir-autogen, elixir-format
+msgid "The catalogue is full, so the product can't come back."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:31
+#, elixir-autogen, elixir-format
+msgid "The demo account isn't available right now."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/user_session_controller.ex:47
+#, elixir-autogen, elixir-format
+msgid "The demo account isn't available right now. Please try again later."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/form.ex:115
+#, elixir-autogen, elixir-format
+msgid "The demo is limited to %{max} products"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:167
+#, elixir-autogen, elixir-format
+msgid "The file can't be uploaded"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:163
+#, elixir-autogen, elixir-format
+msgid "The file is larger than %{kb} KB"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:153
+#, elixir-autogen, elixir-format
+msgid "The first line must name the columns, including id or title"
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:30
+#, elixir-autogen, elixir-format
+msgid "The first line names the columns:"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:85
+#, elixir-autogen, elixir-format
+msgid "The last 12 months, this month so far."
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:106
+#, elixir-autogen, elixir-format
+msgid "The last 12 months."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/error_html.ex:15
+#, elixir-autogen, elixir-format
+msgid "The page you're looking for doesn't exist. Maybe the product was deleted, or the nightly reset removed it."
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:207
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:14
+#, elixir-autogen, elixir-format
+msgid "The product and its stock are removed for every visitor. This can't be undone."
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:78
+#, elixir-autogen, elixir-format
+msgid "The product couldn't be saved. Please fix the errors below."
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:134
+#, elixir-autogen, elixir-format
+msgid "The products of this sale were deleted."
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:148
+#, elixir-autogen, elixir-format
+msgid "The total of the sizes below"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:70
+#, elixir-autogen, elixir-format
+msgid "Theme"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:65
+#, elixir-autogen, elixir-format
+msgid "Theme: dark"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:61
+#: lib/clothing_store_web/components/layouts/app.html.heex:62
+#: lib/clothing_store_web/components/layouts/app.html.heex:63
+#, elixir-autogen, elixir-format
+msgid "Theme: follows the system"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:64
+#, elixir-autogen, elixir-format
+msgid "Theme: light"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:89
+#, elixir-autogen, elixir-format
+msgid "This is a manager dashboard for a clothing store, built as a portfolio project with Elixir and Phoenix LiveView. Everything here is sample data, so go ahead and try:"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:21
+#, elixir-autogen, elixir-format
+msgid "This is the shared demo account, so its e-mail and password can't be changed."
+msgstr ""
+
+#: lib/clothing_store_web/live/product_live/import.ex:156
+#, elixir-autogen, elixir-format
+msgid "This isn't a readable CSV file"
+msgstr ""
+
+#: lib/clothing_store_web/live/transactions_live.html.heex:61
+#, elixir-autogen, elixir-format
+msgid "This month"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:132
+#, elixir-autogen, elixir-format
+msgid "This month (%{month})"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:87
+#, elixir-autogen, elixir-format
+msgid "Title"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:41
+#, elixir-autogen, elixir-format
+msgid "Title, description, category or tag (press /)"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:29
+#, elixir-autogen, elixir-format
+msgid "Toggle menu"
+msgstr ""
+
+#: lib/clothing_store_web/components/chart_components.ex:211
+#: lib/clothing_store_web/live/transactions_live.html.heex:140
+#, elixir-autogen, elixir-format
+msgid "Total"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:146
+#: lib/clothing_store_web/components/layouts/app.html.heex:46
+#: lib/clothing_store_web/live/transactions_live.ex:21
+#: lib/clothing_store_web/live/transactions_live.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Transactions"
+msgstr ""
+
+#: lib/clothing_store_web/live/statistics_live.html.heex:36
+#, elixir-autogen, elixir-format
+msgid "Transactions this month"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/index.html.heex:216
+#, elixir-autogen, elixir-format
+msgid "Try a wider price range, another category or fewer tags."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:16
+#, elixir-autogen, elixir-format
+msgid "Try the dashboard with the shared demo account: add, edit and delete anything. The data resets every night."
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:122
+#: lib/clothing_store_web/live/user_login_live.ex:27
+#, elixir-autogen, elixir-format
+msgid "Try the demo"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:99
+#, elixir-autogen, elixir-format
+msgid "Undo"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:113
+#, elixir-autogen, elixir-format
+msgid "Units sold per day over the last %{days} days"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:262
+#, elixir-autogen, elixir-format
+msgid "Until (inclusive)"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html.ex:24
+#, elixir-autogen, elixir-format
+msgid "Up to %{price} €"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:82
+#, elixir-autogen, elixir-format
+msgid "Uptime"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_live.ex:66
+#, elixir-autogen, elixir-format
+msgid "User confirmation link is invalid or it has expired."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_live.ex:51
+#, elixir-autogen, elixir-format
+msgid "User confirmed successfully."
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:35
+#, elixir-autogen, elixir-format
+msgid "Versions"
+msgstr ""
+
+#: lib/clothing_store_web/live/system_live.ex:83
+#, elixir-autogen, elixir-format
+msgid "Visitors online"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:144
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_settings_live.ex:29
+#, elixir-autogen, elixir-format
+msgid "We send a confirmation link to the new address."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_confirmation_instructions_live.ex:11
+#, elixir-autogen, elixir-format
+msgid "We'll send a new confirmation link to your inbox."
+msgstr ""
+
+#: lib/clothing_store_web/live/user_forgot_password_live.ex:11
+#, elixir-autogen, elixir-format
+msgid "We'll send a password reset link to your inbox."
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:592
+#, elixir-autogen, elixir-format
+msgid "Weak"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/user_session_controller.ex:18
+#, elixir-autogen, elixir-format
+msgid "Welcome back!"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:86
+#, elixir-autogen, elixir-format
+msgid "Welcome to the demo"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/user_session_controller.ex:41
+#, elixir-autogen, elixir-format
+msgid "Welcome to the demo! Data resets every night."
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:257
+#, elixir-autogen, elixir-format
+msgid "What can I try here?"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:98
+#, elixir-autogen, elixir-format
+msgid "What is this demo?"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:82
+#, elixir-autogen, elixir-format
+msgid "What is this? About the project"
+msgstr ""
+
+#: lib/clothing_store_web/live/activity_live.ex:17
+#, elixir-autogen, elixir-format
+msgid "What visitors and simulated customers did, newest first. New events appear as they happen."
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:206
+#, elixir-autogen, elixir-format
+msgid "With sizes, each has its own stock and the product's stock is their total."
+msgstr ""
+
+#: lib/clothing_store_web/user_auth.ex:169
+#: lib/clothing_store_web/user_auth.ex:218
+#, elixir-autogen, elixir-format
+msgid "You must log in to access this page."
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:122
+#, elixir-autogen, elixir-format
+msgid "category"
+msgstr ""
+
+#: lib/clothing_store_web/components/core_components.ex:106
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:125
+#, elixir-autogen, elixir-format
+msgid "description"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:100
+#, elixir-autogen, elixir-format
+msgid "discount %{old} → %{new}"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:102
+#, elixir-autogen, elixir-format
+msgid "discount dates changed"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:84
+#, elixir-autogen, elixir-format
+msgid "just now"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:130
+#, elixir-autogen, elixir-format
+msgid "none"
+msgstr ""
+
+#: lib/clothing_store_web/live/user_login_live.ex:36
+#, elixir-autogen, elixir-format
+msgid "or log in with your account"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:126
+#, elixir-autogen, elixir-format
+msgid "photo"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:124
+#, elixir-autogen, elixir-format
+msgid "price"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:106
+#, elixir-autogen, elixir-format
+msgid "price %{old} → %{new}"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:70
+#, elixir-autogen, elixir-format
+msgid "restocked"
+msgstr ""
+
+#: lib/clothing_store_web/controllers/product_html/show.html.heex:42
+#, elixir-autogen, elixir-format
+msgid "since %{date}"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:123
+#, elixir-autogen, elixir-format
+msgid "stock"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:127
+#, elixir-autogen, elixir-format
+msgid "tags"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:113
+#, elixir-autogen, elixir-format
+msgid "tags %{old} → %{new}"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:121
+#, elixir-autogen, elixir-format
+msgid "title"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:208
+#, elixir-autogen, elixir-format
+msgid "to close"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:207
+#, elixir-autogen, elixir-format
+msgid "to move,"
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts.ex:207
+#, elixir-autogen, elixir-format
+msgid "to open,"
+msgstr ""
+
+#: lib/clothing_store_web/components/product_components.ex:310
+#, elixir-autogen, elixir-format
+msgid "was"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:63
+#, elixir-autogen, elixir-format
+msgid "was deleted"
+msgstr ""
+
+#: lib/clothing_store_web/components/activity_components.ex:57
+#, elixir-autogen, elixir-format
+msgid "was restored after a delete"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:87
+#, elixir-autogen, elixir-format
+msgid "yesterday"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:52
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Apr"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:56
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Aug"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:60
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Dec"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:50
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Feb"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:49
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Jan"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:55
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Jul"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:54
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Jun"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:51
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Mar"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:53
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "May"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:59
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Nov"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:58
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Oct"
+msgstr ""
+
+#: lib/clothing_store_web/helpers.ex:57
+#, elixir-autogen, elixir-format
+msgctxt "month"
+msgid "Sep"
+msgstr ""

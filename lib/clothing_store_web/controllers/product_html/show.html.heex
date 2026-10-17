@@ -1,17 +1,17 @@
-<.back navigate={~p"/products"}>Inventory</.back>
+<.back navigate={~p"/products"}>{gettext("Inventory")}</.back>
 <.header>
   {@product.title}
-  <:subtitle>Product Details · #{@product.id}</:subtitle>
+  <:subtitle>{gettext("Product Details")} · #{@product.id}</:subtitle>
   <:actions>
     <.button href={~p"/products/#{@product}/edit"} variant="secondary" icon="hero-pencil-square">
-      Edit
+      {gettext("Edit")}
     </.button>
     <.delete_dialog
       id="delete-product"
       action={~p"/products/#{@product}"}
-      title={"Delete #{@product.title}?"}
+      title={gettext("Delete %{title}?", title: @product.title)}
     >
-      The product and its stock are removed for every visitor. This can't be undone.
+      {gettext("The product and its stock are removed for every visitor. This can't be undone.")}
     </.delete_dialog>
   </:actions>
 </.header>
@@ -23,32 +23,35 @@
     class="aspect-square w-full rounded-md bg-gray-100 object-cover"
   />
   <.list>
-    <:item title="Price">
+    <:item title={gettext("Price")}>
       <.price product={@product} class="text-lg" />
       <p :if={@product.discount_percent} class="mt-1 text-sm text-gray-600">
-        Discount: −{@product.discount_percent} % from {Calendar.strftime(
-          @product.discount_starts_on,
-          "%-d %b"
-        )} to {Calendar.strftime(@product.discount_ends_on, "%-d %b %Y")}
+        {gettext("Discount: −%{percent} % from %{from} to %{until}",
+          percent: @product.discount_percent,
+          from: strftime(@product.discount_starts_on, "%-d %b"),
+          until: strftime(@product.discount_ends_on, "%-d %b %Y")
+        )}
       </p>
       <dl :if={length(@price_history) > 1} class="mt-3 text-sm">
-        <dt class="font-medium text-gray-700">Price history</dt>
+        <dt class="font-medium text-gray-700">{gettext("Price history")}</dt>
         <dd
           :for={{price, since} <- @price_history}
           class="flex justify-between gap-6 text-gray-600 tabular-nums"
         >
-          <span>since {Calendar.strftime(since, "%-d %b %Y, %H:%M")}</span>
+          <span>
+            {gettext("since %{date}", date: strftime(since, "%-d %b %Y, %H:%M"))}
+          </span>
           <span>{format_price(price)}</span>
         </dd>
       </dl>
     </:item>
-    <:item title="Stock">
+    <:item title={gettext("Stock")}>
       <div class="flex flex-wrap items-center gap-3">
         <.stock_badge stock={@product.stock} />
         <ul
           :if={@product.variants != []}
           class="flex flex-wrap gap-1.5"
-          aria-label="Stock per size"
+          aria-label={gettext("Stock per size")}
         >
           <li
             :for={variant <- @product.variants}
@@ -71,65 +74,84 @@
           method="post"
         >
           <.button type="submit" size="sm" variant="secondary" icon="hero-arrow-up-tray">
-            Restock +{ClothingStore.Products.restock_amount()}
+            {gettext("Restock +%{amount}", amount: ClothingStore.Products.restock_amount())}
           </.button>
         </.form>
       </div>
     </:item>
-    <:item title="Forecast">
+    <:item title={gettext("Forecast")}>
       <p>
-        {ngettext("1 sold", "%{count} sold", @sold)} in the last {@forecast_days} days.
+        {ngettext(
+          "1 sold in the last %{days} days.",
+          "%{count} sold in the last %{days} days.",
+          @sold,
+          days: @forecast_days
+        )}
         <span :if={@product.stock > 0 && @days_left}>
-          At that pace it runs out in about {ngettext("1 day", "%{count} days", @days_left)}.
+          {ngettext(
+            "At that pace it runs out in about 1 day.",
+            "At that pace it runs out in about %{count} days.",
+            @days_left
+          )}
         </span>
-        <span :if={@product.stock > 0 && !@days_left}>No recent sales, so no run-out date.</span>
+        <span :if={@product.stock > 0 && !@days_left}>
+          {gettext("No recent sales, so no run-out date.")}
+        </span>
       </p>
       <p :if={@reorder > 0} class="mt-1 font-medium text-amber-800">
-        Suggested reorder: {@reorder}, enough for another {@forecast_days} days like the last ones.
+        {gettext(
+          "Suggested reorder: %{reorder}, enough for another %{days} days like the last ones.",
+          reorder: @reorder,
+          days: @forecast_days
+        )}
       </p>
       <.sparkline
         :if={@sold > 0}
         id="sales-sparkline"
         class="mt-3"
         points={@daily}
-        title={"Units sold per day over the last #{@forecast_days} days"}
+        title={gettext("Units sold per day over the last %{days} days", days: @forecast_days)}
       />
     </:item>
-    <:item title="Category"><.category_badge category={@product.category} /></:item>
-    <:item title="Tags">
+    <:item title={gettext("Category")}><.category_badge category={@product.category} /></:item>
+    <:item title={gettext("Tags")}>
       <div class="flex flex-wrap gap-1.5">
         <.badge :for={tag <- @product.tags}>{tag}</.badge>
-        <span :if={@product.tags == []} class="text-gray-400">No tags</span>
+        <span :if={@product.tags == []} class="text-gray-400">{gettext("No tags")}</span>
       </div>
     </:item>
-    <:item title="Shelf label">
+    <:item title={gettext("Shelf label")}>
       <div class="flex items-center gap-4">
         <.qr_code
           url={url(~p"/products/#{@product}")}
-          label={"QR code that opens #{@product.title} on a phone"}
+          label={gettext("QR code that opens %{title} on a phone", title: @product.title)}
           class="size-24 shrink-0 rounded-sm ring-1 ring-gray-200"
         />
         <p class="text-sm text-gray-600">
-          Scan it to open this product on a phone. Changes made there show up live on the dashboard.
+          {gettext(
+            "Scan it to open this product on a phone. Changes made there show up live on the dashboard."
+          )}
           <.link
             href={~p"/products/#{@product}/label"}
             class="mt-1 block font-semibold text-red-700 hover:underline"
           >
-            Printable label
+            {gettext("Printable label")}
           </.link>
         </p>
       </div>
     </:item>
-    <:item title="Description">
+    <:item title={gettext("Description")}>
       <p class="whitespace-pre-line">{@product.description}</p>
     </:item>
   </.list>
 </div>
 
 <section class="card mt-6 p-6" aria-labelledby="history-title">
-  <h2 id="history-title" class="font-semibold text-gray-900">History</h2>
+  <h2 id="history-title" class="font-semibold text-gray-900">{gettext("History")}</h2>
   <p class="mt-1 text-sm text-gray-500">
-    Every change to this product. Restoring a version brings back its details (not the stock).
+    {gettext(
+      "Every change to this product. Restoring a version brings back its details (not the stock)."
+    )}
   </p>
   <ol class="mt-4 divide-y divide-gray-100">
     <li
@@ -140,7 +162,9 @@
       <div class="min-w-0">
         <p class="font-medium text-gray-900">
           {version_title(version.action)}
-          <span :if={index == 0} class="ml-1 text-xs font-normal text-gray-500">(current)</span>
+          <span :if={index == 0} class="ml-1 text-xs font-normal text-gray-500">
+            {gettext("(current)")}
+          </span>
         </p>
         <p :if={version.changes != %{}} class="text-gray-600">
           {Enum.map_join(
@@ -164,12 +188,12 @@
         method="post"
       >
         <.button type="submit" size="sm" variant="secondary" icon="hero-arrow-uturn-left">
-          Restore these details
+          {gettext("Restore these details")}
         </.button>
       </.form>
     </li>
   </ol>
   <p :if={@versions == []} class="mt-4 text-sm text-gray-500">
-    No changes recorded yet (history starts with the last demo reset).
+    {gettext("No changes recorded yet (history starts with the last demo reset).")}
   </p>
 </section>

@@ -41,7 +41,7 @@ defmodule ClothingStoreWeb.ProductControllerTest do
     test "renders form", %{conn: conn} do
       conn = get(conn, ~p"/products/new")
       assert html_response(conn, 200) =~ "New Product"
-      assert html_response(conn, 200) =~ "images.pexels.com or images.unsplash.com"
+      assert html_response(conn, 200) =~ "images.pexels.com, images.unsplash.com"
     end
   end
 

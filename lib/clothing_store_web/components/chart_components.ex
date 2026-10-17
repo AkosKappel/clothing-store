@@ -8,6 +8,9 @@ defmodule ClothingStoreWeb.ChartComponents do
   the only cue), a per-mark tooltip, and a table view of the same data.
   """
   use Phoenix.Component
+  use Gettext, backend: ClothingStoreWeb.Gettext
+
+  import ClothingStoreWeb.Helpers, only: [strftime: 2]
 
   @doc """
   A tiny daily column chart, `points` as `[{date, value}]`, oldest first. The
@@ -27,11 +30,20 @@ defmodule ClothingStoreWeb.ChartComponents do
         max: max(Enum.max(values, fn -> 0 end), 1),
         width: length(values) * 6,
         summary:
-          "#{assigns.title}: #{Enum.sum(values)} in total" <>
-            if(best > 0,
-              do: ", most on #{Calendar.strftime(best_date, "%-d %b")} (#{best})",
-              else: ""
-            )
+          if(best > 0,
+            do:
+              gettext("%{title}: %{total} in total, most on %{date} (%{best})",
+                title: assigns.title,
+                total: Enum.sum(values),
+                date: strftime(best_date, "%-d %b"),
+                best: best
+              ),
+            else:
+              gettext("%{title}: %{total} in total",
+                title: assigns.title,
+                total: Enum.sum(values)
+              )
+          )
       )
 
     ~H"""
@@ -54,7 +66,7 @@ defmodule ClothingStoreWeb.ChartComponents do
         rx="1"
         fill="currentColor"
       >
-        <title>{Calendar.strftime(date, "%-d %b")}: {value}</title>
+        <title>{strftime(date, "%-d %b")}: {value}</title>
       </rect>
     </svg>
     """
@@ -196,7 +208,7 @@ defmodule ClothingStoreWeb.ChartComponents do
           </circle>
         </svg>
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span class="text-xs text-gray-500">Total</span>
+          <span class="text-xs text-gray-500">{gettext("Total")}</span>
           <span class="text-sm font-semibold text-gray-900 tabular-nums">{@total_text}</span>
         </div>
       </div>
@@ -226,7 +238,7 @@ defmodule ClothingStoreWeb.ChartComponents do
     ~H"""
     <details class="mt-4 text-sm print:hidden">
       <summary class="cursor-pointer font-medium text-gray-600 hover:text-gray-900">
-        Show as table
+        {gettext("Show as table")}
       </summary>
       <table class="mt-3 w-full text-left">
         <thead class="text-gray-500">

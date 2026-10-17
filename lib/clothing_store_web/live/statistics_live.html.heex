@@ -1,52 +1,65 @@
 <.header>
-  Sales Statistics
-  <:subtitle>How the store is doing: revenue, categories, stock and bestsellers.</:subtitle>
+  {gettext("Sales Statistics")}
+  <:subtitle>
+    {gettext("How the store is doing: revenue, categories, stock and bestsellers.")}
+  </:subtitle>
   <:actions>
     <.button type="button" variant="secondary" icon="hero-printer" data-print class="print:hidden">
-      Print report
+      {gettext("Print report")}
     </.button>
   </:actions>
 </.header>
 <p class="mb-6 hidden text-sm text-gray-600 print:block">
-  Monthly report for {Calendar.strftime(@this_month, "%B %Y")}, printed {Date.utc_today()}.
+  {gettext("Monthly report for %{month}, printed %{date}.",
+    month: strftime(@this_month, "%B %Y"),
+    date: Date.utc_today()
+  )}
 </p>
 
 <dl class="grid grid-cols-2 gap-4 lg:grid-cols-4">
   <div class="card p-5">
     <dt class="flex items-center gap-2 text-sm text-gray-500">
-      <.icon name="hero-banknotes" class="size-5" /> Revenue this month
+      <.icon name="hero-banknotes" class="size-5" /> {gettext("Revenue this month")}
     </dt>
     <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">
       {format_price(@this.revenue)}
     </dd>
-    <dd class="mt-1 text-xs text-gray-500">Last month: {format_price(@last.revenue)}</dd>
+    <dd class="mt-1 text-xs text-gray-500">
+      {gettext("Last month: %{value}", value: format_price(@last.revenue))}
+    </dd>
     <dd :if={Decimal.gt?(@discounts, 0)} class="mt-1 text-xs text-red-700">
-      Discounts given: −{format_price(@discounts)}
+      {gettext("Discounts given: −%{amount}", amount: format_price(@discounts))}
     </dd>
   </div>
   <div class="card p-5">
     <dt class="flex items-center gap-2 text-sm text-gray-500">
-      <.icon name="hero-receipt-percent" class="size-5" /> Transactions this month
+      <.icon name="hero-receipt-percent" class="size-5" /> {gettext("Transactions this month")}
     </dt>
     <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">{@this.count}</dd>
-    <dd class="mt-1 text-xs text-gray-500">Last month: {@last.count}</dd>
+    <dd class="mt-1 text-xs text-gray-500">
+      {gettext("Last month: %{value}", value: @last.count)}
+    </dd>
   </div>
   <div class="card p-5">
     <dt class="flex items-center gap-2 text-sm text-gray-500">
-      <.icon name="hero-shopping-bag" class="size-5" /> Average sale this month
+      <.icon name="hero-shopping-bag" class="size-5" /> {gettext("Average sale this month")}
     </dt>
     <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">
       {if @this.count > 0, do: format_price(Decimal.div(@this.revenue, @this.count)), else: "–"}
     </dd>
     <dd class="mt-1 text-xs text-gray-500">
-      Last month: {if @last.count > 0,
-        do: format_price(Decimal.div(@last.revenue, @last.count)),
-        else: "–"}
+      {gettext("Last month: %{value}",
+        value:
+          if(@last.count > 0,
+            do: format_price(Decimal.div(@last.revenue, @last.count)),
+            else: "–"
+          )
+      )}
     </dd>
   </div>
   <div class="card p-5">
     <dt class="flex items-center gap-2 text-sm text-gray-500">
-      <.icon name="hero-exclamation-triangle" class="size-5" /> Out of stock
+      <.icon name="hero-exclamation-triangle" class="size-5" /> {gettext("Out of stock")}
     </dt>
     <dd class="mt-2 text-2xl font-semibold text-gray-900 tabular-nums">
       {ngettext("1 product", "%{count} products", @stock_alerts.out)}
@@ -59,7 +72,7 @@
         href={~p"/products?low_stock=true&sort=stock_asc"}
         class="font-semibold text-red-700 hover:underline"
       >
-        Review and restock
+        {gettext("Review and restock")}
       </.link>
     </dd>
   </div>
@@ -67,60 +80,69 @@
 
 <div class="mt-8 grid gap-6 lg:grid-cols-3">
   <section class="card min-w-0 p-5 sm:p-6 lg:col-span-2" aria-labelledby="revenue-title">
-    <h2 id="revenue-title" class="font-semibold text-gray-900">Revenue per month</h2>
-    <p class="mt-1 mb-6 text-sm text-gray-500">The last 12 months, this month so far.</p>
+    <h2 id="revenue-title" class="font-semibold text-gray-900">{gettext("Revenue per month")}</h2>
+    <p class="mt-1 mb-6 text-sm text-gray-500">
+      {gettext("The last 12 months, this month so far.")}
+    </p>
     <.bar_chart
       id="revenue-chart"
-      title="Revenue per month over the last 12 months"
+      title={gettext("Revenue per month over the last 12 months")}
       bars={revenue_bars(@monthly)}
       format={&short_euro/1}
     />
     <.chart_table
-      headers={["Month", "Sales", "Revenue"]}
+      headers={[gettext("Month"), gettext("Sales"), gettext("Revenue")]}
       rows={
         for m <- @monthly,
-            do: [Calendar.strftime(m.month, "%B %Y"), to_string(m.count), format_price(m.revenue)]
+            do: [strftime(m.month, "%B %Y"), to_string(m.count), format_price(m.revenue)]
       }
     />
   </section>
 
   <section class="card min-w-0 p-5 sm:p-6" aria-labelledby="categories-title">
-    <h2 id="categories-title" class="font-semibold text-gray-900">Revenue by category</h2>
-    <p class="mt-1 mb-6 text-sm text-gray-500">The last 12 months.</p>
+    <h2 id="categories-title" class="font-semibold text-gray-900">
+      {gettext("Revenue by category")}
+    </h2>
+    <p class="mt-1 mb-6 text-sm text-gray-500">{gettext("The last 12 months.")}</p>
     <.donut_chart
       :if={@categories != []}
       id="category-chart"
-      title="Revenue by category over the last 12 months"
+      title={gettext("Revenue by category over the last 12 months")}
       segments={category_segments(@categories)}
       total_text={short_euro(sum_revenue(@categories))}
     />
-    <.empty_state :if={@categories == []} icon="hero-chart-pie" title="No sales yet" class="py-8" />
+    <.empty_state
+      :if={@categories == []}
+      icon="hero-chart-pie"
+      title={gettext("No sales yet")}
+      class="py-8"
+    />
     <.chart_table
       :if={@categories != []}
-      headers={["Category", "Revenue"]}
+      headers={[gettext("Category"), gettext("Revenue")]}
       rows={for {category, revenue} <- @categories, do: [category, format_price(revenue)]}
     />
   </section>
 </div>
 
-<h2 class="mt-12 mb-4 font-display text-xl font-bold text-gray-900">Bestsellers</h2>
+<h2 class="mt-12 mb-4 font-display text-xl font-bold text-gray-900">{gettext("Bestsellers")}</h2>
 <div class="grid gap-8">
   <.bestsellers
     id="bestsellers-this-month"
-    title={"This month (#{Calendar.strftime(@this_month, "%B %Y")})"}
+    title={gettext("This month (%{month})", month: strftime(@this_month, "%B %Y"))}
     rows={@this_month_bestsellers}
-    empty="No sales this month yet."
+    empty={gettext("No sales this month yet.")}
   />
   <.bestsellers
     id="bestsellers-last-month"
-    title={"Last month (#{Calendar.strftime(@last_month, "%B %Y")})"}
+    title={gettext("Last month (%{month})", month: strftime(@last_month, "%B %Y"))}
     rows={@last_month_bestsellers}
-    empty="No sales last month."
+    empty={gettext("No sales last month.")}
   />
   <.bestsellers
     id="bestsellers-all-time"
-    title="All time"
+    title={gettext("All time")}
     rows={@bestsellers}
-    empty="No sales recorded yet."
+    empty={gettext("No sales recorded yet.")}
   />
 </div>

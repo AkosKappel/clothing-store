@@ -7,16 +7,18 @@ defmodule ClothingStoreWeb.UserConfirmationLive do
     ~H"""
     <div class="mx-auto max-w-md pt-4 sm:pt-8">
       <.header class="justify-center text-center">
-        Confirm Account
-        <:subtitle>Confirm your e-mail address to finish setting up the account.</:subtitle>
+        {gettext("Confirm Account")}
+        <:subtitle>
+          {gettext("Confirm your e-mail address to finish setting up the account.")}
+        </:subtitle>
       </.header>
 
       <div class="card p-6 sm:p-8">
         <.simple_form for={@form} id="confirmation_form" phx-submit="confirm_account">
           <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
           <:actions>
-            <.button phx-disable-with="Confirming..." icon="hero-check" class="w-full">
-              Confirm my account
+            <.button phx-disable-with={gettext("Confirming...")} icon="hero-check" class="w-full">
+              {gettext("Confirm my account")}
             </.button>
           </:actions>
         </.simple_form>
@@ -26,7 +28,7 @@ defmodule ClothingStoreWeb.UserConfirmationLive do
         <.link
           href={~p"/users/log_in"}
           class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
-        >Back to log in</.link>
+        >{gettext("Back to log in")}</.link>
       </p>
     </div>
     """
@@ -35,7 +37,7 @@ defmodule ClothingStoreWeb.UserConfirmationLive do
   def mount(%{"token" => token}, _session, socket) do
     form = to_form(%{"token" => token}, as: "user")
 
-    {:ok, assign(socket, form: form, page_title: "Confirm account"),
+    {:ok, assign(socket, form: form, page_title: gettext("Confirm account")),
      temporary_assigns: [form: nil]}
   end
 
@@ -46,7 +48,7 @@ defmodule ClothingStoreWeb.UserConfirmationLive do
       {:ok, _} ->
         {:noreply,
          socket
-         |> put_flash(:info, "User confirmed successfully.")
+         |> put_flash(:info, gettext("User confirmed successfully."))
          |> redirect(to: ~p"/users/log_in")}
 
       :error ->
@@ -61,7 +63,7 @@ defmodule ClothingStoreWeb.UserConfirmationLive do
           %{} ->
             {:noreply,
              socket
-             |> put_flash(:error, "User confirmation link is invalid or it has expired.")
+             |> put_flash(:error, gettext("User confirmation link is invalid or it has expired."))
              |> redirect(to: ~p"/users/log_in")}
         end
     end

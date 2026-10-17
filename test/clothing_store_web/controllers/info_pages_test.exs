@@ -6,7 +6,8 @@ defmodule ClothingStoreWeb.InfoPagesTest do
 
     assert html =~ ~r/<title[^>]*>\s*Privacy\s*\| Modern Fashion Store<\/title>/
 
-    for cookie <- ~w(_clothing_store_key _clothing_store_web_user_remember_me welcome_seen),
+    for cookie <-
+          ~w(_clothing_store_key _clothing_store_web_user_remember_me welcome_seen theme locale),
         do: assert(html =~ cookie)
   end
 

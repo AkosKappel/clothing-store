@@ -14,10 +14,11 @@ defmodule ClothingStoreWeb.SystemLive do
   def render(assigns) do
     ~H"""
     <.header>
-      System
+      {gettext("System")}
       <:subtitle>
-        The Erlang VM behind this demo, live. Every number updates once a second over the
-        same LiveView connection the dashboard uses.
+        {gettext(
+          "The Erlang VM behind this demo, live. Every number updates once a second over the same LiveView connection the dashboard uses."
+        )}
       </:subtitle>
     </.header>
 
@@ -31,7 +32,7 @@ defmodule ClothingStoreWeb.SystemLive do
     </dl>
 
     <section class="card mt-8 p-5 sm:p-6" aria-labelledby="versions-title">
-      <h2 id="versions-title" class="font-semibold text-gray-900">Versions</h2>
+      <h2 id="versions-title" class="font-semibold text-gray-900">{gettext("Versions")}</h2>
       <dl class="mt-4 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
         <div :for={{name, version} <- @versions} class="flex justify-between gap-4">
           <dt class="text-gray-500">{name}</dt>
@@ -48,9 +49,9 @@ defmodule ClothingStoreWeb.SystemLive do
 
     {:ok,
      assign(socket,
-       page_title: "System",
+       page_title: gettext("System"),
        meta_description:
-         "Live numbers from the Erlang VM that runs the Modern Fashion Store demo.",
+         gettext("Live numbers from the Erlang VM that runs the Modern Fashion Store demo."),
        versions: versions(),
        stats: stats()
      )}
@@ -78,15 +79,15 @@ defmodule ClothingStoreWeb.SystemLive do
 
   defp tiles(stats) do
     [
-      {"Uptime", duration(stats.uptime_s), "hero-clock"},
-      {"Visitors online", stats.online, "hero-users"},
-      {"Processes", format_int(stats.processes), "hero-cpu-chip"},
-      {"Memory", "#{:erlang.float_to_binary(stats.memory_mb, decimals: 1)} MB",
+      {gettext("Uptime"), duration(stats.uptime_s), "hero-clock"},
+      {gettext("Visitors online"), stats.online, "hero-users"},
+      {gettext("Processes"), format_int(stats.processes), "hero-cpu-chip"},
+      {gettext("Memory"), "#{:erlang.float_to_binary(stats.memory_mb, decimals: 1)} MB",
        "hero-circle-stack"},
-      {"Next demo reset", (stats.next_reset_s && duration(stats.next_reset_s)) || "Off",
-       "hero-arrow-path"},
-      {"Schedulers", stats.schedulers, "hero-squares-2x2"},
-      {"Run queue", stats.run_queue, "hero-queue-list"}
+      {gettext("Next demo reset"),
+       (stats.next_reset_s && duration(stats.next_reset_s)) || gettext("Off"), "hero-arrow-path"},
+      {gettext("Schedulers"), stats.schedulers, "hero-squares-2x2"},
+      {gettext("Run queue"), stats.run_queue, "hero-queue-list"}
     ]
   end
 

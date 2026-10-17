@@ -69,18 +69,6 @@ defmodule ClothingStore.Products do
   @doc "How many products the catalogue holds."
   def count_products, do: Repo.aggregate(active(), :count)
 
-  @sorts [
-    {"newest", "Newest first"},
-    {"price_asc", "Price: low to high"},
-    {"price_desc", "Price: high to low"},
-    {"stock_asc", "Stock: low to high"},
-    {"stock_desc", "Stock: high to low"},
-    {"title", "Name: A to Z"}
-  ]
-
-  @doc "The inventory sort options as `{value, label}`; the first is the default."
-  def sorts, do: @sorts
-
   # the id keeps the order stable when the sorted values tie
   defp sort(query, "price_asc"), do: order_by(query, [p], asc: p.price, desc: p.id)
   defp sort(query, "price_desc"), do: order_by(query, [p], desc: p.price, desc: p.id)
@@ -265,7 +253,8 @@ defmodule ClothingStore.Products do
       Ecto.Changeset.add_error(
         changeset,
         :base,
-        "The demo is limited to #{@max_products} products"
+        "The demo is limited to %{max} products",
+        max: @max_products
       )
     else
       changeset

@@ -8,14 +8,10 @@ defmodule ClothingStoreWeb.PageHTML do
 
   embed_templates "page_html/*"
 
-  @link_labels %{
-    github: "GitHub",
-    linkedin: "LinkedIn",
-    portfolio: "Portfolio",
-    repository: "Source code of this project"
-  }
-
-  def link_label(key), do: Map.fetch!(@link_labels, key)
+  def link_label(:github), do: "GitHub"
+  def link_label(:linkedin), do: "LinkedIn"
+  def link_label(:portfolio), do: gettext("Portfolio")
+  def link_label(:repository), do: gettext("Source code of this project")
 
   @doc "The tasks of the original take-home assignment and where to see each one."
   def assignment_tasks do

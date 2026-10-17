@@ -16,28 +16,33 @@ defmodule ClothingStoreWeb.ProductLive.Import do
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-3xl">
-      <.back navigate={~p"/products"}>Inventory</.back>
+      <.back navigate={~p"/products"}>{gettext("Inventory")}</.back>
       <.header>
-        Import products
+        {gettext("Import products")}
         <:subtitle>
-          Add or update products from a CSV file, for example an edited inventory export.
+          {gettext("Add or update products from a CSV file, for example an edited inventory export.")}
         </:subtitle>
       </.header>
 
       <div class="card space-y-5 p-6 sm:p-8">
         <div class="space-y-2 text-sm text-gray-700">
           <p>
-            The first line names the columns: <code class="text-xs">{Enum.join(@columns, ", ")}</code>. A row with the id of an existing product updates the columns it has; every other row adds a product (without a description or photo it gets a placeholder).
+            {gettext("The first line names the columns:")} <code class="text-xs">{Enum.join(@columns, ", ")}</code>. {gettext(
+              "A row with the id of an existing product updates the columns it has; every other row adds a product (without a description or photo it gets a placeholder)."
+            )}
           </p>
           <p>
-            At most {Products.max_import_rows()} rows and {div(@max_bytes, 1000)} KB. If any row is invalid, nothing is imported.
+            {gettext("At most %{rows} rows and %{kb} KB. If any row is invalid, nothing is imported.",
+              rows: Products.max_import_rows(),
+              kb: div(@max_bytes, 1000)
+            )}
           </p>
         </div>
 
         <form id="import-form" phx-submit="import" phx-change="validate" class="space-y-4">
           <div>
             <label for={@uploads.csv.ref} class="block text-sm font-semibold text-gray-800">
-              CSV file
+              {gettext("CSV file")}
             </label>
             <.live_file_input
               upload={@uploads.csv}
@@ -55,14 +60,14 @@ defmodule ClothingStoreWeb.ProductLive.Import do
             </.error>
           </div>
           <div class="flex justify-end gap-3 border-t border-gray-100 pt-4">
-            <.button navigate={~p"/products"} variant="secondary">Cancel</.button>
+            <.button navigate={~p"/products"} variant="secondary">{gettext("Cancel")}</.button>
             <.button
               type="submit"
               icon="hero-arrow-up-tray"
               disabled={@uploads.csv.entries == []}
-              phx-disable-with="Importing..."
+              phx-disable-with={gettext("Importing...")}
             >
-              Import
+              {gettext("Import")}
             </.button>
           </div>
         </form>
@@ -75,8 +80,13 @@ defmodule ClothingStoreWeb.ProductLive.Import do
         >
           <.icon name="hero-check-circle-mini" class="size-5 shrink-0 text-emerald-600" />
           <p>
-            Imported: {elem(@result, 1).created} added, {elem(@result, 1).updated} updated.
-            <.link navigate={~p"/products"} class="font-semibold underline">Open the inventory</.link>
+            {gettext("Imported: %{created} added, %{updated} updated.",
+              created: elem(@result, 1).created,
+              updated: elem(@result, 1).updated
+            )}
+            <.link navigate={~p"/products"} class="font-semibold underline">
+              {gettext("Open the inventory")}
+            </.link>
           </p>
         </div>
 
@@ -86,10 +96,10 @@ defmodule ClothingStoreWeb.ProductLive.Import do
           role="alert"
           class="rounded-md bg-rose-50 p-4 text-sm text-rose-900 ring-1 ring-rose-600/20"
         >
-          <p class="font-semibold">Nothing was imported. Please fix these rows:</p>
+          <p class="font-semibold">{gettext("Nothing was imported. Please fix these rows:")}</p>
           <ul class="mt-2 list-disc space-y-1 pl-5">
             <li :for={{line, message} <- Enum.take(elem(@result, 1), 20)}>
-              {if line > 1, do: "Line #{line}: ", else: ""}{message}
+              {if line > 1, do: gettext("Line %{line}: ", line: line), else: ""}{message}
             </li>
           </ul>
         </div>
@@ -103,7 +113,7 @@ defmodule ClothingStoreWeb.ProductLive.Import do
     {:ok,
      socket
      |> assign(
-       page_title: "Import products",
+       page_title: gettext("Import products"),
        columns: @columns,
        max_bytes: @max_bytes,
        result: nil
@@ -120,7 +130,7 @@ defmodule ClothingStoreWeb.ProductLive.Import do
     result =
       case files do
         [csv] -> import_csv(csv)
-        [] -> {:error, [{1, "Choose a CSV file first"}]}
+        [] -> {:error, [{1, gettext("Choose a CSV file first")}]}
       end
 
     {:noreply, assign(socket, :result, result)}
@@ -140,17 +150,19 @@ defmodule ClothingStoreWeb.ProductLive.Import do
       |> Products.import_products()
     else
       :no_columns ->
-        {:error, [{1, "The first line must name the columns, including id or title"}]}
+        {:error, [{1, gettext("The first line must name the columns, including id or title")}]}
 
       _ ->
-        {:error, [{1, "This isn't a readable CSV file"}]}
+        {:error, [{1, gettext("This isn't a readable CSV file")}]}
     end
   end
 
   defp entry_errors(upload), do: Enum.flat_map(upload.entries, &upload_errors(upload, &1))
 
-  defp error_text(:too_large), do: "The file is larger than #{div(@max_bytes, 1000)} KB"
-  defp error_text(:not_accepted), do: "Choose a .csv file"
-  defp error_text(:too_many_files), do: "Choose one file"
-  defp error_text(_error), do: "The file can't be uploaded"
+  defp error_text(:too_large),
+    do: gettext("The file is larger than %{kb} KB", kb: div(@max_bytes, 1000))
+
+  defp error_text(:not_accepted), do: gettext("Choose a .csv file")
+  defp error_text(:too_many_files), do: gettext("Choose one file")
+  defp error_text(_error), do: gettext("The file can't be uploaded")
 end

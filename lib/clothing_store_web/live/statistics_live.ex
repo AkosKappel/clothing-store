@@ -16,7 +16,7 @@ defmodule ClothingStoreWeb.StatisticsLive do
       Phoenix.PubSub.subscribe(ClothingStore.PubSub, "transactions")
     end
 
-    {:ok, socket |> assign(:page_title, "Statistics") |> load()}
+    {:ok, socket |> assign(:page_title, gettext("Statistics")) |> load()}
   end
 
   @impl true

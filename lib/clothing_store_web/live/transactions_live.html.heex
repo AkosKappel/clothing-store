@@ -1,9 +1,9 @@
 <.header>
-  Transactions
+  {gettext("Transactions")}
   <:subtitle>
     {if @month,
-      do: "Sales in #{Calendar.strftime(@month, "%B %Y")}.",
-      else: "Every sale, newest first."}
+      do: gettext("Sales in %{month}.", month: strftime(@month, "%B %Y")),
+      else: gettext("Every sale, newest first.")}
   </:subtitle>
   <:actions>
     <.button
@@ -12,7 +12,7 @@
       icon="hero-arrow-down-tray"
       download
     >
-      Export CSV
+      {gettext("Export CSV")}
     </.button>
   </:actions>
 </.header>
@@ -24,14 +24,14 @@
       variant="secondary"
       icon="hero-chevron-left-mini"
     >
-      {Calendar.strftime(Date.shift(@month, month: -1), "%b %Y")}
+      {strftime(Date.shift(@month, month: -1), "%b %Y")}
     </.button>
     <.button
       :if={Date.before?(@month, @this_month)}
       patch={~p"/transactions?#{[month: month_param(Date.shift(@month, month: 1))]}"}
       variant="secondary"
     >
-      {Calendar.strftime(Date.shift(@month, month: 1), "%b %Y")}
+      {strftime(Date.shift(@month, month: 1), "%b %Y")}
       <.icon name="hero-chevron-right-mini" />
     </.button>
   </div>
@@ -46,11 +46,11 @@
     class="flex flex-wrap items-end gap-3"
   >
     <div class="w-full sm:w-52">
-      <.input field={f[:month]} type="month" value={@selected_month} label="Month" />
+      <.input field={f[:month]} type="month" value={@selected_month} label={gettext("Month")} />
     </div>
-    <.button type="submit" icon="hero-funnel">Show month</.button>
+    <.button type="submit" icon="hero-funnel">{gettext("Show month")}</.button>
     <.button :if={@month} patch={~p"/transactions"} variant="secondary" icon="hero-x-mark">
-      All months
+      {gettext("All months")}
     </.button>
     <.button
       :if={!@month}
@@ -58,26 +58,26 @@
       variant="secondary"
       icon="hero-calendar"
     >
-      This month
+      {gettext("This month")}
     </.button>
   </.form>
 </section>
 
 <dl :if={@result.total_entries > 0} class="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
   <div class="card p-4">
-    <dt class="text-sm text-gray-500">Sales</dt>
+    <dt class="text-sm text-gray-500">{gettext("Sales")}</dt>
     <dd class="mt-1 text-2xl font-semibold text-gray-900 tabular-nums">
       {@result.total_entries}
     </dd>
   </div>
   <div class="card p-4">
-    <dt class="text-sm text-gray-500">Revenue</dt>
+    <dt class="text-sm text-gray-500">{gettext("Revenue")}</dt>
     <dd class="mt-1 text-2xl font-semibold text-gray-900 tabular-nums">
       {format_price(@result.revenue)}
     </dd>
   </div>
   <div class="card p-4 max-sm:col-span-2">
-    <dt class="text-sm text-gray-500">Average sale</dt>
+    <dt class="text-sm text-gray-500">{gettext("Average sale")}</dt>
     <dd class="mt-1 text-2xl font-semibold text-gray-900 tabular-nums">
       {format_price(Decimal.div(@result.revenue, @result.total_entries))}
     </dd>
@@ -93,7 +93,7 @@
   <% totals = @month_totals[month] %>
   <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
     <h2 id={"month-#{month_param(month)}"} class="text-lg font-semibold text-gray-900">
-      {Calendar.strftime(month, "%B %Y")}
+      {strftime(month, "%B %Y")}
     </h2>
     <p :if={totals} class="text-sm text-gray-600">
       {ngettext("1 sale", "%{count} sales", totals.count)} · {format_price(totals.revenue)}
@@ -101,7 +101,7 @@
   </div>
 
   <.table id={"transactions-#{month_param(month)}"} rows={group}>
-    <:col :let={transaction} label="Sale" class="whitespace-nowrap">
+    <:col :let={transaction} label={gettext("Sale")} class="whitespace-nowrap">
       <span class="font-semibold text-gray-900">#{transaction.id}</span>
       <time
         class="block text-gray-500 max-lg:inline max-lg:ml-2"
@@ -111,7 +111,7 @@
         {relative_time(transaction.inserted_at)}
       </time>
     </:col>
-    <:col :let={transaction} label="Products" class="w-full" card_label={false}>
+    <:col :let={transaction} label={gettext("Products")} class="w-full" card_label={false}>
       <ul class="space-y-2">
         <li :for={item <- transaction.products_transactions} class="flex items-center gap-3">
           <img
@@ -131,11 +131,15 @@
           </span>
         </li>
         <li :if={transaction.products_transactions == []} class="text-gray-500">
-          The products of this sale were deleted.
+          {gettext("The products of this sale were deleted.")}
         </li>
       </ul>
     </:col>
-    <:col :let={transaction} label="Total" class="text-right font-semibold whitespace-nowrap">
+    <:col
+      :let={transaction}
+      label={gettext("Total")}
+      class="text-right font-semibold whitespace-nowrap"
+    >
       {format_price(transaction.total_price)}
     </:col>
   </.table>
@@ -152,17 +156,19 @@
 <.empty_state
   :if={@result.total_entries == 0 && @month}
   icon="hero-calendar"
-  title={"No transactions in #{Calendar.strftime(@month, "%B %Y")}"}
+  title={gettext("No transactions in %{month}", month: strftime(@month, "%B %Y"))}
 >
-  Pick another month, or show every transaction.
+  {gettext("Pick another month, or show every transaction.")}
   <:actions>
-    <.button patch={~p"/transactions"} variant="secondary" icon="hero-x-mark">All months</.button>
+    <.button patch={~p"/transactions"} variant="secondary" icon="hero-x-mark">
+      {gettext("All months")}
+    </.button>
   </:actions>
 </.empty_state>
 <.empty_state
   :if={@result.total_entries == 0 && !@month}
   icon="hero-receipt-percent"
-  title="No transactions yet"
+  title={gettext("No transactions yet")}
 >
-  Sales appear here as soon as they are recorded.
+  {gettext("Sales appear here as soon as they are recorded.")}
 </.empty_state>

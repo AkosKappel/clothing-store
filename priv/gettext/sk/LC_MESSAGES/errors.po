@@ -1,0 +1,165 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: sk\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+msgid "can't be blank"
+msgstr "nesmie byť prázdne"
+
+msgid "has already been taken"
+msgstr "je už obsadené"
+
+msgid "is invalid"
+msgstr "je neplatné"
+
+msgid "must be accepted"
+msgstr "musí byť prijaté"
+
+msgid "has invalid format"
+msgstr "má neplatný formát"
+
+msgid "has an invalid entry"
+msgstr "obsahuje neplatnú položku"
+
+msgid "is reserved"
+msgstr "je rezervované"
+
+msgid "does not match confirmation"
+msgstr "sa nezhoduje s potvrdením"
+
+msgid "is still associated with this entry"
+msgstr "je stále priradené k tomuto záznamu"
+
+msgid "are still associated with this entry"
+msgstr "sú stále priradené k tomuto záznamu"
+
+msgid "should have %{count} item(s)"
+msgid_plural "should have %{count} item(s)"
+msgstr[0] "musí mať 1 položku"
+msgstr[1] "musí mať %{count} položky"
+msgstr[2] "musí mať %{count} položiek"
+
+msgid "should be %{count} character(s)"
+msgid_plural "should be %{count} character(s)"
+msgstr[0] "musí mať 1 znak"
+msgstr[1] "musí mať %{count} znaky"
+msgstr[2] "musí mať %{count} znakov"
+
+msgid "should be %{count} byte(s)"
+msgid_plural "should be %{count} byte(s)"
+msgstr[0] "musí mať 1 bajt"
+msgstr[1] "musí mať %{count} bajty"
+msgstr[2] "musí mať %{count} bajtov"
+
+msgid "should have at least %{count} item(s)"
+msgid_plural "should have at least %{count} item(s)"
+msgstr[0] "musí mať aspoň 1 položku"
+msgstr[1] "musí mať aspoň %{count} položky"
+msgstr[2] "musí mať aspoň %{count} položiek"
+
+msgid "should be at least %{count} character(s)"
+msgid_plural "should be at least %{count} character(s)"
+msgstr[0] "musí mať aspoň 1 znak"
+msgstr[1] "musí mať aspoň %{count} znaky"
+msgstr[2] "musí mať aspoň %{count} znakov"
+
+msgid "should be at least %{count} byte(s)"
+msgid_plural "should be at least %{count} byte(s)"
+msgstr[0] "musí mať aspoň 1 bajt"
+msgstr[1] "musí mať aspoň %{count} bajty"
+msgstr[2] "musí mať aspoň %{count} bajtov"
+
+msgid "should have at most %{count} item(s)"
+msgid_plural "should have at most %{count} item(s)"
+msgstr[0] "môže mať najviac 1 položku"
+msgstr[1] "môže mať najviac %{count} položky"
+msgstr[2] "môže mať najviac %{count} položiek"
+
+msgid "should be at most %{count} character(s)"
+msgid_plural "should be at most %{count} character(s)"
+msgstr[0] "môže mať najviac 1 znak"
+msgstr[1] "môže mať najviac %{count} znaky"
+msgstr[2] "môže mať najviac %{count} znakov"
+
+msgid "should be at most %{count} byte(s)"
+msgid_plural "should be at most %{count} byte(s)"
+msgstr[0] "môže mať najviac 1 bajt"
+msgstr[1] "môže mať najviac %{count} bajty"
+msgstr[2] "môže mať najviac %{count} bajtov"
+
+msgid "must be less than %{number}"
+msgstr "musí byť menšie ako %{number}"
+
+msgid "must be greater than %{number}"
+msgstr "musí byť väčšie ako %{number}"
+
+msgid "must be less than or equal to %{number}"
+msgstr "musí byť menšie alebo rovné %{number}"
+
+msgid "must be greater than or equal to %{number}"
+msgstr "musí byť väčšie alebo rovné %{number}"
+
+msgid "must be equal to %{number}"
+msgstr "musí byť rovné %{number}"
+
+msgid "can't be changed for the demo account"
+msgstr "nemožno zmeniť pre demo účet"
+
+msgid "did not change"
+msgstr "sa nezmenilo"
+
+msgid "is not valid"
+msgstr "nie je platné"
+
+msgid "at least one digit or punctuation character"
+msgstr "aspoň jedna číslica alebo interpunkčné znamienko"
+
+msgid "at least one lower case character"
+msgstr "aspoň jedno malé písmeno"
+
+msgid "at least one upper case character"
+msgstr "aspoň jedno veľké písmeno"
+
+msgid "does not match password"
+msgstr "sa nezhoduje s heslom"
+
+msgid "is listed twice"
+msgstr "je uvedené dvakrát"
+
+msgid "is needed for a discount"
+msgstr "je potrebné pre zľavu"
+
+msgid "can't be before the start"
+msgstr "nemôže byť pred začiatkom"
+
+msgid "must have the @ sign and no spaces"
+msgstr "musí obsahovať znak @ a žiadne medzery"
+
+msgid "must be a path under /images/ or an https:// URL from %{hosts}"
+msgstr "musí byť cesta pod /images/ alebo https:// URL z %{hosts}"
+
+msgid "should have at most %{max} tags"
+msgstr "môže mať najviac %{max} štítkov"
+
+msgid "each tag should be 1 to %{max} characters"
+msgstr "každý štítok musí mať 1 až %{max} znakov"
+
+msgid "each tag should be at most %{max} bytes"
+msgstr "každý štítok môže mať najviac %{max} bajtov"
+
+msgid "The demo is limited to %{max} products"
+msgstr "Demo je obmedzené na %{max} produktov"
+
+msgid "can be at most %{count}"
+msgid_plural "can be at most %{count}"
+msgstr[0] "môže byť najviac %{count}"
+msgstr[1] "môže byť najviac %{count}"
+msgstr[2] "môže byť najviac %{count}"

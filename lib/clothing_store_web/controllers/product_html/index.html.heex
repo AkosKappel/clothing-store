@@ -1,6 +1,8 @@
 <.header>
-  Inventory
-  <:subtitle>Every product with its stock. Search, filter and sort the catalogue.</:subtitle>
+  {gettext("Inventory")}
+  <:subtitle>
+    {gettext("Every product with its stock. Search, filter and sort the catalogue.")}
+  </:subtitle>
   <:actions>
     <.button
       href={~p"/inventory.csv?#{export_params(@filters)}"}
@@ -8,13 +10,13 @@
       icon="hero-arrow-down-tray"
       download
     >
-      Export CSV
+      {gettext("Export CSV")}
     </.button>
     <.button href={~p"/products/import"} variant="secondary" icon="hero-arrow-up-tray">
-      Import CSV
+      {gettext("Import CSV")}
     </.button>
     <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
-      New product
+      {gettext("New product")}
       <kbd class="ml-1 hidden rounded-sm bg-black/20 px-1.5 font-sans text-xs sm:inline">N</kbd>
     </.button>
   </:actions>
@@ -22,7 +24,7 @@
 
 <section class="card mb-6 p-5" aria-labelledby="filters-title">
   <h2 id="filters-title" class="flex items-center gap-2 font-semibold text-gray-900">
-    <.icon name="hero-funnel" class="size-5 text-gray-500" /> Filters
+    <.icon name="hero-funnel" class="size-5 text-gray-500" /> {gettext("Filters")}
   </h2>
   <.form
     :let={f}
@@ -35,8 +37,8 @@
     <.input
       field={f[:q]}
       type="search"
-      label="Search"
-      placeholder="Title, description, category or tag (press /)"
+      label={gettext("Search")}
+      placeholder={gettext("Title, description, category or tag (press /)")}
       value={@filters["q"]}
       data-shortcut="/"
       aria-keyshortcuts="/"
@@ -46,7 +48,7 @@
       <.input
         field={f[:category]}
         type="select"
-        label="Category"
+        label={gettext("Category")}
         options={@categories}
         value={@filters["category"]}
       />
@@ -55,7 +57,7 @@
         type="number"
         min="0"
         step="0.01"
-        label="Min price (€)"
+        label={gettext("Min price (€)")}
         placeholder="0,00"
         value={@filters["min_price"]}
       />
@@ -64,8 +66,8 @@
         type="number"
         min="0"
         step="0.01"
-        label="Max price (€)"
-        placeholder="Any"
+        label={gettext("Max price (€)")}
+        placeholder={gettext("Any")}
         value={@filters["max_price"]}
       />
       <label class="flex items-center gap-2 self-end pb-2 text-sm text-gray-700">
@@ -75,7 +77,7 @@
           value="true"
           class="size-4 rounded-sm border-gray-300 text-red-600 focus:ring-red-600"
           checked={@filters["in_stock"] == "true"}
-        /> In stock only
+        /> {gettext("In stock only")}
       </label>
     </div>
     <label class="flex items-center gap-2 text-sm text-gray-700">
@@ -85,11 +87,11 @@
         value="true"
         class="size-4 rounded-sm border-gray-300 text-red-600 focus:ring-red-600"
         checked={@filters["low_stock"] == "true"}
-      /> Low or out of stock only
+      /> {gettext("Low or out of stock only")}
     </label>
 
     <fieldset :if={@tags != []}>
-      <legend class="text-sm font-semibold text-gray-800">Tags</legend>
+      <legend class="text-sm font-semibold text-gray-800">{gettext("Tags")}</legend>
       <div class="mt-2 flex flex-wrap gap-2">
         <label :for={tag <- @tags} class="cursor-pointer">
           <input
@@ -113,9 +115,9 @@
         variant="secondary"
         icon="hero-x-mark"
       >
-        Clear filters
+        {gettext("Clear filters")}
       </.button>
-      <.button type="submit" icon="hero-funnel">Apply filters</.button>
+      <.button type="submit" icon="hero-funnel">{gettext("Apply filters")}</.button>
     </div>
   </.form>
 </section>
@@ -132,11 +134,11 @@
     >
       {label}
       <.icon name="hero-x-mark-mini" class="size-4" />
-      <span class="sr-only">(remove this filter)</span>
+      <span class="sr-only">{gettext("(remove this filter)")}</span>
     </.link>
   </div>
   <div :if={@products != []} class="flex items-center gap-2">
-    <label for="sort" class="text-sm text-gray-600">Sort by</label>
+    <label for="sort" class="text-sm text-gray-600">{gettext("Sort by")}</label>
     <select
       id="sort"
       name="sort"
@@ -144,17 +146,16 @@
       data-autosubmit
       class="rounded-md border-gray-300 py-1.5 pr-8 text-sm shadow-xs focus:border-red-600 focus:ring-red-600"
     >
-      {Phoenix.HTML.Form.options_for_select(
-        Enum.map(ClothingStore.Products.sorts(), fn {value, label} -> {label, value} end),
-        @filters["sort"] || "newest"
-      )}
+      {Phoenix.HTML.Form.options_for_select(sort_options(), @filters["sort"] || "newest")}
     </select>
-    <noscript><.button type="submit" form="filters-form" size="sm" variant="secondary">Sort</.button></noscript>
+    <noscript><.button type="submit" form="filters-form" size="sm" variant="secondary">
+      {gettext("Sort")}
+    </.button></noscript>
   </div>
 </div>
 
 <.table id="products" rows={@products} row_id={&"product-#{&1.id}"}>
-  <:col :let={product} label="Product">
+  <:col :let={product} label={gettext("Product")}>
     <div class="flex items-center gap-4 sm:min-w-64">
       <img
         src={image_link(product.photo)}
@@ -173,17 +174,19 @@
       </div>
     </div>
   </:col>
-  <:col :let={product} label="Category"><.category_badge category={product.category} /></:col>
-  <:col :let={product} label="Tags">
+  <:col :let={product} label={gettext("Category")}>
+    <.category_badge category={product.category} />
+  </:col>
+  <:col :let={product} label={gettext("Tags")}>
     <div class="flex flex-wrap gap-1.5">
       <.badge :for={tag <- product.tags}>{tag}</.badge>
       <span :if={product.tags == []} class="text-gray-400">–</span>
     </div>
   </:col>
-  <:col :let={product} label="Price" class="text-right whitespace-nowrap">
+  <:col :let={product} label={gettext("Price")} class="text-right whitespace-nowrap">
     <.price product={product} />
   </:col>
-  <:col :let={product} label="Stock" class="text-right whitespace-nowrap">
+  <:col :let={product} label={gettext("Stock")} class="text-right whitespace-nowrap">
     <.stock_badge stock={product.stock} />
   </:col>
   <:action :let={product}>
@@ -193,34 +196,38 @@
       size="sm"
       icon="hero-pencil-square"
     >
-      Edit<span class="sr-only">, {product.title}</span>
+      {gettext("Edit")}<span class="sr-only">, {product.title}</span>
     </.button>
     <.delete_dialog
       id={"delete-product-#{product.id}"}
       action={~p"/products/#{product}"}
-      title={"Delete #{product.title}?"}
+      title={gettext("Delete %{title}?", title: product.title)}
       size="sm"
     >
-      The product and its stock are removed for every visitor. This can't be undone.
+      {gettext("The product and its stock are removed for every visitor. This can't be undone.")}
     </.delete_dialog>
   </:action>
   <:empty>
     <.empty_state
       :if={filtered?(@filters)}
       icon="hero-magnifying-glass"
-      title="No products match these filters"
+      title={gettext("No products match these filters")}
     >
-      Try a wider price range, another category or fewer tags.
+      {gettext("Try a wider price range, another category or fewer tags.")}
       <:actions>
         <.button href={~p"/products"} variant="secondary" icon="hero-x-mark">
-          Clear filters
+          {gettext("Clear filters")}
         </.button>
       </:actions>
     </.empty_state>
-    <.empty_state :if={!filtered?(@filters)} image={~p"/images/logo.svg"} title="No products yet">
-      Add the first product to start tracking stock.
+    <.empty_state
+      :if={!filtered?(@filters)}
+      image={~p"/images/logo.svg"}
+      title={gettext("No products yet")}
+    >
+      {gettext("Add the first product to start tracking stock.")}
       <:actions>
-        <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
+        <.button href={~p"/products/new"} icon="hero-plus">{gettext("New product")}</.button>
       </:actions>
     </.empty_state>
   </:empty>

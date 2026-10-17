@@ -19,11 +19,11 @@ defmodule ClothingStoreWeb.ProductHTML do
     single =
       for {key, label} <- [
             {"q", &"“#{&1}”"},
-            {"category", &"Category: #{&1}"},
-            {"min_price", &"From #{&1} €"},
-            {"max_price", &"Up to #{&1} €"},
-            {"in_stock", fn _ -> "In stock" end},
-            {"low_stock", fn _ -> "Low stock" end}
+            {"category", &gettext("Category: %{category}", category: &1)},
+            {"min_price", &gettext("From %{price} €", price: &1)},
+            {"max_price", &gettext("Up to %{price} €", price: &1)},
+            {"in_stock", fn _ -> gettext("In stock") end},
+            {"low_stock", fn _ -> gettext("Low stock") end}
           ],
           value = params[key],
           value != nil,
@@ -40,12 +40,24 @@ defmodule ClothingStoreWeb.ProductHTML do
   def export_params(filters), do: Enum.reject(filters, fn {_key, value} -> blank?(value) end)
 
   @doc "A heading for one entry of a product's history."
-  def version_title("created"), do: "Added to the catalogue"
-  def version_title("updated"), do: "Edited"
-  def version_title("restocked"), do: "Restocked"
-  def version_title("restored"), do: "Restored after a delete"
+  def version_title("created"), do: gettext("Added to the catalogue")
+  def version_title("updated"), do: gettext("Edited")
+  def version_title("restocked"), do: gettext("Restocked")
+  def version_title("restored"), do: gettext("Restored after a delete")
   def version_title(action), do: String.capitalize(action)
 
   defp blank?(value),
     do: value in [nil, "", [], "All"] or (is_binary(value) and String.trim(value) == "")
+
+  @doc "The inventory sort options as `{label, value}`; the first is the default."
+  def sort_options do
+    [
+      {gettext("Newest first"), "newest"},
+      {gettext("Price: low to high"), "price_asc"},
+      {gettext("Price: high to low"), "price_desc"},
+      {gettext("Stock: low to high"), "stock_asc"},
+      {gettext("Stock: high to low"), "stock_desc"},
+      {gettext("Name: A to Z"), "title"}
+    ]
+  end
 end

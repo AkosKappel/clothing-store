@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class={["[scrollbar-gutter:stable]", theme_class(@conn.cookies["theme"])]}>
+<html
+  lang={Gettext.get_locale(ClothingStoreWeb.Gettext)}
+  class={["[scrollbar-gutter:stable]", theme_class(@conn.cookies["theme"])]}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,7 +12,7 @@
     <meta property="og:site_name" content="Modern Fashion Store" />
     <meta
       property="og:title"
-      content={(assigns[:page_title] || "Dashboard") <> " | Modern Fashion Store"}
+      content={(assigns[:page_title] || gettext("Dashboard")) <> " | Modern Fashion Store"}
     />
     <meta property="og:description" content={meta_description(assigns)} />
     <meta property="og:image" content={url(~p"/images/og-image.jpg")} />
@@ -21,7 +24,7 @@
     <link rel="apple-touch-icon" href={~p"/images/icons/apple-touch-icon.png"} />
     <link rel="icon" href={~p"/favicon.ico"} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={~p"/favicon.svg"} />
-    <.live_title default="Dashboard" suffix=" | Modern Fashion Store">
+    <.live_title default={gettext("Dashboard")} suffix=" | Modern Fashion Store">
       {assigns[:page_title]}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />

@@ -138,13 +138,15 @@ defmodule ClothingStore.Products.Product do
       if allowed_photo?(photo),
         do: [],
         else: [
-          photo: "must be a path under /images/ or an https:// URL from #{photo_hosts_text()}"
+          photo:
+            {"must be a path under /images/ or an https:// URL from %{hosts}",
+             hosts: photo_hosts_text()}
         ]
     end)
   end
 
   @doc false
-  def photo_hosts_text, do: Enum.join(@photo_hosts, " or ")
+  def photo_hosts_text, do: Enum.join(@photo_hosts, ", ")
 
   defp allowed_photo?("/images/" <> _ = path),
     # "%2e%2e" is a dot-segment to browsers too
@@ -166,13 +168,13 @@ defmodule ClothingStore.Products.Product do
     validate_change(changeset, :tags, fn :tags, tags ->
       cond do
         length(tags) > @max_tags ->
-          [tags: "should have at most #{@max_tags} tags"]
+          [tags: {"should have at most %{max} tags", max: @max_tags}]
 
         Enum.any?(tags, &(String.length(&1) not in 1..@max_tag_length)) ->
-          [tags: "each tag should be 1 to #{@max_tag_length} characters"]
+          [tags: {"each tag should be 1 to %{max} characters", max: @max_tag_length}]
 
         Enum.any?(tags, &(byte_size(&1) > @max_tag_bytes)) ->
-          [tags: "each tag should be at most #{@max_tag_bytes} bytes"]
+          [tags: {"each tag should be at most %{max} bytes", max: @max_tag_bytes}]
 
         true ->
           []

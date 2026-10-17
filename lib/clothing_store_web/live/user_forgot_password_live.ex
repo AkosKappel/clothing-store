@@ -7,8 +7,8 @@ defmodule ClothingStoreWeb.UserForgotPasswordLive do
     ~H"""
     <div class="mx-auto max-w-md pt-4 sm:pt-8">
       <.header class="justify-center text-center">
-        Forgot your password?
-        <:subtitle>We'll send a password reset link to your inbox.</:subtitle>
+        {gettext("Forgot your password?")}
+        <:subtitle>{gettext("We'll send a password reset link to your inbox.")}</:subtitle>
       </.header>
 
       <div class="card p-6 sm:p-8">
@@ -16,13 +16,13 @@ defmodule ClothingStoreWeb.UserForgotPasswordLive do
           <.input
             field={@form[:email]}
             type="email"
-            label="Email"
+            label={gettext("Email")}
             autocomplete="email"
             required
           />
           <:actions>
-            <.button phx-disable-with="Sending..." icon="hero-envelope" class="w-full">
-              Send password reset instructions
+            <.button phx-disable-with={gettext("Sending...")} icon="hero-envelope" class="w-full">
+              {gettext("Send password reset instructions")}
             </.button>
           </:actions>
         </.simple_form>
@@ -32,14 +32,14 @@ defmodule ClothingStoreWeb.UserForgotPasswordLive do
         <.link
           href={~p"/users/log_in"}
           class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
-        >Back to log in</.link>
+        >{gettext("Back to log in")}</.link>
       </p>
     </div>
     """
   end
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, form: to_form(%{}, as: "user"), page_title: "Forgot password")}
+    {:ok, assign(socket, form: to_form(%{}, as: "user"), page_title: gettext("Forgot password"))}
   end
 
   def handle_event("send_email", %{"user" => %{"email" => email}}, socket) do
@@ -51,7 +51,9 @@ defmodule ClothingStoreWeb.UserForgotPasswordLive do
     end
 
     info =
-      "If your email is in our system, you will receive instructions to reset your password shortly."
+      gettext(
+        "If your email is in our system, you will receive instructions to reset your password shortly."
+      )
 
     {:noreply,
      socket

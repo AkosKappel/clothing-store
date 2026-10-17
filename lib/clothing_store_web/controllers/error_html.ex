@@ -10,9 +10,11 @@ defmodule ClothingStoreWeb.ErrorHTML do
   def render("404.html", _assigns) do
     error_page(%{
       status: 404,
-      title: "Page not found",
+      title: gettext("Page not found"),
       text:
-        "The page you're looking for doesn't exist. Maybe the product was deleted, or the nightly reset removed it.",
+        gettext(
+          "The page you're looking for doesn't exist. Maybe the product was deleted, or the nightly reset removed it."
+        ),
       reference: nil
     })
   end
@@ -20,8 +22,8 @@ defmodule ClothingStoreWeb.ErrorHTML do
   def render("500.html", _assigns) do
     error_page(%{
       status: 500,
-      title: "Something went wrong",
-      text: "An unexpected error stopped this page. Please try again in a moment.",
+      title: gettext("Something went wrong"),
+      text: gettext("An unexpected error stopped this page. Please try again in a moment."),
       # the same id is in the log lines of this request, next to the stack trace
       reference: Logger.metadata()[:request_id]
     })
@@ -37,7 +39,7 @@ defmodule ClothingStoreWeb.ErrorHTML do
   defp error_page(assigns) do
     ~H"""
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang={Gettext.get_locale(ClothingStoreWeb.Gettext)}>
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -65,11 +67,11 @@ defmodule ClothingStoreWeb.ErrorHTML do
             <h1 class="mt-4 font-display text-3xl font-bold text-gray-900">{@title}</h1>
             <p class="mt-3 text-gray-600">{@text}</p>
             <p :if={@reference} class="mt-4 text-sm text-gray-500">
-              Reference: <code class="font-mono">{@reference}</code>
+              {gettext("Reference:")} <code class="font-mono">{@reference}</code>
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-3">
-              <.button href="/" icon="hero-home">Go to the dashboard</.button>
-              <.button href={~p"/about"} variant="secondary">About this project</.button>
+              <.button href="/" icon="hero-home">{gettext("Go to the dashboard")}</.button>
+              <.button href={~p"/about"} variant="secondary">{gettext("About this project")}</.button>
             </div>
           </div>
         </main>

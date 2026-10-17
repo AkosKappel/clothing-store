@@ -1,6 +1,7 @@
 defmodule ClothingStoreWeb.ProductComponents do
   @moduledoc "Badges for product data shared by the dashboard, inventory and statistics pages."
   use Phoenix.Component
+  use Gettext, backend: ClothingStoreWeb.Gettext
 
   import ClothingStoreWeb.CoreComponents
 
@@ -73,16 +74,25 @@ defmodule ClothingStoreWeb.ProductComponents do
       >
         <.icon name="hero-exclamation-circle-mini" class="size-5 shrink-0 text-rose-600" />
         <div>
-          <p class="font-semibold">The product couldn't be saved. Please fix the errors below.</p>
+          <p class="font-semibold">
+            {gettext("The product couldn't be saved. Please fix the errors below.")}
+          </p>
           <p :for={msg <- translate_errors(@form.errors, :base)} class="mt-1">{msg}</p>
         </div>
       </div>
 
-      <.input field={@form[:title]} type="text" label="Title" maxlength="100" counter required />
+      <.input
+        field={@form[:title]}
+        type="text"
+        label={gettext("Title")}
+        maxlength="100"
+        counter
+        required
+      />
       <.input
         field={@form[:description]}
         type="textarea"
-        label="Description"
+        label={gettext("Description")}
         maxlength="2000"
         rows="4"
         counter
@@ -91,25 +101,35 @@ defmodule ClothingStoreWeb.ProductComponents do
       <.input
         field={@form[:photo]}
         type="text"
-        label="Photo"
+        label={gettext("Photo")}
         placeholder="/images/products/white-t-shirt.webp"
-        hint={"A path under /images/, or an https:// URL from #{ClothingStore.Products.Product.photo_hosts_text()}."}
+        hint={
+          gettext("A path under /images/, or an https:// URL from %{hosts}.",
+            hosts: ClothingStore.Products.Product.photo_hosts_text()
+          )
+        }
         required
       />
       <img
         :if={photo_preview?(@form[:photo])}
         id="photo-preview"
         src={@form[:photo].value}
-        alt="Photo preview"
+        alt={gettext("Photo preview")}
         class="size-32 rounded-md bg-gray-100 object-cover ring-1 ring-gray-200"
       />
 
       <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <.input field={@form[:category]} type="text" label="Category" maxlength="50" required />
+        <.input
+          field={@form[:category]}
+          type="text"
+          label={gettext("Category")}
+          maxlength="50"
+          required
+        />
         <.input
           field={@form[:price]}
           type="number"
-          label="Price"
+          label={gettext("Price")}
           prefix="€"
           min="0"
           step="0.01"
@@ -120,19 +140,19 @@ defmodule ClothingStoreWeb.ProductComponents do
             <.input
               field={@form[:stock]}
               type="number"
-              label="Stock"
+              label={gettext("Stock")}
               min="0"
               step="1"
               required
               readonly={has_variants?(@form)}
-              hint={has_variants?(@form) && "The total of the sizes below"}
+              hint={has_variants?(@form) && gettext("The total of the sizes below")}
             />
           </div>
           <button
             :for={
               {step, icon, label} <- [
-                {-1, "hero-minus-mini", "Decrease stock"},
-                {1, "hero-plus-mini", "Increase stock"}
+                {-1, "hero-minus-mini", gettext("Decrease stock")},
+                {1, "hero-plus-mini", gettext("Increase stock")}
               ]
             }
             type="button"
@@ -150,12 +170,16 @@ defmodule ClothingStoreWeb.ProductComponents do
       <.input
         field={@form[:tags]}
         type="text"
-        label="Tags"
+        label={gettext("Tags")}
         value={@form[:tags].value |> List.wrap() |> Enum.join(", ")}
-        hint="Comma separated or Enter after each, up to 10, for example: summer, sale"
+        hint={gettext("Comma separated or Enter after each, up to 10, for example: summer, sale")}
         data-tag-input
       />
-      <ul :if={tag_list(@form) != []} class="-mt-3 flex flex-wrap gap-1.5" aria-label="Tags">
+      <ul
+        :if={tag_list(@form) != []}
+        class="-mt-3 flex flex-wrap gap-1.5"
+        aria-label={gettext("Tags")}
+      >
         <li
           :for={tag <- tag_list(@form)}
           class="inline-flex items-center gap-1 rounded-full bg-gray-100 py-0.5 pr-1 pl-2.5 text-xs font-medium text-gray-700 ring-1 ring-gray-200 ring-inset"
@@ -167,7 +191,7 @@ defmodule ClothingStoreWeb.ProductComponents do
             phx-click="remove_tag"
             phx-value-tag={tag}
             class="rounded-full p-0.5 hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-red-600"
-            aria-label={"Remove tag #{tag}"}
+            aria-label={gettext("Remove tag %{tag}", tag: tag)}
           >
             <.icon name="hero-x-mark-mini" class="size-3.5" />
           </button>
@@ -175,23 +199,32 @@ defmodule ClothingStoreWeb.ProductComponents do
       </ul>
 
       <fieldset class="rounded-md border border-gray-200 p-4">
-        <legend class="px-1 text-sm font-semibold text-gray-800">Sizes and colours (optional)</legend>
+        <legend class="px-1 text-sm font-semibold text-gray-800">
+          {gettext("Sizes and colours (optional)")}
+        </legend>
         <p class="mb-3 text-xs text-gray-500">
-          With sizes, each has its own stock and the product's stock is their total.
+          {gettext("With sizes, each has its own stock and the product's stock is their total.")}
         </p>
         <.inputs_for :let={variant} field={@form[:variants]}>
           <input type="hidden" name="product[variants_sort][]" value={variant.index} />
           <div class="mb-3 grid grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)_auto] items-start gap-2">
-            <.input field={variant[:size]} label="Size" maxlength="10" required />
-            <.input field={variant[:colour]} label="Colour" maxlength="30" />
-            <.input field={variant[:stock]} type="number" label="Stock" min="0" step="1" required />
+            <.input field={variant[:size]} label={gettext("Size")} maxlength="10" required />
+            <.input field={variant[:colour]} label={gettext("Colour")} maxlength="30" />
+            <.input
+              field={variant[:stock]}
+              type="number"
+              label={gettext("Stock")}
+              min="0"
+              step="1"
+              required
+            />
             <button
               type="button"
               name="product[variants_drop][]"
               value={variant.index}
               phx-click={JS.dispatch("change")}
-              aria-label={"Remove size #{variant[:size].value}"}
-              title="Remove"
+              aria-label={gettext("Remove size %{size}", size: variant[:size].value)}
+              title={gettext("Remove")}
               class="mt-7 rounded-md p-2 text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-red-600"
             >
               <.icon name="hero-trash-mini" class="size-5" />
@@ -208,34 +241,38 @@ defmodule ClothingStoreWeb.ProductComponents do
           size="sm"
           icon="hero-plus"
         >
-          Add a size
+          {gettext("Add a size")}
         </.button>
       </fieldset>
 
       <fieldset class="rounded-md border border-gray-200 p-4">
-        <legend class="px-1 text-sm font-semibold text-gray-800">Discount (optional)</legend>
+        <legend class="px-1 text-sm font-semibold text-gray-800">
+          {gettext("Discount (optional)")}
+        </legend>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <.input
             field={@form[:discount_percent]}
             type="number"
-            label="Percent off"
+            label={gettext("Percent off")}
             min="1"
             max="90"
             step="1"
           />
-          <.input field={@form[:discount_starts_on]} type="date" label="From" />
-          <.input field={@form[:discount_ends_on]} type="date" label="Until (inclusive)" />
+          <.input field={@form[:discount_starts_on]} type="date" label={gettext("From")} />
+          <.input field={@form[:discount_ends_on]} type="date" label={gettext("Until (inclusive)")} />
         </div>
         <p class="mt-2 text-xs text-gray-500">
-          Sales during these days use the discounted price. Leave the percent empty for no discount.
+          {gettext(
+            "Sales during these days use the discounted price. Leave the percent empty for no discount."
+          )}
         </p>
       </fieldset>
 
       <:actions>
         <div class="ml-auto flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
-          <.button href={@cancel_to} variant="secondary">Cancel</.button>
-          <.button type="submit" icon="hero-check" phx-disable-with="Saving...">
-            Save product
+          <.button href={@cancel_to} variant="secondary">{gettext("Cancel")}</.button>
+          <.button type="submit" icon="hero-check" phx-disable-with={gettext("Saving...")}>
+            {gettext("Save product")}
           </.button>
         </div>
       </:actions>
@@ -270,7 +307,9 @@ defmodule ClothingStoreWeb.ProductComponents do
         {ClothingStoreWeb.Helpers.format_price(Product.sale_price(@product))}
       </span>
       <s :if={@on_sale} class="text-sm whitespace-nowrap text-gray-500">
-        <span class="sr-only">was</span> {ClothingStoreWeb.Helpers.format_price(@product.price)}
+        <span class="sr-only">{gettext("was")}</span> {ClothingStoreWeb.Helpers.format_price(
+          @product.price
+        )}
       </s>
       <.badge :if={@on_sale} class="bg-red-50 text-red-800 ring-red-600/20">
         −{@product.discount_percent} %
@@ -302,9 +341,9 @@ defmodule ClothingStoreWeb.ProductComponents do
     |> Phoenix.HTML.raw()
   end
 
-  def stock_text(0), do: "Out of stock"
-  def stock_text(stock) when stock <= @low_stock, do: "Low: #{stock} left"
-  def stock_text(stock), do: "#{stock} in stock"
+  def stock_text(0), do: gettext("Out of stock")
+  def stock_text(stock) when stock <= @low_stock, do: gettext("Low: %{stock} left", stock: stock)
+  def stock_text(stock), do: gettext("%{stock} in stock", stock: stock)
 
   defp stock_class(0), do: "bg-red-50 text-red-800 ring-red-600/20"
 

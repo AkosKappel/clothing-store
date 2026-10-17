@@ -63,10 +63,10 @@ defmodule ClothingStoreWeb.ProductLive.Form do
       product: product,
       action: ~p"/products",
       back_to: ~p"/products",
-      back_label: "Inventory",
-      page_title: "New product",
-      page_heading: "New Product",
-      subtitle: "Add a product to the catalogue. All fields except tags are required.",
+      back_label: gettext("Inventory"),
+      page_title: gettext("New product"),
+      page_heading: gettext("New Product"),
+      subtitle: gettext("Add a product to the catalogue. All fields except tags are required."),
       form: to_form(Products.change_product(product))
     )
   end
@@ -80,9 +80,9 @@ defmodule ClothingStoreWeb.ProductLive.Form do
       action: ~p"/products/#{product}",
       back_to: ~p"/products/#{product}",
       back_label: product.title,
-      page_title: "Edit product",
-      page_heading: "Edit Product",
-      subtitle: "Changes are shown to every visitor straight away.",
+      page_title: gettext("Edit product"),
+      page_heading: gettext("Edit Product"),
+      subtitle: gettext("Changes are shown to every visitor straight away."),
       form: to_form(Products.change_product(product))
     )
   end
@@ -112,7 +112,7 @@ defmodule ClothingStoreWeb.ProductLive.Form do
           Ecto.Changeset.add_error(
             changeset,
             :base,
-            "The demo is limited to #{Products.max_products()} products"
+            gettext("The demo is limited to %{max} products", max: Products.max_products())
           )
 
         {:noreply, assign(socket, :form, to_form(changeset))}

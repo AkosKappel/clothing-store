@@ -2,6 +2,7 @@ defmodule ClothingStoreWeb.UserAuth do
   @moduledoc "Session and remember-me cookie handling, plus the plugs and `on_mount` hooks that guard pages."
 
   use ClothingStoreWeb, :verified_routes
+  use Gettext, backend: ClothingStoreWeb.Gettext
 
   import Plug.Conn
   import Phoenix.Controller
@@ -165,7 +166,7 @@ defmodule ClothingStoreWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:warning, "You must log in to access this page.")
+        |> Phoenix.LiveView.put_flash(:warning, gettext("You must log in to access this page."))
         |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
 
       {:halt, socket}
@@ -214,7 +215,7 @@ defmodule ClothingStoreWeb.UserAuth do
       conn
     else
       conn
-      |> put_flash(:warning, "You must log in to access this page.")
+      |> put_flash(:warning, gettext("You must log in to access this page."))
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
       |> halt()

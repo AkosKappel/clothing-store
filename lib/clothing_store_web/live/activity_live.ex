@@ -12,16 +12,23 @@ defmodule ClothingStoreWeb.ActivityLive do
   def render(assigns) do
     ~H"""
     <.header>
-      Activity
+      {gettext("Activity")}
       <:subtitle>
-        What visitors and simulated customers did, newest first. New events appear as they happen.
+        {gettext(
+          "What visitors and simulated customers did, newest first. New events appear as they happen."
+        )}
       </:subtitle>
     </.header>
 
     <section class="card px-5 py-2 sm:px-6">
       <.activity_list id="activity" events={@streams.events} />
-      <.empty_state :if={@empty} icon="hero-bolt" title="Nothing has happened yet" class="py-10">
-        Edit a product or wait a few minutes for the next simulated sale.
+      <.empty_state
+        :if={@empty}
+        icon="hero-bolt"
+        title={gettext("Nothing has happened yet")}
+        class="py-10"
+      >
+        {gettext("Edit a product or wait a few minutes for the next simulated sale.")}
       </.empty_state>
     </section>
     """
@@ -34,7 +41,7 @@ defmodule ClothingStoreWeb.ActivityLive do
 
     {:ok,
      socket
-     |> assign(page_title: "Activity", empty: events == [])
+     |> assign(page_title: gettext("Activity"), empty: events == [])
      |> stream(:events, events, limit: @limit)}
   end
 

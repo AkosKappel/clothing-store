@@ -46,15 +46,16 @@ document.addEventListener("click", event => {
 // Theme toggle: system -> light -> dark. The server renders the <html> class from
 // the cookie (Layouts.theme_class/1); this keeps it in step and updates the button.
 const themes = ["system", "light", "dark"]
-const themeLabels = {system: "follows the system", light: "light", dark: "dark"}
 const currentTheme = () =>
   themes.find(theme => document.documentElement.classList.contains(theme)) || "system"
 
 const showTheme = theme => {
   const toggle = document.getElementById("theme-toggle")
   if (!toggle) return
-  toggle.setAttribute("aria-label", `Theme: ${themeLabels[theme]}`)
-  toggle.title = `Theme: ${themeLabels[theme]}`
+  // the labels come translated from the server (Layouts app template)
+  const label = toggle.dataset[`label${theme[0].toUpperCase()}${theme.slice(1)}`]
+  toggle.setAttribute("aria-label", label)
+  toggle.title = label
   toggle.querySelectorAll("[data-theme-icon]").forEach(icon => {
     icon.classList.toggle("hidden", icon.dataset.themeIcon !== theme)
   })

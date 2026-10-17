@@ -8,7 +8,7 @@ defmodule ClothingStoreWeb.PageController do
     links = Demo.links()
 
     render(conn, :about,
-      page_title: "About",
+      page_title: gettext("About"),
       author: Demo.author(),
       links: links,
       repository: links[:repository],
@@ -19,12 +19,12 @@ defmodule ClothingStoreWeb.PageController do
   end
 
   def privacy(conn, _params) do
-    render(conn, :privacy, page_title: "Privacy", reset: Demo.reset_settings())
+    render(conn, :privacy, page_title: gettext("Privacy"), reset: Demo.reset_settings())
   end
 
   def terms(conn, _params) do
     render(conn, :terms,
-      page_title: "Terms of use",
+      page_title: gettext("Terms of use"),
       reset: Demo.reset_settings(),
       repository: Demo.links()[:repository],
       max_products: Products.max_products()

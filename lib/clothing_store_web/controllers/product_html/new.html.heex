@@ -1,8 +1,10 @@
 <div class="mx-auto max-w-3xl">
-  <.back navigate={~p"/products"}>Inventory</.back>
+  <.back navigate={~p"/products"}>{gettext("Inventory")}</.back>
   <.header>
-    New Product
-    <:subtitle>Add a product to the catalogue. All fields except tags are required.</:subtitle>
+    {gettext("New Product")}
+    <:subtitle>
+      {gettext("Add a product to the catalogue. All fields except tags are required.")}
+    </:subtitle>
   </.header>
 
   <.product_form form={to_form(@changeset)} action={~p"/products"} cancel_to={~p"/products"} />

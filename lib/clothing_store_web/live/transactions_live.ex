@@ -18,7 +18,7 @@ defmodule ClothingStoreWeb.TransactionsLive do
       Phoenix.PubSub.subscribe(ClothingStore.PubSub, "transactions")
     end
 
-    {:ok, assign(socket, page_title: "Transactions", per_page: @per_page)}
+    {:ok, assign(socket, page_title: gettext("Transactions"), per_page: @per_page)}
   end
 
   @impl true

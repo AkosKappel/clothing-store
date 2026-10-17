@@ -18,27 +18,28 @@ defmodule ClothingStoreWeb.CoreComponents do
 
   @flash_styles %{
     info: %{
-      title: "Done",
       icon: "hero-check-circle-mini",
       box: "bg-emerald-50 text-emerald-900 ring-emerald-600/30",
       icon_color: "text-emerald-600",
       bar: "bg-emerald-500/60"
     },
     warning: %{
-      title: "Please note",
       icon: "hero-exclamation-triangle-mini",
       box: "bg-amber-50 text-amber-900 ring-amber-600/30",
       icon_color: "text-amber-600",
       bar: "bg-amber-500/60"
     },
     error: %{
-      title: "Something went wrong",
       icon: "hero-exclamation-circle-mini",
       box: "bg-rose-50 text-rose-900 ring-rose-600/30",
       icon_color: "text-rose-600",
       bar: "bg-rose-500/60"
     }
   }
+
+  defp flash_title(:info), do: gettext("Done")
+  defp flash_title(:warning), do: gettext("Please note")
+  defp flash_title(:error), do: gettext("Something went wrong")
 
   @doc """
   Renders flash notices.
@@ -82,7 +83,7 @@ defmodule ClothingStoreWeb.CoreComponents do
     >
       <.icon name={@style.icon} class={["mt-0.5 shrink-0", @style.icon_color]} />
       <div class="min-w-0 flex-1 text-sm">
-        <p class="font-semibold">{@title || @style.title}</p>
+        <p class="font-semibold">{@title || flash_title(@kind)}</p>
         <p class="mt-0.5">{msg}</p>
         <.form
           :if={@undo}
@@ -95,7 +96,7 @@ defmodule ClothingStoreWeb.CoreComponents do
             type="submit"
             class="inline-flex items-center gap-1 rounded-md bg-surface/70 px-2.5 py-1 text-xs font-semibold ring-1 ring-current/20 ring-inset hover:bg-surface"
           >
-            <.icon name="hero-arrow-uturn-left-mini" class="size-4" /> Undo
+            <.icon name="hero-arrow-uturn-left-mini" class="size-4" /> {gettext("Undo")}
           </button>
         </.form>
       </div>
@@ -586,7 +587,11 @@ defmodule ClothingStoreWeb.CoreComponents do
   def password_strength(assigns) do
     assigns =
       assign(assigns,
-        label: Enum.at(["", "Weak", "Fair", "Good", "Strong"], assigns.score),
+        label:
+          Enum.at(
+            ["", gettext("Weak"), gettext("Fair"), gettext("Good"), gettext("Strong")],
+            assigns.score
+          ),
         color:
           Enum.at(
             ["", "bg-red-500", "bg-amber-500", "bg-lime-500", "bg-emerald-600"],
@@ -603,7 +608,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         />
       </div>
       <p class="w-28 text-right text-xs text-gray-600" aria-live="polite">
-        Strength: <span class="font-semibold">{@label}</span>
+        {gettext("Strength:")} <span class="font-semibold">{@label}</span>
       </p>
     </div>
     """
@@ -900,7 +905,7 @@ defmodule ClothingStoreWeb.CoreComponents do
   attr :id, :string, required: true
   attr :action, :string, required: true
   attr :title, :string, required: true
-  attr :label, :string, default: "Delete", doc: "the label of the trigger and confirm buttons"
+  attr :label, :string, default: nil, doc: "the label of the trigger and confirm buttons"
   attr :size, :string, default: "md"
   slot :inner_block, required: true
 
@@ -914,7 +919,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       commandfor={@id}
       command="show-modal"
     >
-      {@label}
+      {@label || gettext("Delete")}
     </.button>
     <dialog
       id={@id}
@@ -942,7 +947,7 @@ defmodule ClothingStoreWeb.CoreComponents do
           <.button variant="secondary" autofocus>{gettext("Cancel")}</.button>
         </form>
         <.form for={%{}} action={@action} method="delete">
-          <.button icon="hero-trash">{@label}</.button>
+          <.button icon="hero-trash">{@label || gettext("Delete")}</.button>
         </.form>
       </div>
     </dialog>

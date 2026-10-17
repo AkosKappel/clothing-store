@@ -110,3 +110,58 @@ msgstr ""
 
 msgid "must be equal to %{number}"
 msgstr ""
+
+## The app's own validations
+msgid "can't be changed for the demo account"
+msgstr ""
+
+msgid "did not change"
+msgstr ""
+
+## From Ecto.Changeset.put_change/3
+msgid "is not valid"
+msgstr ""
+
+msgid "at least one digit or punctuation character"
+msgstr ""
+
+msgid "at least one lower case character"
+msgstr ""
+
+msgid "at least one upper case character"
+msgstr ""
+
+msgid "does not match password"
+msgstr ""
+
+msgid "is listed twice"
+msgstr ""
+
+msgid "is needed for a discount"
+msgstr ""
+
+msgid "can't be before the start"
+msgstr ""
+
+msgid "must have the @ sign and no spaces"
+msgstr ""
+
+msgid "must be a path under /images/ or an https:// URL from %{hosts}"
+msgstr ""
+
+msgid "should have at most %{max} tags"
+msgstr ""
+
+msgid "each tag should be 1 to %{max} characters"
+msgstr ""
+
+msgid "each tag should be at most %{max} bytes"
+msgstr ""
+
+msgid "The demo is limited to %{max} products"
+msgstr ""
+
+msgid "can be at most %{count}"
+msgid_plural "can be at most %{count}"
+msgstr[0] ""
+msgstr[1] ""

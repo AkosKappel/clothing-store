@@ -32,10 +32,14 @@ defmodule ClothingStoreWeb.SalesComponents do
   def revenue_bars(monthly) do
     for %{month: month, revenue: revenue, count: count} <- monthly do
       %{
-        label: Calendar.strftime(month, "%b"),
+        label: strftime(month, "%b"),
         value: to_float(revenue),
         tooltip:
-          "#{Calendar.strftime(month, "%B %Y")}: #{format_price(revenue)} from #{ngettext("1 sale", "%{count} sales", count)}"
+          gettext("%{month}: %{revenue} from %{sales}",
+            month: strftime(month, "%B %Y"),
+            revenue: format_price(revenue),
+            sales: ngettext("1 sale", "%{count} sales", count)
+          )
       }
     end
   end
@@ -67,7 +71,7 @@ defmodule ClothingStoreWeb.SalesComponents do
         segments ++
           [
             %{
-              label: "Other",
+              label: gettext("Other"),
               value: to_float(revenue),
               color: other_color(),
               text: format_price(revenue)
@@ -93,7 +97,7 @@ defmodule ClothingStoreWeb.SalesComponents do
     <section aria-labelledby={"#{@id}-title"}>
       <h2 id={"#{@id}-title"} class="mb-3 text-lg font-semibold text-gray-900">{@title}</h2>
       <.table id={@id} rows={Enum.with_index(@rows, 1)}>
-        <:col :let={{{product, _sold}, rank}} label="Product">
+        <:col :let={{{product, _sold}, rank}} label={gettext("Product")}>
           <span class="mr-2 inline-block w-5 font-semibold text-gray-500">{rank}.</span>
           <.link
             href={~p"/products/#{product}"}
@@ -102,13 +106,25 @@ defmodule ClothingStoreWeb.SalesComponents do
             {product.title}
           </.link>
         </:col>
-        <:col :let={{{product, _sold}, _rank}} label="Price" class="text-right whitespace-nowrap">
+        <:col
+          :let={{{product, _sold}, _rank}}
+          label={gettext("Price")}
+          class="text-right whitespace-nowrap"
+        >
           {format_price(product.price)}
         </:col>
-        <:col :let={{{_product, sold}, _rank}} label="Sold" class="text-right whitespace-nowrap">
+        <:col
+          :let={{{_product, sold}, _rank}}
+          label={gettext("Sold")}
+          class="text-right whitespace-nowrap"
+        >
           {sold}
         </:col>
-        <:col :let={{{product, _sold}, _rank}} label="In stock" class="text-right whitespace-nowrap">
+        <:col
+          :let={{{product, _sold}, _rank}}
+          label={gettext("In stock")}
+          class="text-right whitespace-nowrap"
+        >
           <.stock_badge stock={product.stock} />
         </:col>
         <:empty>

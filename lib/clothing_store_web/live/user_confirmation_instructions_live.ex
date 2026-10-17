@@ -7,8 +7,8 @@ defmodule ClothingStoreWeb.UserConfirmationInstructionsLive do
     ~H"""
     <div class="mx-auto max-w-md pt-4 sm:pt-8">
       <.header class="justify-center text-center">
-        No confirmation instructions received?
-        <:subtitle>We'll send a new confirmation link to your inbox.</:subtitle>
+        {gettext("No confirmation instructions received?")}
+        <:subtitle>{gettext("We'll send a new confirmation link to your inbox.")}</:subtitle>
       </.header>
 
       <div class="card p-6 sm:p-8">
@@ -16,13 +16,13 @@ defmodule ClothingStoreWeb.UserConfirmationInstructionsLive do
           <.input
             field={@form[:email]}
             type="email"
-            label="Email"
+            label={gettext("Email")}
             autocomplete="email"
             required
           />
           <:actions>
-            <.button phx-disable-with="Sending..." icon="hero-envelope" class="w-full">
-              Resend confirmation instructions
+            <.button phx-disable-with={gettext("Sending...")} icon="hero-envelope" class="w-full">
+              {gettext("Resend confirmation instructions")}
             </.button>
           </:actions>
         </.simple_form>
@@ -32,14 +32,15 @@ defmodule ClothingStoreWeb.UserConfirmationInstructionsLive do
         <.link
           href={~p"/users/log_in"}
           class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
-        >Back to log in</.link>
+        >{gettext("Back to log in")}</.link>
       </p>
     </div>
     """
   end
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, form: to_form(%{}, as: "user"), page_title: "Resend confirmation")}
+    {:ok,
+     assign(socket, form: to_form(%{}, as: "user"), page_title: gettext("Resend confirmation"))}
   end
 
   def handle_event("send_instructions", %{"user" => %{"email" => email}}, socket) do
@@ -51,7 +52,9 @@ defmodule ClothingStoreWeb.UserConfirmationInstructionsLive do
     end
 
     info =
-      "If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly."
+      gettext(
+        "If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly."
+      )
 
     {:noreply,
      socket

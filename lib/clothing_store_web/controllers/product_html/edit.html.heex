@@ -1,8 +1,8 @@
 <div class="mx-auto max-w-3xl">
   <.back navigate={~p"/products/#{@product}"}>{@product.title}</.back>
   <.header>
-    Edit Product
-    <:subtitle>Changes are shown to every visitor straight away.</:subtitle>
+    {gettext("Edit Product")}
+    <:subtitle>{gettext("Changes are shown to every visitor straight away.")}</:subtitle>
   </.header>
 
   <.product_form

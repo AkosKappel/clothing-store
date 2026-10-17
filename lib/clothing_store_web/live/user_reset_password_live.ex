@@ -9,8 +9,8 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
     ~H"""
     <div class="mx-auto max-w-md pt-4 sm:pt-8">
       <.header class="justify-center text-center">
-        Reset Password
-        <:subtitle>Choose a new password of at least 12 characters.</:subtitle>
+        {gettext("Reset Password")}
+        <:subtitle>{gettext("Choose a new password of at least 12 characters.")}</:subtitle>
       </.header>
 
       <div class="card p-6 sm:p-8">
@@ -23,14 +23,14 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
           <.input
             field={@form[:password]}
             type="password"
-            label="New password"
+            label={gettext("New password")}
             autocomplete="new-password"
             required
           />
           <.input
             field={@form[:password_confirmation]}
             type="password"
-            label="Confirm new password"
+            label={gettext("Confirm new password")}
             autocomplete="new-password"
             required
           />
@@ -45,8 +45,8 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
             }
           />
           <:actions>
-            <.button phx-disable-with="Resetting..." icon="hero-key" class="w-full">
-              Reset Password
+            <.button phx-disable-with={gettext("Resetting...")} icon="hero-key" class="w-full">
+              {gettext("Reset Password")}
             </.button>
           </:actions>
         </.simple_form>
@@ -56,7 +56,7 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
         <.link
           href={~p"/users/log_in"}
           class="font-semibold text-gray-800 underline decoration-red-600 underline-offset-4 hover:text-red-700"
-        >Back to log in</.link>
+        >{gettext("Back to log in")}</.link>
       </p>
     </div>
     """
@@ -74,7 +74,7 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
           %{}
       end
 
-    {:ok, socket |> assign_form(form_source) |> assign(:page_title, "Reset password"),
+    {:ok, socket |> assign_form(form_source) |> assign(:page_title, gettext("Reset password")),
      temporary_assigns: [form: nil]}
   end
 
@@ -85,7 +85,7 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
       {:ok, _} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Password reset successfully.")
+         |> put_flash(:info, gettext("Password reset successfully."))
          |> redirect(to: ~p"/users/log_in")}
 
       {:error, changeset} ->
@@ -103,7 +103,7 @@ defmodule ClothingStoreWeb.UserResetPasswordLive do
       assign(socket, user: user, token: token)
     else
       socket
-      |> put_flash(:error, "Reset password link is invalid or it has expired.")
+      |> put_flash(:error, gettext("Reset password link is invalid or it has expired."))
       |> redirect(to: ~p"/")
     end
   end

@@ -1,6 +1,8 @@
 defmodule ClothingStoreWeb.Helpers do
   @moduledoc "Formatting helpers shared by templates: prices, dates and password rules."
 
+  use Gettext, backend: ClothingStoreWeb.Gettext
+
   alias ClothingStore.Users.User
 
   def format_price(price) when is_nil(price), do: "0,00 €"
@@ -11,6 +13,54 @@ defmodule ClothingStoreWeb.Helpers do
     |> Decimal.to_string()
     |> String.replace(".", ",")
     |> Kernel.<>(" €")
+  end
+
+  @doc "`Calendar.strftime/3` with the month names in the current language."
+  def strftime(date, format) do
+    Calendar.strftime(date, format,
+      month_names: &month_name/1,
+      abbreviated_month_names: &abbreviated_month_name/1
+    )
+  end
+
+  defp month_name(month) do
+    Enum.at(
+      [
+        gettext("January"),
+        gettext("February"),
+        gettext("March"),
+        gettext("April"),
+        gettext("May"),
+        gettext("June"),
+        gettext("July"),
+        gettext("August"),
+        gettext("September"),
+        gettext("October"),
+        gettext("November"),
+        gettext("December")
+      ],
+      month - 1
+    )
+  end
+
+  defp abbreviated_month_name(month) do
+    Enum.at(
+      [
+        pgettext("month", "Jan"),
+        pgettext("month", "Feb"),
+        pgettext("month", "Mar"),
+        pgettext("month", "Apr"),
+        pgettext("month", "May"),
+        pgettext("month", "Jun"),
+        pgettext("month", "Jul"),
+        pgettext("month", "Aug"),
+        pgettext("month", "Sep"),
+        pgettext("month", "Oct"),
+        pgettext("month", "Nov"),
+        pgettext("month", "Dec")
+      ],
+      month - 1
+    )
   end
 
   def format_date(nil), do: "-"
@@ -31,12 +81,11 @@ defmodule ClothingStoreWeb.Helpers do
     seconds = DateTime.diff(now, datetime)
 
     cond do
-      seconds < 60 -> "just now"
-      seconds < 3600 -> "#{div(seconds, 60)} min ago"
-      seconds < 2 * 3600 -> "1 hour ago"
-      seconds < 86_400 -> "#{div(seconds, 3600)} hours ago"
-      seconds < 2 * 86_400 -> "yesterday"
-      seconds < 7 * 86_400 -> "#{div(seconds, 86_400)} days ago"
+      seconds < 60 -> gettext("just now")
+      seconds < 3600 -> gettext("%{count} min ago", count: div(seconds, 60))
+      seconds < 86_400 -> ngettext("1 hour ago", "%{count} hours ago", div(seconds, 3600))
+      seconds < 2 * 86_400 -> gettext("yesterday")
+      seconds < 7 * 86_400 -> ngettext("1 day ago", "%{count} days ago", div(seconds, 86_400))
       true -> datetime |> DateTime.to_date() |> Date.to_iso8601()
     end
   end
@@ -47,8 +96,9 @@ defmodule ClothingStoreWeb.Helpers do
     min_length = User.password_min_length()
 
     [
-      {"At least #{min_length} characters", String.length(password) >= min_length},
-      {"Both passwords match", password != "" and password == confirmation}
+      {gettext("At least %{count} characters", count: min_length),
+       String.length(password) >= min_length},
+      {gettext("Both passwords match"), password != "" and password == confirmation}
     ]
   end
 

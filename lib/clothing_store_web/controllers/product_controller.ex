@@ -14,7 +14,7 @@ defmodule ClothingStoreWeb.ProductController do
     tags = Products.list_tags()
 
     render(conn, :index,
-      page_title: "Inventory",
+      page_title: gettext("Inventory"),
       products: products,
       filters: filters,
       categories: categories,
@@ -53,11 +53,11 @@ defmodule ClothingStoreWeb.ProductController do
     case Products.create_product(product_params) do
       {:ok, product} ->
         conn
-        |> put_flash(:info, "Product created successfully.")
+        |> put_flash(:info, gettext("Product created successfully."))
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, page_title: "New product", changeset: changeset)
+        render(conn, :new, page_title: gettext("New product"), changeset: changeset)
     end
   end
 
@@ -89,11 +89,15 @@ defmodule ClothingStoreWeb.ProductController do
     case Products.update_product(product, product_params) do
       {:ok, product} ->
         conn
-        |> put_flash(:info, "Product updated successfully.")
+        |> put_flash(:info, gettext("Product updated successfully."))
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, page_title: "Edit product", product: product, changeset: changeset)
+        render(conn, :edit,
+          page_title: gettext("Edit product"),
+          product: product,
+          changeset: changeset
+        )
     end
   end
 
@@ -101,17 +105,17 @@ defmodule ClothingStoreWeb.ProductController do
     case Products.restore_product(id) do
       {:ok, product} ->
         conn
-        |> put_flash(:info, "#{product.title} is back.")
+        |> put_flash(:info, gettext("%{title} is back.", title: product.title))
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, :catalogue_full} ->
         conn
-        |> put_flash(:error, "The catalogue is full, so the product can't come back.")
+        |> put_flash(:error, gettext("The catalogue is full, so the product can't come back."))
         |> redirect(to: ~p"/products")
 
       {:error, :not_found} ->
         conn
-        |> put_flash(:error, "That product can't be restored any more.")
+        |> put_flash(:error, gettext("That product can't be restored any more."))
         |> redirect(to: ~p"/products")
     end
   end
@@ -122,19 +126,26 @@ defmodule ClothingStoreWeb.ProductController do
     case Products.revert_to_version(product, version_id) do
       {:ok, product} ->
         conn
-        |> put_flash(:info, "Restored the earlier details of #{product.title}.")
+        |> put_flash(
+          :info,
+          gettext("Restored the earlier details of %{title}.", title: product.title)
+        )
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, _reason} ->
         conn
-        |> put_flash(:error, "That version can't be restored.")
+        |> put_flash(:error, gettext("That version can't be restored."))
         |> redirect(to: ~p"/products/#{product}")
     end
   end
 
   def label(conn, %{"id" => id}) do
     product = Products.get_product!(id)
-    render(conn, :label, page_title: "Label: #{product.title}", product: product)
+
+    render(conn, :label,
+      page_title: gettext("Label: %{title}", title: product.title),
+      product: product
+    )
   end
 
   def restock(conn, %{"id" => id}) do
@@ -143,7 +154,13 @@ defmodule ClothingStoreWeb.ProductController do
     case Products.restock_product(product) do
       {:ok, product} ->
         conn
-        |> put_flash(:info, "Restocked: #{product.title} now has #{product.stock} in stock.")
+        |> put_flash(
+          :info,
+          gettext("Restocked: %{title} now has %{stock} in stock.",
+            title: product.title,
+            stock: product.stock
+          )
+        )
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, :not_found} ->
@@ -156,7 +173,7 @@ defmodule ClothingStoreWeb.ProductController do
     {:ok, _product} = Products.delete_product(product)
 
     conn
-    |> put_flash(:info, "#{product.title} was deleted.")
+    |> put_flash(:info, gettext("%{title} was deleted.", title: product.title))
     |> put_flash(:undo, to_string(product.id))
     |> redirect(to: ~p"/products")
   end

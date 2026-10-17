@@ -1,12 +1,12 @@
 <.header>
-  Product dashboard
+  {gettext("Product dashboard")}
   <:subtitle>
     <span class="inline-flex items-center gap-2">
       <span class="relative flex size-2.5" aria-hidden="true">
         <span class="absolute inline-flex size-full rounded-full bg-emerald-400 opacity-75 motion-safe:animate-ping"></span>
         <span class="relative inline-flex size-2.5 rounded-full bg-emerald-500"></span>
       </span>
-      Live: changes made by other visitors appear here instantly.
+      {gettext("Live: changes made by other visitors appear here instantly.")}
     </span>
     <span id="online-count" class="ml-2 inline-flex items-center gap-1 text-gray-500">
       <.icon name="hero-users-mini" class="size-4" />
@@ -15,7 +15,7 @@
   </:subtitle>
   <:actions>
     <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
-      New product
+      {gettext("New product")}
       <kbd class="ml-1 hidden rounded-sm bg-black/20 px-1.5 font-sans text-xs sm:inline">N</kbd>
     </.button>
   </:actions>
@@ -27,10 +27,10 @@
       id="recent-activity-title"
       class="flex items-center gap-2 text-sm font-semibold text-gray-900"
     >
-      <.icon name="hero-bolt-mini" class="size-4 text-red-600" /> Recent activity
+      <.icon name="hero-bolt-mini" class="size-4 text-red-600" /> {gettext("Recent activity")}
     </h2>
     <.link navigate={~p"/activity"} class="text-sm font-semibold text-red-700 hover:underline">
-      See all
+      {gettext("See all")}
     </.link>
   </div>
   <.activity_list id="recent-activity" events={@streams.activity} />
@@ -38,12 +38,12 @@
 
 <div class="mb-4 flex items-center justify-between gap-3">
   <p class="text-sm text-gray-600">{ngettext("1 product", "%{count} products", @total)}</p>
-  <div class="inline-flex rounded-md shadow-xs" role="group" aria-label="Layout">
+  <div class="inline-flex rounded-md shadow-xs" role="group" aria-label={gettext("Layout")}>
     <.link
       :for={
         {view, label, icon} <- [
-          {"grid", "Grid", "hero-squares-2x2-mini"},
-          {"list", "List", "hero-list-bullet-mini"}
+          {"grid", gettext("Grid"), "hero-squares-2x2-mini"},
+          {"list", gettext("List"), "hero-list-bullet-mini"}
         ]
       }
       patch={if view == "grid", do: ~p"/", else: ~p"/?view=list"}
@@ -62,10 +62,12 @@
   </div>
 </div>
 
-<.empty_state :if={@total == 0} image={~p"/images/logo.svg"} title="No products yet">
-  Add the first product, or wait for the nightly reset to bring back the demo catalogue.
+<.empty_state :if={@total == 0} image={~p"/images/logo.svg"} title={gettext("No products yet")}>
+  {gettext(
+    "Add the first product, or wait for the nightly reset to bring back the demo catalogue."
+  )}
   <:actions>
-    <.button href={~p"/products/new"} icon="hero-plus">New product</.button>
+    <.button href={~p"/products/new"} icon="hero-plus">{gettext("New product")}</.button>
   </:actions>
 </.empty_state>
 
@@ -135,7 +137,7 @@
 
 <div :if={!@end_of_list} class="mt-8 flex justify-center">
   <.button type="button" variant="secondary" phx-click="load_more" icon="hero-arrow-down">
-    Load more
+    {gettext("Load more")}
   </.button>
 </div>
 

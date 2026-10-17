@@ -26,7 +26,12 @@ defmodule ClothingStoreWeb.ProductLive.Index do
 
     {:ok,
      socket
-     |> assign(page_title: "Dashboard", view: "grid", highlighted: %{}, announcement: nil)
+     |> assign(
+       page_title: gettext("Dashboard"),
+       view: "grid",
+       highlighted: %{},
+       announcement: nil
+     )
      |> assign(:online, Presence.online_count())
      |> stream(:activity, ActivityFeed.recent(@recent_activity), limit: @recent_activity)
      |> stream_configure(:products, dom_id: &"product-#{&1.id}")
@@ -64,13 +69,16 @@ defmodule ClothingStoreWeb.ProductLive.Index do
       |> update(:loaded, &(&1 + 1))
       |> update(:ids, &MapSet.put(&1, product.id))
 
-    {:noreply, highlight(socket, product, "New product: #{product.title}", at: 0)}
+    {:noreply,
+     highlight(socket, product, gettext("New product: %{title}", title: product.title), at: 0)}
   end
 
   def handle_info({:product_updated, product}, socket) do
     # products further down appear with their new data once they're scrolled to
     if MapSet.member?(socket.assigns.ids, product.id),
-      do: {:noreply, highlight(socket, product, "#{product.title} was updated", [])},
+      do:
+        {:noreply,
+         highlight(socket, product, gettext("%{title} was updated", title: product.title), [])},
       else: {:noreply, socket}
   end
 
@@ -84,7 +92,7 @@ defmodule ClothingStoreWeb.ProductLive.Index do
      |> update(:loaded, &if(loaded?, do: &1 - 1, else: &1))
      |> update(:ids, &MapSet.delete(&1, product.id))
      |> update(:highlighted, &Map.delete(&1, product.id))
-     |> assign(:announcement, "#{product.title} was deleted")}
+     |> assign(:announcement, gettext("%{title} was deleted", title: product.title))}
   end
 
   def handle_info({:unhighlight, id}, socket) do
