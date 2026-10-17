@@ -2,6 +2,8 @@ defmodule ClothingStore.Products.Product do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias ClothingStore.Products.Variant
+
   schema "products" do
     field :description, :string
     field :title, :string
@@ -15,7 +17,7 @@ defmodule ClothingStore.Products.Product do
     field :discount_starts_on, :date
     field :discount_ends_on, :date
 
-    has_many :variants, ClothingStore.Products.Variant,
+    has_many :variants, Variant,
       on_replace: :delete,
       preload_order: [asc: :id]
 
@@ -70,7 +72,7 @@ defmodule ClothingStore.Products.Product do
     |> validate_number(:stock, greater_than_or_equal_to: 0, less_than_or_equal_to: @max_amount)
     |> validate_discount()
     |> cast_assoc(:variants,
-      with: &ClothingStore.Products.Variant.changeset/2,
+      with: &Variant.changeset/2,
       sort_param: :variants_sort,
       drop_param: :variants_drop
     )
@@ -102,16 +104,18 @@ defmodule ClothingStore.Products.Product do
       |> validate_required([:discount_starts_on, :discount_ends_on],
         message: "is needed for a discount"
       )
-      |> validate_change(:discount_ends_on, fn :discount_ends_on, ends_on ->
-        starts_on = get_field(changeset, :discount_starts_on)
-
-        if starts_on && Date.before?(ends_on, starts_on),
-          do: [discount_ends_on: "can't be before the start"],
-          else: []
-      end)
+      |> validate_change(:discount_ends_on, &validate_ends_on(&1, &2, changeset))
     else
       changeset
     end
+  end
+
+  defp validate_ends_on(:discount_ends_on, ends_on, changeset) do
+    starts_on = get_field(changeset, :discount_starts_on)
+
+    if starts_on && Date.before?(ends_on, starts_on),
+      do: [discount_ends_on: "can't be before the start"],
+      else: []
   end
 
   @doc "Whether the product's discount runs on `date`."
