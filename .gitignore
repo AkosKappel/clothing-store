@@ -50,3 +50,6 @@ docker/tailscale/state/
 
 # maintenance mode flag (see docker/nginx.conf)
 docker/maintenance/on
+
+# Dialyzer PLTs (mix dialyzer)
+/priv/plts/
