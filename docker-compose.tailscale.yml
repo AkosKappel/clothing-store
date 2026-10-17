@@ -3,7 +3,7 @@
 # Enabled on the server through COMPOSE_FILE in .env; see .env.example.
 services:
   tailscale:
-    image: tailscale/tailscale:v1.102.5
+    image: tailscale/tailscale:v1.104.1
     container_name: ${CONTAINER_PREFIX:-tagline}-tailscale
     restart: unless-stopped
     logging:

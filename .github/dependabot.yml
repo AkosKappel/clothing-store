@@ -1,0 +1,18 @@
+# Monthly update pull requests; images and the BEAM versions also live in mise.toml and the
+# CI workflow, so keep those in step when merging an Elixir/Erlang image bump.
+version: 2
+updates:
+  - package-ecosystem: mix
+    directory: /
+    schedule: {interval: monthly}
+    groups:
+      mix: {patterns: ["*"], update-types: [minor, patch]}
+  - package-ecosystem: docker
+    directory: /
+    schedule: {interval: monthly}
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule: {interval: monthly}
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: {interval: monthly}
