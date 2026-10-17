@@ -3,8 +3,8 @@ defmodule ClothingStore.Demo.ActivityTest do
 
   import ClothingStore.ProductsFixtures
 
-  alias ClothingStore.{Products, Transactions}
   alias ClothingStore.Demo.Activity
+  alias ClothingStore.{Products, Transactions}
 
   describe "Transactions.record_sale/1" do
     test "records the sale at current prices, takes the stock and broadcasts" do
