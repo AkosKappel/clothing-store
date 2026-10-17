@@ -208,6 +208,13 @@ defmodule ClothingStoreWeb.Layouts do
     """
   end
 
+  @doc "The page's `meta_description` assign, or a summary of the demo for link previews."
+  def meta_description(assigns) do
+    assigns[:meta_description] ||
+      "A Phoenix LiveView manager dashboard for a clothing store: inventory, sales " <>
+        "statistics and live updates. A portfolio demo with sample data."
+  end
+
   defp active?("/", current_path), do: current_path == "/"
   defp active?(href, current_path), do: String.starts_with?(current_path, href)
 end
