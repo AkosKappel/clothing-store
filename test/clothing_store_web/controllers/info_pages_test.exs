@@ -23,4 +23,11 @@ defmodule ClothingStoreWeb.InfoPagesTest do
     assert html =~ ~s(href="/privacy")
     assert html =~ ~s(href="/terms")
   end
+
+  test "pages carry a description and a link preview image", %{conn: conn} do
+    html = conn |> get(~p"/about") |> html_response(200)
+
+    assert html =~ ~r/<meta name="description" content="[^"]+"/
+    assert html =~ ~r{<meta property="og:image" content="http[^"]+/images/og-image.jpg"}
+  end
 end
