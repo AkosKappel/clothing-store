@@ -16,7 +16,7 @@
   <:actions>
     <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
       New product
-      <kbd class="ml-1 hidden rounded-sm bg-red-700 px-1.5 font-sans text-xs sm:inline">N</kbd>
+      <kbd class="ml-1 hidden rounded-sm bg-black/20 px-1.5 font-sans text-xs sm:inline">N</kbd>
     </.button>
   </:actions>
 </.header>
@@ -52,8 +52,8 @@
       class={[
         "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium ring-1 ring-gray-300 ring-inset first:rounded-l-md last:-ml-px last:rounded-r-md focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-red-600",
         if(@view == view,
-          do: "bg-gray-800 text-white ring-gray-800",
-          else: "bg-white text-gray-700 hover:bg-gray-50"
+          do: "bg-ink-800 text-white ring-ink-800",
+          else: "bg-surface text-gray-700 hover:bg-gray-50"
         )
       ]}
     >

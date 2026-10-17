@@ -7,7 +7,7 @@
   <.button type="button" icon="hero-printer" data-print>Print label</.button>
 </div>
 
-<article class="mx-auto mt-4 flex w-full max-w-sm flex-col items-center gap-4 rounded-lg border-2 border-dashed border-gray-400 bg-white p-6 text-center print:border-solid">
+<article class="mx-auto mt-4 flex w-full max-w-sm flex-col items-center gap-4 rounded-lg border-2 border-dashed border-gray-400 bg-surface p-6 text-center print:border-solid">
   <img src={~p"/images/logo.svg"} width="40" height="40" alt="" />
   <h2 class="font-display text-2xl font-bold text-gray-900">{@product.title}</h2>
   <p class="text-3xl font-extrabold text-gray-900 tabular-nums">{format_price(@product.price)}</p>

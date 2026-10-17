@@ -42,4 +42,21 @@ defmodule ClothingStoreWeb.InfoPagesTest do
     assert build_conn() |> get("/sw.js") |> response(200) =~ "offline.html"
     assert build_conn() |> get("/offline.html") |> response(200) =~ "You're offline"
   end
+
+  test "the theme cookie picks the theme on the server, so pages never flash", %{conn: conn} do
+    assert conn |> get(~p"/about") |> html_response(200) =~
+             ~r/<html lang="en" class="\[scrollbar-gutter:stable\]\s*">/
+
+    for theme <- ~w(dark light) do
+      html =
+        build_conn() |> put_req_cookie("theme", theme) |> get(~p"/about") |> html_response(200)
+
+      assert html =~ ~s(class="[scrollbar-gutter:stable] #{theme}")
+    end
+
+    html =
+      build_conn() |> put_req_cookie("theme", "<script>") |> get(~p"/about") |> html_response(200)
+
+    refute html =~ "<script>\""
+  end
 end

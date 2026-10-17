@@ -138,6 +138,9 @@ for {slug, title, category, price, stock, tags, description} <- catalogue do
     )
 end
 
+# the feed starts empty; the catalogue isn't news (the versions stay, for the price history)
+Repo.delete_all(ClothingStore.ActivityFeed.Event)
+
 # A year of sales. A fixed random seed makes every reset produce the same pattern;
 # the dates count back from now, so this month and last month always have sales.
 :rand.seed(:exsss, {2026, 10, 6})

@@ -93,7 +93,7 @@ defmodule ClothingStoreWeb.CoreComponents do
         >
           <button
             type="submit"
-            class="inline-flex items-center gap-1 rounded-md bg-white/70 px-2.5 py-1 text-xs font-semibold ring-1 ring-current/20 ring-inset hover:bg-white"
+            class="inline-flex items-center gap-1 rounded-md bg-surface/70 px-2.5 py-1 text-xs font-semibold ring-1 ring-current/20 ring-inset hover:bg-surface"
           >
             <.icon name="hero-arrow-uturn-left-mini" class="size-4" /> Undo
           </button>
@@ -234,9 +234,14 @@ defmodule ClothingStoreWeb.CoreComponents do
           "md" -> "px-4 py-2 text-sm"
         end,
         case assigns.variant do
-          "primary" -> "bg-red-600 text-white hover:bg-red-700"
-          "secondary" -> "bg-white text-gray-800 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
-          "danger" -> "bg-white text-red-700 ring-1 ring-red-300 ring-inset hover:bg-red-50"
+          "primary" ->
+            "bg-red-600 text-white hover:bg-red-700 dark:hover:bg-red-500"
+
+          "secondary" ->
+            "bg-surface text-gray-800 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+
+          "danger" ->
+            "bg-surface text-red-700 ring-1 ring-red-300 ring-inset hover:bg-red-50"
         end,
         assigns.class
       ])
@@ -362,7 +367,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class={[input_classes(@errors), "bg-white"]}
+        class={[input_classes(@errors), "bg-surface"]}
         multiple={@multiple}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={describedby(@id, @hint, @errors)}
@@ -404,7 +409,7 @@ defmodule ClothingStoreWeb.CoreComponents do
     <div>
       <.label :if={@label} for={@id}>{@label}</.label>
       <div class={[
-        "mt-1.5 flex rounded-md bg-white shadow-xs ring-1 focus-within:ring-2",
+        "mt-1.5 flex rounded-md bg-surface shadow-xs ring-1 focus-within:ring-2",
         if(@errors == [],
           do: "ring-gray-300 focus-within:ring-red-600",
           else: "ring-rose-400 focus-within:ring-rose-500"
@@ -683,7 +688,7 @@ defmodule ClothingStoreWeb.CoreComponents do
             </th>
           </tr>
         </thead>
-        <tbody id={@id} class="divide-y divide-gray-200 bg-white">
+        <tbody id={@id} class="divide-y divide-gray-200 bg-surface">
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="hover:bg-gray-50">
             <td
               :for={col <- @col}
@@ -917,7 +922,7 @@ defmodule ClothingStoreWeb.CoreComponents do
       aria-describedby={"#{@id}-description"}
       closedby="any"
       class={[
-        "m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-white p-6 text-left shadow-xl backdrop:bg-gray-900/50",
+        "m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-surface p-6 text-left shadow-xl backdrop:bg-gray-900/50",
         "motion-safe:transition-[opacity,scale] motion-safe:duration-150 motion-safe:starting:open:scale-95 motion-safe:starting:open:opacity-0"
       ]}
     >

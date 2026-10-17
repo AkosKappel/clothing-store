@@ -15,7 +15,7 @@
     </.button>
     <.button href={~p"/products/new"} icon="hero-plus" data-shortcut="n" aria-keyshortcuts="n">
       New product
-      <kbd class="ml-1 hidden rounded-sm bg-red-700 px-1.5 font-sans text-xs sm:inline">N</kbd>
+      <kbd class="ml-1 hidden rounded-sm bg-black/20 px-1.5 font-sans text-xs sm:inline">N</kbd>
     </.button>
   </:actions>
 </.header>
@@ -99,7 +99,7 @@
             class="peer sr-only"
             checked={tag in @filters["tags"]}
           />
-          <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition-colors ring-inset peer-checked:bg-red-600 peer-checked:text-white peer-checked:ring-red-600 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-red-600 hover:bg-gray-50 peer-checked:hover:bg-red-700">
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition-colors ring-inset peer-checked:bg-red-600 peer-checked:text-white peer-checked:ring-red-600 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-red-600 hover:bg-gray-50 peer-checked:hover:bg-red-700 dark:peer-checked:hover:bg-red-500">
             {tag}
           </span>
         </label>

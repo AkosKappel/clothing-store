@@ -1,8 +1,8 @@
 <% current_path = ClothingStoreWeb.Helpers.current_path(assigns) %>
-<header class="relative bg-gray-800 print:hidden text-white [view-transition-name:site-header]">
+<header class="relative bg-ink-800 print:hidden text-white [view-transition-name:site-header]">
   <a
     href="#main"
-    class="sr-only z-50 rounded-md bg-white px-4 py-2 font-semibold text-gray-900 shadow-lg focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus-visible:outline-2 focus-visible:outline-red-600"
+    class="sr-only z-50 rounded-md bg-surface px-4 py-2 font-semibold text-ink-900 shadow-lg focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus-visible:outline-2 focus-visible:outline-red-600"
   >
     Skip to content
   </a>
@@ -23,7 +23,7 @@
     <button
       id="menu-toggle"
       type="button"
-      class="rounded-md p-2 text-gray-200 hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
+      class="rounded-md p-2 text-ink-200 hover:bg-ink-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white lg:hidden"
       aria-controls="menu"
       aria-expanded="false"
       aria-label="Toggle menu"
@@ -34,7 +34,7 @@
 
     <ul
       id="menu"
-      class="absolute top-full left-0 z-40 hidden w-full space-y-1 bg-gray-800 px-4 pb-4 shadow-lg max-lg:motion-safe:transition-[opacity,translate] max-lg:motion-safe:starting:-translate-y-2 max-lg:motion-safe:starting:opacity-0 lg:static lg:flex lg:w-auto lg:items-center lg:gap-1 lg:space-y-0 lg:p-0 lg:shadow-none"
+      class="absolute top-full left-0 z-40 hidden w-full space-y-1 bg-ink-800 px-4 pb-4 shadow-lg max-lg:motion-safe:transition-[opacity,translate] max-lg:motion-safe:starting:-translate-y-2 max-lg:motion-safe:starting:opacity-0 lg:static lg:flex lg:w-auto lg:items-center lg:gap-1 lg:space-y-0 lg:p-0 lg:shadow-none"
     >
       <%= if assigns[:current_user] do %>
         <.nav_link href={~p"/"} current_path={current_path} icon="hero-squares-2x2">Dashboard</.nav_link>
@@ -45,10 +45,24 @@
       <.nav_link href={~p"/about"} current_path={current_path} icon="hero-information-circle">About</.nav_link>
       <li>
         <button
+          id="theme-toggle"
+          type="button"
+          class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-ink-200 hover:bg-ink-700 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          aria-label="Theme: follows the system"
+          title="Theme: follows the system"
+        >
+          <.icon name="hero-computer-desktop" class="size-5 opacity-80" data-theme-icon="system" />
+          <.icon name="hero-sun" class="hidden size-5 opacity-80" data-theme-icon="light" />
+          <.icon name="hero-moon" class="hidden size-5 opacity-80" data-theme-icon="dark" />
+          <span class="lg:sr-only">Theme</span>
+        </button>
+      </li>
+      <li>
+        <button
           type="button"
           commandfor="welcome"
           command="show-modal"
-          class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-gray-200 hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-ink-200 hover:bg-ink-700 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           title="What is this demo?"
         >
           <.icon name="hero-question-mark-circle" class="size-5 opacity-80" />
@@ -59,7 +73,7 @@
         <.link
           href={~p"/users/log_out"}
           method="delete"
-          class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold whitespace-nowrap text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+          class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold whitespace-nowrap text-ink-200 ring-1 ring-ink-600 ring-inset hover:bg-ink-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
         >
           <.icon name="hero-arrow-right-start-on-rectangle-mini" /> Log out
         </.link>
@@ -70,7 +84,7 @@
       >
         <.link
           href={~p"/users/log_in"}
-          class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-white"
+          class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700 dark:hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-white"
         >
           Log in
         </.link>

@@ -30,8 +30,8 @@ defmodule ClothingStoreWeb.Layouts do
           "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
           if(@active,
-            do: "bg-gray-900 text-red-400",
-            else: "text-gray-200 hover:bg-gray-700 hover:text-white"
+            do: "bg-ink-900 text-red-400",
+            else: "text-ink-200 hover:bg-ink-700 hover:text-white"
           )
         ]}
       >
@@ -61,18 +61,18 @@ defmodule ClothingStoreWeb.Layouts do
       aria-labelledby="welcome-title"
       closedby="any"
       class={[
-        "m-auto w-[calc(100%-2rem)] max-w-lg rounded-xl bg-white p-0 text-left shadow-2xl backdrop:bg-gray-900/60",
+        "m-auto w-[calc(100%-2rem)] max-w-lg rounded-xl bg-surface p-0 text-left shadow-2xl backdrop:bg-gray-900/60",
         "motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:starting:open:scale-95 motion-safe:starting:open:opacity-0"
       ]}
     >
-      <div class="flex items-center justify-between gap-4 bg-gray-800 px-6 py-4">
+      <div class="flex items-center justify-between gap-4 bg-ink-800 px-6 py-4">
         <div class="flex items-center gap-2">
           <img src={~p"/images/logo.svg"} width="32" height="32" alt="" />
           <span class="font-display text-lg font-bold text-red-400 italic">Modern Fashion Store</span>
         </div>
         <form method="dialog">
           <button
-            class="rounded-md p-1 text-gray-300 hover:bg-gray-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+            class="rounded-md p-1 text-ink-300 hover:bg-ink-700 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
             aria-label="Close"
             title="Close"
           >
@@ -150,7 +150,7 @@ defmodule ClothingStoreWeb.Layouts do
       id="command-palette"
       aria-label="Jump to a page"
       closedby="any"
-      class="mx-auto mt-[12vh] w-[calc(100%-2rem)] max-w-lg rounded-xl bg-white p-0 shadow-2xl backdrop:bg-gray-900/50"
+      class="mx-auto mt-[12vh] w-[calc(100%-2rem)] max-w-lg rounded-xl bg-surface p-0 shadow-2xl backdrop:bg-gray-900/50"
     >
       <form action={~p"/products"} method="get" class="border-b border-gray-200">
         <label class="flex items-center gap-3 px-4">
@@ -214,7 +214,7 @@ defmodule ClothingStoreWeb.Layouts do
       )
 
     ~H"""
-    <footer class="mt-16 bg-gray-800 print:hidden text-sm text-gray-300">
+    <footer class="mt-16 bg-ink-800 print:hidden text-sm text-ink-300">
       <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
           <a href="/" class="flex items-center gap-2">
@@ -277,21 +277,29 @@ defmodule ClothingStoreWeb.Layouts do
           <ul class="mt-4 flex flex-wrap gap-2">
             <li
               :for={tech <- ["Elixir", "Phoenix LiveView", "PostgreSQL", "Tailwind CSS", "Docker"]}
-              class="rounded-full px-3 py-1 whitespace-nowrap text-xs font-medium text-gray-200 ring-1 ring-gray-600 ring-inset"
+              class="rounded-full px-3 py-1 whitespace-nowrap text-xs font-medium text-ink-200 ring-1 ring-ink-600 ring-inset"
             >
               {tech}
             </li>
           </ul>
         </div>
       </div>
-      <div class="border-t border-gray-700">
-        <p class="mx-auto max-w-7xl px-4 py-5 text-gray-400 sm:px-6 lg:px-8">
+      <div class="border-t border-ink-700">
+        <p class="mx-auto max-w-7xl px-4 py-5 text-ink-400 sm:px-6 lg:px-8">
           &copy; {Date.utc_today().year} {@author}. Product photos from Pexels and StockSnap.
         </p>
       </div>
     </footer>
     """
   end
+
+  @doc """
+  The `<html>` class for the `theme` cookie set by the theme toggle: `dark`,
+  `light`, or none to follow the system setting. Rendered by the server, so a
+  page never flashes in the wrong theme.
+  """
+  def theme_class(theme) when theme in ["dark", "light"], do: theme
+  def theme_class(_theme), do: nil
 
   @doc "The page's `meta_description` assign, or a summary of the demo for link previews."
   def meta_description(assigns) do

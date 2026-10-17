@@ -46,7 +46,7 @@ defmodule ClothingStoreWeb.ErrorHTML do
         <link rel="stylesheet" href={~p"/assets/css/app.css"} />
       </head>
       <body class="flex min-h-screen flex-col bg-gray-50 text-gray-900 antialiased">
-        <header class="bg-gray-800">
+        <header class="bg-ink-800">
           <div class="mx-auto flex max-w-7xl items-center px-4 py-3 sm:px-6 lg:px-8">
             <a href="/" class="flex items-center gap-2">
               <img src={~p"/images/logo.svg"} width="40" height="40" alt="" />
@@ -59,7 +59,9 @@ defmodule ClothingStoreWeb.ErrorHTML do
 
         <main class="flex flex-1 items-center justify-center px-4 py-16">
           <div class="max-w-lg text-center">
-            <p class="font-display text-6xl font-extrabold text-red-600">{@status}</p>
+            <p class="font-display text-6xl font-extrabold text-red-600 dark:text-red-400">
+              {@status}
+            </p>
             <h1 class="mt-4 font-display text-3xl font-bold text-gray-900">{@title}</h1>
             <p class="mt-3 text-gray-600">{@text}</p>
             <p :if={@reference} class="mt-4 text-sm text-gray-500">

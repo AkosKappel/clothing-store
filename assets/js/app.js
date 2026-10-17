@@ -43,6 +43,35 @@ document.addEventListener("click", event => {
   toggle.setAttribute("aria-expanded", open)
 })
 
+// Theme toggle: system -> light -> dark. The server renders the <html> class from
+// the cookie (Layouts.theme_class/1); this keeps it in step and updates the button.
+const themes = ["system", "light", "dark"]
+const themeLabels = {system: "follows the system", light: "light", dark: "dark"}
+const currentTheme = () =>
+  themes.find(theme => document.documentElement.classList.contains(theme)) || "system"
+
+const showTheme = theme => {
+  const toggle = document.getElementById("theme-toggle")
+  if (!toggle) return
+  toggle.setAttribute("aria-label", `Theme: ${themeLabels[theme]}`)
+  toggle.title = `Theme: ${themeLabels[theme]}`
+  toggle.querySelectorAll("[data-theme-icon]").forEach(icon => {
+    icon.classList.toggle("hidden", icon.dataset.themeIcon !== theme)
+  })
+}
+
+document.addEventListener("click", event => {
+  if (!event.target.closest("#theme-toggle")) return
+  const theme = themes[(themes.indexOf(currentTheme()) + 1) % themes.length]
+  document.documentElement.classList.remove("light", "dark")
+  if (theme !== "system") document.documentElement.classList.add(theme)
+  const secure = location.protocol === "https:" ? "; Secure" : ""
+  document.cookie = `theme=${theme}; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
+  showTheme(theme)
+})
+showTheme(currentTheme())
+window.addEventListener("phx:page-loading-stop", () => showTheme(currentTheme()))
+
 // Escape closes the open mobile menu and puts focus back on its button
 document.addEventListener("keydown", event => {
   const menu = document.getElementById("menu")
