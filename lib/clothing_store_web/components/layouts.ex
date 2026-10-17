@@ -61,7 +61,7 @@ defmodule ClothingStoreWeb.Layouts do
       aria-labelledby="welcome-title"
       closedby="any"
       class={[
-        "m-auto w-[calc(100%-2rem)] max-w-lg rounded-xl bg-surface p-0 text-left shadow-2xl backdrop:bg-gray-900/60",
+        "m-auto w-[calc(100%-2rem)] max-w-lg rounded-xl bg-surface p-0 text-left shadow-2xl backdrop:bg-black/60",
         "motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:starting:open:scale-95 motion-safe:starting:open:opacity-0"
       ]}
     >
@@ -156,7 +156,7 @@ defmodule ClothingStoreWeb.Layouts do
       id="command-palette"
       aria-label={gettext("Jump to a page")}
       closedby="any"
-      class="mx-auto mt-[12vh] w-[calc(100%-2rem)] max-w-lg rounded-xl bg-surface p-0 shadow-2xl backdrop:bg-gray-900/50"
+      class="mx-auto mt-[12vh] w-[calc(100%-2rem)] max-w-lg rounded-xl bg-surface p-0 shadow-2xl backdrop:bg-black/50"
     >
       <form action={~p"/products"} method="get" class="border-b border-gray-200">
         <label class="flex items-center gap-3 px-4">
