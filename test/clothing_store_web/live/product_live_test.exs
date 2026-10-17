@@ -32,4 +32,17 @@ defmodule ClothingStoreWeb.ProductLiveTest do
     refute has_element?(lv, "#product-#{product.id}")
     assert has_element?(lv, "#live-announcement", "Linen shirt was deleted")
   end
+
+  test "a demo reset reloads the products", %{conn: conn} do
+    product = product_fixture(%{title: "Linen shirt"})
+    {:ok, lv, _html} = live(conn, ~p"/")
+
+    {:ok, _} = ClothingStore.Products.delete_product(product)
+    # the delete broadcast already removed it; put it back to see the reload drop it
+    send(lv.pid, {:product_created, product})
+    assert has_element?(lv, "#product-#{product.id}")
+
+    send(lv.pid, :demo_reset)
+    refute has_element?(lv, "#product-#{product.id}")
+  end
 end
