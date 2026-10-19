@@ -44,6 +44,17 @@ defmodule ClothingStoreWeb.InfoPagesTest do
     assert build_conn() |> get("/offline.html") |> response(200) =~ "You're offline"
   end
 
+  # In production the layout links the digested manifest-<hash>.webmanifest, which
+  # Plug.Static's exact-name `only` list does not cover.
+  test "a digested manifest is served, as the production layout links it", %{conn: conn} do
+    static = Application.app_dir(:clothing_store, "priv/static")
+    digested = Path.join(static, "manifest-0123456789abcdef.webmanifest")
+    File.cp!(Path.join(static, "manifest.webmanifest"), digested)
+    on_exit(fn -> File.rm(digested) end)
+
+    assert conn |> get("/manifest-0123456789abcdef.webmanifest") |> response(200) =~ "standalone"
+  end
+
   test "the theme cookie picks the theme on the server, so pages never flash", %{conn: conn} do
     assert conn |> get(~p"/about") |> html_response(200) =~
              ~r/<html lang="en" class="\[scrollbar-gutter:stable\]\s*">/

@@ -26,8 +26,9 @@ defmodule ClothingStoreWeb.Endpoint do
     from: :clothing_store,
     gzip: not code_reloading?,
     only: ClothingStoreWeb.static_paths(),
-    # digested favicons (favicon-<hash>.svg) don't match the exact names in static_paths
-    only_matching: ~w(favicon)
+    # digested files the layout links (favicon-<hash>.svg, manifest-<hash>.webmanifest) don't
+    # match the exact names in static_paths
+    only_matching: ~w(favicon manifest)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
