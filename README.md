@@ -56,7 +56,11 @@ Run `mix precommit` before committing: it compiles with warnings as errors, remo
 docker compose up -d --build
 ```
 
-The app is then available at [`127.0.0.1:8083`](http://127.0.0.1:8083) (nginx in front of the app). On first start the app migrates the database and seeds it if it is empty.
+The app is then available at [`127.0.0.1:8081`](http://127.0.0.1:8081) (nginx in front of the app). On first start the app migrates the database and seeds it if it is empty.
+
+### Production
+
+The live demo does not run from a checkout: CI builds the release image on every push to `main`, scans it and publishes it as `ghcr.io/akoskappel/tagline`, and the server runs it from its own folder with a Tailscale sidecar. See [`deploy/`](deploy/README.md).
 
 ## Screenshots
 

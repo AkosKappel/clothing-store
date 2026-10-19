@@ -34,11 +34,13 @@ RUN mix release
 
 FROM ${RUNNER_IMAGE}
 
-# the commit the image was built from, set by bin/deploy; `docker image inspect` shows it
+# the commit the image was built from, set by CI; `docker image inspect` shows it
 ARG GIT_REVISION=unknown
 LABEL org.opencontainers.image.revision=${GIT_REVISION}
 
-RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 openssl libncurses6 libsctp1 locales ca-certificates curl \
+# upgrade: security fixes released after the base image, so the CI scan stays green
+RUN apt-get update && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends libstdc++6 openssl libncurses6 libsctp1 locales ca-certificates curl \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 

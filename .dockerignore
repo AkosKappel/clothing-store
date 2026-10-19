@@ -2,7 +2,7 @@
 .env
 .env.*
 !.env.example
-docker/tailscale/ts.env
+deploy
 .git
 _build
 deps

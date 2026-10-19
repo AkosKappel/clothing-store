@@ -8,7 +8,7 @@ x-logging: &logging
 services:
   db:
     image: postgres:18
-    container_name: ${CONTAINER_PREFIX:-tagline}-db
+    container_name: ${CONTAINER_PREFIX:-tagline-dev}-db
     restart: unless-stopped
     logging: *logging
     deploy:
@@ -40,8 +40,9 @@ services:
       context: .
       args:
         GIT_REVISION: ${GIT_REVISION:-unknown}
-    image: tagline-app
-    container_name: ${CONTAINER_PREFIX:-tagline}-app
+    # built here for development only; production runs ghcr.io/akoskappel/tagline
+    image: tagline-app:dev
+    container_name: ${CONTAINER_PREFIX:-tagline-dev}-app
     restart: unless-stopped
     logging: *logging
     deploy:
@@ -96,7 +97,7 @@ services:
 
   nginx:
     image: nginx:1.30-alpine
-    container_name: ${CONTAINER_PREFIX:-tagline}-nginx
+    container_name: ${CONTAINER_PREFIX:-tagline-dev}-nginx
     restart: unless-stopped
     logging: *logging
     deploy:
@@ -104,7 +105,7 @@ services:
         limits:
           memory: 128M
     ports:
-      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-8083}:80"
+      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-8081}:80"
     volumes:
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./docker/maintenance:/usr/share/nginx/maintenance:ro
