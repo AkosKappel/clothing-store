@@ -54,7 +54,7 @@ services:
       # the app role when set (DB_APP_*), otherwise the superuser
       DATABASE_URL: ecto://${DB_APP_USERNAME:-${DB_USERNAME:-tagline}}:${DB_APP_PASSWORD:-${DB_PASSWORD}}@db/${DB_DATABASE:-tagline}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:?set SECRET_KEY_BASE in .env}
-      PHX_HOST: ${PHX_HOST:-tagline.tailb52c43.ts.net}
+      PHX_HOST: ${PHX_HOST:-tagline.akoskappel.dev}
       PORT: "4000"
       POOL_SIZE: "5"
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@eshop.com}

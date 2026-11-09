@@ -2,7 +2,7 @@
 
 Author: **Ákos Kappel**
 
-Live Demo: **[Modern Fashion Store](https://tagline.tailb52c43.ts.net)** (press **Try the demo** on the login page; the data resets every night)
+Live Demo: **[Modern Fashion Store](https://tagline.akoskappel.dev)** (press **Try the demo** on the login page; the data resets every night)
 
 # Table of Contents
 
@@ -60,7 +60,7 @@ The app is then available at [`127.0.0.1:8081`](http://127.0.0.1:8081) (nginx in
 
 ### Production
 
-The live demo does not run from a checkout: CI builds the release image on every push to `main`, scans it and publishes it as `ghcr.io/akoskappel/tagline`, and the server runs it from its own folder with a Tailscale sidecar. See [`deploy/`](deploy/README.md).
+The live demo does not run from a checkout: CI builds the release image on every push to `main`, scans it and publishes it as `ghcr.io/akoskappel/tagline`, and the server runs it from its own folder behind a Cloudflare Tunnel. See [`deploy/`](deploy/README.md).
 
 ## Screenshots
 
@@ -197,7 +197,7 @@ Also, any of the filters can be combined together, for example, you can select a
 
 ## Bonus
 
-The app runs as a Docker release on a home server, behind nginx (security headers and rate limiting) and is published to the internet with a Tailscale Funnel sidecar container, at [tagline.tailb52c43.ts.net](https://tagline.tailb52c43.ts.net).
+The app runs as a Docker release on a home server, behind nginx (security headers and rate limiting) and is published to the internet through a Cloudflare Tunnel connector container, at [tagline.akoskappel.dev](https://tagline.akoskappel.dev).
 It is a public demo: **Try the demo** logs you in as the shared demo account (server-side, its password never reaches the browser), the data resets every night (by default at 03:15 Europe/Bratislava time, configurable with the `DEMO_RESET_*` settings), the e-mail and password of the demo account can't be changed, registration is disabled, and e-mails are only logged, never sent.
 The seed photos are Pexels photos served locally as WebP.
 In 2026 I upgraded the app from Phoenix 1.7, LiveView 1.0 and Tailwind 3 to the current versions listed in the [tech stack](#tech-stack).

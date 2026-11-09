@@ -10,13 +10,13 @@ touching it. Operations live in the infra repository (`apps/tagline/`).
 | Image | `tagline-app:dev`, built locally | `ghcr.io/akoskappel/tagline` at `IMAGE_TAG`, built, scanned and published by CI |
 | Config (nginx, maintenance page, database role script) | `docker/` in the checkout | `config/`, fetched from GitHub at the deployed commit |
 | Ports | web `8081` (staging), database `5435` | `127.0.0.1:8083`, database without a host port |
-| Public URL | none (no sidecar) | https://tagline.tailb52c43.ts.net |
+| Public URL | none (no sidecar) | https://tagline.akoskappel.dev |
 
 ## First setup
 
 ```bash
-mkdir -p ~/deploy/tagline/tailscale
-cp deploy/compose.yaml deploy/compose.tailscale.yaml deploy/deploy.sh ~/deploy/tagline/
+mkdir -p ~/deploy/tagline/tailscale ~/deploy/tagline/cloudflared
+cp deploy/compose.yaml deploy/compose.tailscale.yaml deploy/compose.cloudflare.yaml deploy/deploy.sh ~/deploy/tagline/
 cp deploy/tailscale/serve.json ~/deploy/tagline/tailscale/
 cp deploy/.env.example ~/deploy/tagline/.env   # fill in the secrets, chmod 600
 ```
@@ -37,3 +37,12 @@ to go back (only to a version with the same schema; otherwise restore the dump).
 Maintenance mode: `touch config/maintenance/on` in the deploy folder, remove it to end it.
 
 When a file in this `deploy/` folder changed, copy it to the deploy folder first.
+
+## Public address
+
+https://tagline.akoskappel.dev goes through a Cloudflare Tunnel: `compose.cloudflare.yaml` runs a
+`cloudflared` connector that forwards every request to nginx. Its token goes into
+`cloudflared/tunnel.env` (`TUNNEL_TOKEN=...`, `chmod 600`; print it with
+`cloudflared tunnel token tagline` on a machine logged in to the `akoskappel.dev` zone).
+The Tailscale sidecar still serves the old `tagline.tailb52c43.ts.net` address, where nginx
+answers with a 301 to the new domain.
