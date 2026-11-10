@@ -9,5 +9,6 @@
     form={to_form(@changeset)}
     action={~p"/products/#{@product}"}
     cancel_to={~p"/products/#{@product}"}
+    lock_version={@product.lock_version}
   />
 </div>

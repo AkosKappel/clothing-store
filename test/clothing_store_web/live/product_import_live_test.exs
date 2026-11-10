@@ -41,6 +41,18 @@ defmodule ClothingStoreWeb.ProductImportLiveTest do
              Products.list_products(%{"q" => "Wool"})
   end
 
+  test "two rows for the same product both apply, in order" do
+    product = product_fixture(title: "Linen shirt")
+
+    rows = [
+      %{"id" => to_string(product.id), "stock" => "5"},
+      %{"id" => to_string(product.id), "title" => "Wool shirt"}
+    ]
+
+    assert Products.import_products(rows) == {:ok, %{created: 0, updated: 2}}
+    assert %{stock: 5, title: "Wool shirt"} = Products.get_product!(product.id)
+  end
+
   test "one invalid row imports nothing and names the line" do
     csv = "title,category,price,stock\nGood,Shirts,10,1\nBad,Shirts,-5,1\n"
 

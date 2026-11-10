@@ -161,6 +161,9 @@ msgstr ""
 msgid "The demo is limited to %{max} products"
 msgstr ""
 
+msgid "Someone else saved this product while you were editing it. Check your changes and save again to keep them."
+msgstr ""
+
 msgid "can be at most %{count}"
 msgid_plural "can be at most %{count}"
 msgstr[0] ""

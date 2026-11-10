@@ -149,6 +149,9 @@ msgstr "jeder Tag darf höchstens %{max} Byte groß sein"
 msgid "The demo is limited to %{max} products"
 msgstr "Die Demo ist auf %{max} Produkte begrenzt"
 
+msgid "Someone else saved this product while you were editing it. Check your changes and save again to keep them."
+msgstr "Jemand anderes hat dieses Produkt gespeichert, während Sie es bearbeitet haben. Prüfen Sie Ihre Änderungen und speichern Sie erneut, um sie zu behalten."
+
 msgid "can be at most %{count}"
 msgid_plural "can be at most %{count}"
 msgstr[0] "darf höchstens %{count} sein"

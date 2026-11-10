@@ -93,4 +93,48 @@ defmodule ClothingStoreWeb.ProductFormLiveTest do
     assert has_element?(lv, ~s|#product-form[action="/products/#{product.id}"]|)
     assert has_element?(lv, ~s|#product-form input[name="_method"][value="put"]|)
   end
+
+  describe "when someone else saves the product" do
+    test "the form says so and can load their version", %{conn: conn} do
+      product = product_fixture(%{title: "Old title"})
+      {:ok, lv, _html} = live(conn, ~p"/products/#{product}/edit")
+      refute has_element?(lv, "#newer-version")
+
+      {:ok, _} = ClothingStore.Products.update_product(product, %{title: "Their title"})
+      assert render(lv) =~ "Changed: Title."
+
+      html = lv |> element("#newer-version button", "Load their version") |> render_click()
+      refute html =~ "newer-version"
+      assert html =~ ~s(value="Their title")
+      assert html =~ ~s(name="product[lock_version]" value="#{product.lock_version + 1}")
+    end
+
+    test "keeping my changes saves them over theirs", %{conn: conn} do
+      product = product_fixture(%{title: "Old title"})
+      {:ok, lv, _html} = live(conn, ~p"/products/#{product}/edit")
+      lv |> form("#product-form", product: %{title: "My title"}) |> render_change()
+
+      # a sale also changes the product
+      {:ok, _} = ClothingStore.Products.restock_product(product)
+      assert render(lv) =~ "Changed: Stock."
+
+      html = lv |> element("#newer-version button", "Keep my changes") |> render_click()
+      assert html =~ ~s(value="My title")
+
+      form = form(lv, "#product-form")
+      render_submit(form)
+      conn = follow_trigger_action(form, conn)
+      assert redirected_to(conn) == ~p"/products/#{product}"
+      assert ClothingStore.Products.get_product!(product.id).title == "My title"
+    end
+
+    test "other products' saves change nothing", %{conn: conn} do
+      product = product_fixture()
+      other = product_fixture()
+      {:ok, lv, _html} = live(conn, ~p"/products/#{product}/edit")
+
+      {:ok, _} = ClothingStore.Products.update_product(other, %{title: "Elsewhere"})
+      refute render(lv) =~ "newer-version"
+    end
+  end
 end

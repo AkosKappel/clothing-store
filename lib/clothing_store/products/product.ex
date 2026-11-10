@@ -16,6 +16,7 @@ defmodule ClothingStore.Products.Product do
     field :discount_percent, :integer
     field :discount_starts_on, :date
     field :discount_ends_on, :date
+    field :lock_version, :integer, default: 1
 
     has_many :variants, Variant,
       on_replace: :delete,

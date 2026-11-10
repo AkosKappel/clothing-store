@@ -40,18 +40,27 @@ defmodule ClothingStoreWeb.ProductController do
     tags = Products.parse_tags(product_params["tags"])
     product_params = Map.put(product_params, "tags", tags)
 
-    case Products.update_product(product, product_params) do
+    case Products.update_product(edited_version(product, product_params), product_params) do
       {:ok, product} ->
         conn
         |> put_flash(:info, gettext("Product updated successfully."))
         |> redirect(to: ~p"/products/#{product}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        # the form keeps what was typed; a save over someone else's then goes through on purpose
         render(conn, :edit,
           page_title: gettext("Edit product"),
           product: product,
           changeset: changeset
         )
+    end
+  end
+
+  # the version the form was opened on; without one (an old form), the current one
+  defp edited_version(product, params) do
+    case Ecto.Type.cast(:integer, params["lock_version"]) do
+      {:ok, version} when is_integer(version) -> %{product | lock_version: version}
+      _ -> product
     end
   end
 

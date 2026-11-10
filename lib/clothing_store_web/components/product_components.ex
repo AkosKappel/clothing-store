@@ -85,11 +85,22 @@ defmodule ClothingStoreWeb.ProductComponents do
   attr :action, :string, required: true
   attr :cancel_to, :string, required: true
   attr :removable_tags, :boolean, default: false, doc: "× buttons on tag chips (LiveView only)"
+
+  attr :lock_version, :integer,
+    default: nil,
+    doc: "the version being edited; a save over a newer one is refused"
+
   attr :rest, :global, include: ~w(phx-trigger-action)
 
   def product_form(assigns) do
     ~H"""
     <.simple_form for={@form} action={@action} class="card p-6 sm:p-8" {@rest}>
+      <input
+        :if={@lock_version}
+        type="hidden"
+        name={@form[:lock_version].name}
+        value={@lock_version}
+      />
       <div
         :if={@form.source.action in [:insert, :update] && @form.errors != []}
         role="alert"

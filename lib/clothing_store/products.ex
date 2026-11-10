@@ -340,8 +340,9 @@ defmodule ClothingStore.Products do
     Map.update!(counts, :created, &(&1 + 1))
   end
 
+  # read again: an earlier row or a sale may have changed it since it was planned
   defp apply_import({_line, {{:update, product}, attrs}}, counts) do
-    {:ok, _} = update_product(product, attrs)
+    {:ok, _} = product.id |> import_target() |> update_product(attrs)
     Map.update!(counts, :updated, &(&1 + 1))
   end
 
@@ -354,6 +355,8 @@ defmodule ClothingStore.Products do
     end)
     |> Enum.map_join("; ", fn {field, messages} -> "#{field} #{Enum.join(messages, ", ")}" end)
   end
+
+  @stale_message "Someone else saved this product while you were editing it. Check your changes and save again to keep them."
 
   @doc """
   Updates a product.
@@ -371,7 +374,8 @@ defmodule ClothingStore.Products do
     product
     |> Repo.preload(:variants)
     |> Product.changeset(attrs)
-    |> Repo.update()
+    |> Ecto.Changeset.optimistic_lock(:lock_version)
+    |> Repo.update(stale_error_field: :base, stale_error_message: @stale_message)
     |> log_event("updated", product)
     |> notify_subscribers(:product_updated)
   end
@@ -417,7 +421,11 @@ defmodule ClothingStore.Products do
             ),
           else: dynamic([p], fragment("LEAST(? + ?, ?)", p.stock, ^@restock_amount, ^max))
 
-      from(p in active(), where: p.id == ^id, select: p, update: [set: [stock: ^new_stock]])
+      from(p in active(),
+        where: p.id == ^id,
+        select: p,
+        update: [set: [stock: ^new_stock], inc: [lock_version: 1]]
+      )
       |> Repo.update_all(set: [updated_at: DateTime.utc_now(:second)])
       |> case do
         {1, [restocked]} -> restocked

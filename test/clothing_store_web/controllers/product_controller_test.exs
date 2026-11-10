@@ -114,6 +114,23 @@ defmodule ClothingStoreWeb.ProductControllerTest do
       conn = put(conn, ~p"/products/#{product}", product: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Product"
     end
+
+    test "refuses a save over a newer version, then lets it through on purpose",
+         %{conn: conn, product: product} do
+      {:ok, _} = ClothingStore.Products.update_product(product, %{title: "Their title"})
+      stale = Map.put(@update_attrs, :lock_version, product.lock_version)
+
+      html = conn |> put(~p"/products/#{product}", product: stale) |> html_response(200)
+      assert html =~ "Someone else saved this product"
+      # what was typed stays, on top of the current version
+      assert html =~ "some updated description"
+      assert html =~ ~s(name="product[lock_version]" value="#{product.lock_version + 1}")
+      assert ClothingStore.Products.get_product!(product.id).title == "Their title"
+
+      current = Map.put(@update_attrs, :lock_version, product.lock_version + 1)
+      conn = put(conn, ~p"/products/#{product}", product: current)
+      assert redirected_to(conn) == ~p"/products/#{product}"
+    end
   end
 
   describe "delete product" do

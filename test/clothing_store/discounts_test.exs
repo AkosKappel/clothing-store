@@ -55,7 +55,7 @@ defmodule ClothingStore.DiscountsTest do
 
   test "the price history keeps every price change" do
     product = product_fixture(price: "50.00")
-    {:ok, _} = Products.update_product(product, %{price: "45.00"})
+    {:ok, product} = Products.update_product(product, %{price: "45.00"})
     {:ok, _} = Products.update_product(product, %{title: "Renamed"})
 
     prices =

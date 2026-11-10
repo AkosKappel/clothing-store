@@ -77,6 +77,18 @@ defmodule ClothingStore.ProductsTest do
       assert Repo.preload(product, :variants) == Products.get_product!(product.id)
     end
 
+    test "update_product/2 refuses a product changed since it was read" do
+      product = product_fixture()
+      {:ok, _} = ClothingStore.Transactions.record_sale([{product, 1}])
+      {:ok, restocked} = Products.restock_product(product)
+      assert restocked.lock_version == product.lock_version + 2
+
+      assert {:error, changeset} = Products.update_product(product, %{title: "Stale"})
+      assert {"Someone else saved" <> _, _} = changeset.errors[:base]
+      assert {:ok, updated} = Products.update_product(restocked, %{title: "Fresh"})
+      assert updated.lock_version == restocked.lock_version + 1
+    end
+
     test "delete_product/1 deletes the product" do
       product = product_fixture()
       assert {:ok, %Product{}} = Products.delete_product(product)

@@ -118,7 +118,7 @@ defmodule ClothingStore.Transactions do
     from(p in Product,
       where: p.id == ^id and p.stock >= ^quantity and is_nil(p.deleted_at),
       select: p,
-      update: [inc: [stock: ^(-quantity)], set: [updated_at: ^now]]
+      update: [inc: [stock: ^(-quantity), lock_version: 1], set: [updated_at: ^now]]
     )
     |> Repo.update_all([])
     |> case do
