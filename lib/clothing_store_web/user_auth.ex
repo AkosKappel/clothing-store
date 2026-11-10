@@ -8,6 +8,7 @@ defmodule ClothingStoreWeb.UserAuth do
   import Phoenix.Controller
 
   alias ClothingStore.Users
+  alias ClothingStore.Users.User
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -173,6 +174,14 @@ defmodule ClothingStoreWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_admin, _params, session, socket) do
+    socket = mount_current_user(socket, session)
+
+    if User.admin?(socket.assigns.current_user),
+      do: {:cont, socket},
+      else: {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/")}
+  end
+
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(socket, session)
 
@@ -218,6 +227,19 @@ defmodule ClothingStoreWeb.UserAuth do
       |> put_flash(:warning, gettext("You must log in to access this page."))
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
+      |> halt()
+    end
+  end
+
+  @doc "Lets only admins through; to anyone else the page does not exist."
+  def require_admin(conn, _opts) do
+    if User.admin?(conn.assigns[:current_user]) do
+      conn
+    else
+      conn
+      |> put_status(:not_found)
+      |> put_view(html: ClothingStoreWeb.ErrorHTML)
+      |> render(:"404")
       |> halt()
     end
   end

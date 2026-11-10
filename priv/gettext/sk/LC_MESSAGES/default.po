@@ -173,7 +173,7 @@ msgid "A row with the id of an existing product updates the columns it has; ever
 msgstr "Riadok s id existujúceho produktu aktualizuje stĺpce, ktoré obsahuje; každý iný riadok pridá produkt (bez popisu alebo fotky dostane zástupný obsah)."
 
 #: lib/clothing_store_web/components/layouts.ex:151
-#: lib/clothing_store_web/components/layouts/app.html.heex:53
+#: lib/clothing_store_web/components/layouts/app.html.heex:61
 #: lib/clothing_store_web/controllers/page_controller.ex:11
 #, elixir-autogen, elixir-format
 msgid "About"
@@ -525,7 +525,7 @@ msgstr "Odstrániť %{title}?"
 msgid "Demo"
 msgstr "Demo"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:102
+#: lib/clothing_store_web/components/layouts/app.html.heex:110
 #, elixir-autogen, elixir-format
 msgid "Demo info"
 msgstr "Informácie o deme"
@@ -812,7 +812,7 @@ msgstr "Zostať prihlásený"
 msgid "Label: %{title}"
 msgstr "Štítok: %{title}"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:78
+#: lib/clothing_store_web/components/layouts/app.html.heex:86
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr "Jazyk"
@@ -859,7 +859,7 @@ msgstr "Naživo: zmeny ostatných návštevníkov sa tu zobrazia okamžite."
 msgid "Load more"
 msgstr "Načítať ďalšie"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:122
+#: lib/clothing_store_web/components/layouts/app.html.heex:130
 #: lib/clothing_store_web/live/user_login_live.ex:8
 #: lib/clothing_store_web/live/user_login_live.ex:71
 #: lib/clothing_store_web/live/user_login_live.ex:97
@@ -867,7 +867,7 @@ msgstr "Načítať ďalšie"
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:111
+#: lib/clothing_store_web/components/layouts/app.html.heex:119
 #, elixir-autogen, elixir-format
 msgid "Log out"
 msgstr "Odhlásiť sa"
@@ -1750,24 +1750,24 @@ msgstr "Produkty tohto predaja boli odstránené."
 msgid "The total of the sizes below"
 msgstr "Súčet veľkostí nižšie"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:70
+#: lib/clothing_store_web/components/layouts/app.html.heex:78
 #, elixir-autogen, elixir-format
 msgid "Theme"
 msgstr "Téma"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:65
+#: lib/clothing_store_web/components/layouts/app.html.heex:73
 #, elixir-autogen, elixir-format
 msgid "Theme: dark"
 msgstr "Téma: tmavá"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:61
-#: lib/clothing_store_web/components/layouts/app.html.heex:62
-#: lib/clothing_store_web/components/layouts/app.html.heex:63
+#: lib/clothing_store_web/components/layouts/app.html.heex:69
+#: lib/clothing_store_web/components/layouts/app.html.heex:70
+#: lib/clothing_store_web/components/layouts/app.html.heex:71
 #, elixir-autogen, elixir-format
 msgid "Theme: follows the system"
 msgstr "Téma: podľa systému"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:64
+#: lib/clothing_store_web/components/layouts/app.html.heex:72
 #, elixir-autogen, elixir-format
 msgid "Theme: light"
 msgstr "Téma: svetlá"
@@ -1939,7 +1939,7 @@ msgstr "Vitajte v deme! Dáta sa každú noc obnovia."
 msgid "What can I try here?"
 msgstr "Čo tu môžem vyskúšať?"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:99
+#: lib/clothing_store_web/components/layouts/app.html.heex:107
 #, elixir-autogen, elixir-format
 msgid "What is this demo?"
 msgstr "Čo je toto demo?"
@@ -1959,8 +1959,8 @@ msgstr "Čo robili návštevníci a simulovaní zákazníci, od najnovšieho. No
 msgid "With sizes, each has its own stock and the product's stock is their total."
 msgstr "Pri veľkostiach má každá vlastnú zásobu a zásoba produktu je ich súčet."
 
-#: lib/clothing_store_web/user_auth.ex:169
-#: lib/clothing_store_web/user_auth.ex:218
+#: lib/clothing_store_web/user_auth.ex:170
+#: lib/clothing_store_web/user_auth.ex:227
 #, elixir-autogen, elixir-format
 msgid "You must log in to access this page."
 msgstr "Na prístup k tejto stránke sa musíte prihlásiť."
@@ -2194,3 +2194,8 @@ msgstr "Načítať novšiu verziu"
 #, elixir-autogen, elixir-format
 msgid "Someone else just saved this product."
 msgstr "Niekto iný práve uložil tento produkt."
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "System metrics"
+msgstr "Systémové metriky"

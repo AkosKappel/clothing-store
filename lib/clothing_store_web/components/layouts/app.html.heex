@@ -49,6 +49,14 @@
         <.nav_link href={~p"/statistics"} current_path={current_path} icon="hero-chart-bar">{gettext(
           "Statistics"
         )}</.nav_link>
+        <.nav_link
+          :if={ClothingStore.Users.User.admin?(assigns[:current_user])}
+          href={~p"/admin/dashboard"}
+          current_path={current_path}
+          icon="hero-cpu-chip"
+        >
+          {gettext("System metrics")}
+        </.nav_link>
       <% end %>
       <.nav_link href={~p"/about"} current_path={current_path} icon="hero-information-circle">{gettext(
         "About"

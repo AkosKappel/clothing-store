@@ -2,6 +2,7 @@ defmodule ClothingStoreWeb.Router do
   use ClothingStoreWeb, :router
 
   import ClothingStoreWeb.UserAuth
+  import Phoenix.LiveDashboard.Router
 
   # photos may come from the image hosts in ClothingStore.Products.Product.photo_hosts/0;
   # 'unsafe-inline' styles are for topbar, which styles its canvas from JS
@@ -31,6 +32,18 @@ defmodule ClothingStoreWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers, %{"content-security-policy" => @csp}
     plug :fetch_current_user
+  end
+
+  # LiveDashboard's inline scripts carry a per-request nonce, allowed only on its pages
+  pipeline :admin do
+    plug :require_admin
+    plug :put_admin_csp
+  end
+
+  defp put_admin_csp(conn, _opts) do
+    nonce = 18 |> :crypto.strong_rand_bytes() |> Base.encode64()
+    csp = String.replace(@csp, "script-src 'self'", "script-src 'self' 'nonce-#{nonce}'")
+    conn |> assign(:csp_nonce, nonce) |> put_resp_header("content-security-policy", csp)
   end
 
   pipeline :api do
@@ -78,19 +91,22 @@ defmodule ClothingStoreWeb.Router do
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:clothing_store, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
-
+    # LiveDashboard is at /admin/dashboard, for admins (OWNER_EMAIL / OWNER_PASSWORD)
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: ClothingStoreWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  scope "/admin" do
+    pipe_through [:browser, :require_authenticated_user, :admin]
+
+    live_dashboard "/dashboard",
+      metrics: ClothingStoreWeb.Telemetry,
+      csp_nonce_assign_key: %{script: :csp_nonce, style: :csp_nonce},
+      on_mount: [{ClothingStoreWeb.UserAuth, :ensure_admin}],
+      live_session_name: :admin_dashboard
   end
 
   ## Authentication routes

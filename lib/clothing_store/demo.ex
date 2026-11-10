@@ -11,6 +11,19 @@ defmodule ClothingStore.Demo do
     %{email: Keyword.fetch!(config, :email), password: Keyword.fetch!(config, :password)}
   end
 
+  @doc "The private owner account (an admin), or nil when OWNER_EMAIL / OWNER_PASSWORD are not set."
+  def owner do
+    config = Application.fetch_env!(:clothing_store, :demo)[:owner] || []
+
+    case {config[:email], config[:password]} do
+      {email, password} when is_binary(email) and is_binary(password) ->
+        %{email: email, password: password}
+
+      _ ->
+        nil
+    end
+  end
+
   @doc "The demo account's e-mail and password can't be changed."
   def locked?(%User{email: email}), do: email == account().email
   def locked?(_), do: false

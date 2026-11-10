@@ -34,6 +34,12 @@ demo_account =
     password: System.get_env("ADMIN_PASSWORD")
   )
 
+demo_owner =
+  present.(
+    email: System.get_env("OWNER_EMAIL"),
+    password: System.get_env("OWNER_PASSWORD")
+  )
+
 demo_reset =
   present.(
     enabled:
@@ -70,6 +76,7 @@ config :clothing_store,
        :demo,
        present.(
          account: demo_account,
+         owner: demo_owner,
          reset: demo_reset,
          activity: demo_activity,
          links: demo_links,

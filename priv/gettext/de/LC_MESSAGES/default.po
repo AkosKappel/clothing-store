@@ -166,7 +166,7 @@ msgid "A row with the id of an existing product updates the columns it has; ever
 msgstr "Eine Zeile mit der ID eines vorhandenen Produkts aktualisiert die enthaltenen Spalten; jede andere Zeile fügt ein Produkt hinzu (ohne Beschreibung oder Foto erhält es einen Platzhalter)."
 
 #: lib/clothing_store_web/components/layouts.ex:151
-#: lib/clothing_store_web/components/layouts/app.html.heex:53
+#: lib/clothing_store_web/components/layouts/app.html.heex:61
 #: lib/clothing_store_web/controllers/page_controller.ex:11
 #, elixir-autogen, elixir-format
 msgid "About"
@@ -517,7 +517,7 @@ msgstr "%{title} löschen?"
 msgid "Demo"
 msgstr "Demo"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:102
+#: lib/clothing_store_web/components/layouts/app.html.heex:110
 #, elixir-autogen, elixir-format
 msgid "Demo info"
 msgstr "Demo-Info"
@@ -804,7 +804,7 @@ msgstr "Angemeldet bleiben"
 msgid "Label: %{title}"
 msgstr "Etikett: %{title}"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:78
+#: lib/clothing_store_web/components/layouts/app.html.heex:86
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr "Sprache"
@@ -851,7 +851,7 @@ msgstr "Live: Änderungen anderer Besucher erscheinen hier sofort."
 msgid "Load more"
 msgstr "Mehr laden"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:122
+#: lib/clothing_store_web/components/layouts/app.html.heex:130
 #: lib/clothing_store_web/live/user_login_live.ex:8
 #: lib/clothing_store_web/live/user_login_live.ex:71
 #: lib/clothing_store_web/live/user_login_live.ex:97
@@ -859,7 +859,7 @@ msgstr "Mehr laden"
 msgid "Log in"
 msgstr "Anmelden"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:111
+#: lib/clothing_store_web/components/layouts/app.html.heex:119
 #, elixir-autogen, elixir-format
 msgid "Log out"
 msgstr "Abmelden"
@@ -1742,24 +1742,24 @@ msgstr "Die Produkte dieses Verkaufs wurden gelöscht."
 msgid "The total of the sizes below"
 msgstr "Die Summe der Größen unten"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:70
+#: lib/clothing_store_web/components/layouts/app.html.heex:78
 #, elixir-autogen, elixir-format
 msgid "Theme"
 msgstr "Design"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:65
+#: lib/clothing_store_web/components/layouts/app.html.heex:73
 #, elixir-autogen, elixir-format
 msgid "Theme: dark"
 msgstr "Design: dunkel"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:61
-#: lib/clothing_store_web/components/layouts/app.html.heex:62
-#: lib/clothing_store_web/components/layouts/app.html.heex:63
+#: lib/clothing_store_web/components/layouts/app.html.heex:69
+#: lib/clothing_store_web/components/layouts/app.html.heex:70
+#: lib/clothing_store_web/components/layouts/app.html.heex:71
 #, elixir-autogen, elixir-format
 msgid "Theme: follows the system"
 msgstr "Design: wie System"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:64
+#: lib/clothing_store_web/components/layouts/app.html.heex:72
 #, elixir-autogen, elixir-format
 msgid "Theme: light"
 msgstr "Design: hell"
@@ -1931,7 +1931,7 @@ msgstr "Willkommen in der Demo! Die Daten werden jede Nacht zurückgesetzt."
 msgid "What can I try here?"
 msgstr "Was kann ich hier ausprobieren?"
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:99
+#: lib/clothing_store_web/components/layouts/app.html.heex:107
 #, elixir-autogen, elixir-format
 msgid "What is this demo?"
 msgstr "Was ist diese Demo?"
@@ -1951,8 +1951,8 @@ msgstr "Was Besucher und simulierte Kunden getan haben, die neuesten zuerst. Neu
 msgid "With sizes, each has its own stock and the product's stock is their total."
 msgstr "Mit Größen hat jede ihren eigenen Bestand, und der Bestand des Produkts ist ihre Summe."
 
-#: lib/clothing_store_web/user_auth.ex:169
-#: lib/clothing_store_web/user_auth.ex:218
+#: lib/clothing_store_web/user_auth.ex:170
+#: lib/clothing_store_web/user_auth.ex:227
 #, elixir-autogen, elixir-format
 msgid "You must log in to access this page."
 msgstr "Sie müssen sich anmelden, um diese Seite aufzurufen."
@@ -2185,3 +2185,8 @@ msgstr "Neuere Version laden"
 #, elixir-autogen, elixir-format
 msgid "Someone else just saved this product."
 msgstr "Jemand anderes hat dieses Produkt gerade gespeichert."
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "System metrics"
+msgstr "Systemmetriken"

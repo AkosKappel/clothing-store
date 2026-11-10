@@ -58,6 +58,9 @@ services:
       POOL_SIZE: "5"
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@eshop.com}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+      # optional private admin account (LiveDashboard at /admin/dashboard)
+      OWNER_EMAIL: ${OWNER_EMAIL:-}
+      OWNER_PASSWORD: ${OWNER_PASSWORD:-}
       DEMO_RESET_ENABLED: ${DEMO_RESET_ENABLED:-true}
       DEMO_RESET_TIME: ${DEMO_RESET_TIME:-03:15}
       DEMO_RESET_TIMEZONE: ${DEMO_RESET_TIMEZONE:-Europe/Bratislava}

@@ -64,4 +64,23 @@ defmodule ClothingStore.Demo.ResetTest do
     assert "Visitor product" in Enum.map(Products.list_products(), & &1.title)
     refute_receive :demo_reset
   end
+
+  test "seeds the owner account as an admin when one is configured, and only then" do
+    assert :ok = Demo.Reset.run()
+    assert [%{role: "demo"}] = ClothingStore.Repo.all(ClothingStore.Users.User)
+
+    demo = Application.fetch_env!(:clothing_store, :demo)
+    on_exit(fn -> Application.put_env(:clothing_store, :demo, demo) end)
+
+    Application.put_env(
+      :clothing_store,
+      :demo,
+      Keyword.put(demo, :owner, email: "owner@example.com", password: "a long owner password")
+    )
+
+    assert :ok = Demo.Reset.run()
+    owner = Users.get_user_by_email_and_password("owner@example.com", "a long owner password")
+    assert %{role: "admin", confirmed_at: %DateTime{}} = owner
+    assert %{role: "demo"} = Users.get_user_by_email(Demo.account().email)
+  end
 end

@@ -199,5 +199,6 @@ Also, any of the filters can be combined together, for example, you can select a
 
 The app runs as a Docker release on a home server, behind nginx (security headers and rate limiting) and is published to the internet through a Cloudflare Tunnel connector container, at [tagline.akoskappel.dev](https://tagline.akoskappel.dev).
 It is a public demo: **Try the demo** logs you in as the shared demo account (server-side, its password never reaches the browser), the data resets every night (by default at 03:15 Europe/Bratislava time, configurable with the `DEMO_RESET_*` settings), the e-mail and password of the demo account can't be changed, registration is disabled, and e-mails are only logged, never sent.
+Users have a role: the demo account is `demo`, and an optional private owner account (`OWNER_EMAIL` / `OWNER_PASSWORD`, re-created by the nightly reset like the demo account) is `admin`, the only one who can open Phoenix LiveDashboard at `/admin/dashboard`.
 The seed photos are Pexels photos served locally as WebP.
 In 2026 I upgraded the app from Phoenix 1.7, LiveView 1.0 and Tailwind 3 to the current versions listed in the [tech stack](#tech-stack).

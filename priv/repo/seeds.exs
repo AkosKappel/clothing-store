@@ -203,3 +203,14 @@ Repo.insert_all(
 {:ok, user} = Users.register_user(%{email: email, password: password})
 # confirmed, so /users/confirm answers "already confirmed" instead of minting tokens
 user |> Users.User.confirm_changeset() |> Repo.update!()
+
+# The private owner account (OWNER_EMAIL / OWNER_PASSWORD), if set: an admin, re-created
+# by every nightly reset like the demo account
+with %{email: email, password: password} <- ClothingStore.Demo.owner() do
+  {:ok, owner} = Users.register_user(%{email: email, password: password})
+
+  owner
+  |> Users.User.confirm_changeset()
+  |> Ecto.Changeset.change(role: "admin")
+  |> Repo.update!()
+end

@@ -166,7 +166,7 @@ msgid "A row with the id of an existing product updates the columns it has; ever
 msgstr ""
 
 #: lib/clothing_store_web/components/layouts.ex:151
-#: lib/clothing_store_web/components/layouts/app.html.heex:53
+#: lib/clothing_store_web/components/layouts/app.html.heex:61
 #: lib/clothing_store_web/controllers/page_controller.ex:11
 #, elixir-autogen, elixir-format
 msgid "About"
@@ -517,7 +517,7 @@ msgstr ""
 msgid "Demo"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:102
+#: lib/clothing_store_web/components/layouts/app.html.heex:110
 #, elixir-autogen, elixir-format
 msgid "Demo info"
 msgstr ""
@@ -804,7 +804,7 @@ msgstr ""
 msgid "Label: %{title}"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:78
+#: lib/clothing_store_web/components/layouts/app.html.heex:86
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr ""
@@ -851,7 +851,7 @@ msgstr ""
 msgid "Load more"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:122
+#: lib/clothing_store_web/components/layouts/app.html.heex:130
 #: lib/clothing_store_web/live/user_login_live.ex:8
 #: lib/clothing_store_web/live/user_login_live.ex:71
 #: lib/clothing_store_web/live/user_login_live.ex:97
@@ -859,7 +859,7 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:111
+#: lib/clothing_store_web/components/layouts/app.html.heex:119
 #, elixir-autogen, elixir-format
 msgid "Log out"
 msgstr ""
@@ -1742,24 +1742,24 @@ msgstr ""
 msgid "The total of the sizes below"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:70
+#: lib/clothing_store_web/components/layouts/app.html.heex:78
 #, elixir-autogen, elixir-format
 msgid "Theme"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:65
+#: lib/clothing_store_web/components/layouts/app.html.heex:73
 #, elixir-autogen, elixir-format
 msgid "Theme: dark"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:61
-#: lib/clothing_store_web/components/layouts/app.html.heex:62
-#: lib/clothing_store_web/components/layouts/app.html.heex:63
+#: lib/clothing_store_web/components/layouts/app.html.heex:69
+#: lib/clothing_store_web/components/layouts/app.html.heex:70
+#: lib/clothing_store_web/components/layouts/app.html.heex:71
 #, elixir-autogen, elixir-format
 msgid "Theme: follows the system"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:64
+#: lib/clothing_store_web/components/layouts/app.html.heex:72
 #, elixir-autogen, elixir-format
 msgid "Theme: light"
 msgstr ""
@@ -1931,7 +1931,7 @@ msgstr ""
 msgid "What can I try here?"
 msgstr ""
 
-#: lib/clothing_store_web/components/layouts/app.html.heex:99
+#: lib/clothing_store_web/components/layouts/app.html.heex:107
 #, elixir-autogen, elixir-format
 msgid "What is this demo?"
 msgstr ""
@@ -1951,8 +1951,8 @@ msgstr ""
 msgid "With sizes, each has its own stock and the product's stock is their total."
 msgstr ""
 
-#: lib/clothing_store_web/user_auth.ex:169
-#: lib/clothing_store_web/user_auth.ex:218
+#: lib/clothing_store_web/user_auth.ex:170
+#: lib/clothing_store_web/user_auth.ex:227
 #, elixir-autogen, elixir-format
 msgid "You must log in to access this page."
 msgstr ""
@@ -2184,4 +2184,9 @@ msgstr ""
 #: lib/clothing_store_web/live/product_live/form.ex:47
 #, elixir-autogen, elixir-format
 msgid "Someone else just saved this product."
+msgstr ""
+
+#: lib/clothing_store_web/components/layouts/app.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "System metrics"
 msgstr ""

@@ -12,9 +12,15 @@ defmodule ClothingStore.Users.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+    # never cast from params: only the seeds make an admin
+    field :role, :string, default: "demo"
 
     timestamps(type: :utc_datetime)
   end
+
+  @doc "Whether the user is the private owner account, which may open the admin pages."
+  def admin?(%__MODULE__{role: "admin"}), do: true
+  def admin?(_user), do: false
 
   @doc """
   A user changeset for registration.
