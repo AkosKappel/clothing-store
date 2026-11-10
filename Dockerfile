@@ -49,6 +49,8 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 MIX_ENV=prod
 WORKDIR /app
 # the release stays owned by root, so the app (nobody) can't change its own code
 COPY --from=builder /app/_build/prod/rel/clothing_store ./
+# uploaded photos; a named volume mounted here takes over this owner
+RUN mkdir /app/uploads && chown nobody:nogroup /app/uploads
 USER nobody
 
 EXPOSE 4000

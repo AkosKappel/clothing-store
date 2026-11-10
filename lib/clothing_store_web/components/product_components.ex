@@ -86,6 +86,12 @@ defmodule ClothingStoreWeb.ProductComponents do
   attr :cancel_to, :string, required: true
   attr :removable_tags, :boolean, default: false, doc: "× buttons on tag chips (LiveView only)"
 
+  attr :photo_upload, Phoenix.LiveView.UploadConfig,
+    default: nil,
+    doc: "a photo file input next to the URL field (LiveView only)"
+
+  attr :photo_upload_error, :string, default: nil
+
   attr :lock_version, :integer,
     default: nil,
     doc: "the version being edited; a save over a newer one is refused"
@@ -144,6 +150,34 @@ defmodule ClothingStoreWeb.ProductComponents do
         }
         required
       />
+      <div :if={@photo_upload} class="-mt-2">
+        <label for={@photo_upload.ref} class="block text-sm/6 font-medium text-gray-900">
+          {gettext("Or upload a photo")}
+        </label>
+        <.live_file_input
+          upload={@photo_upload}
+          class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-gray-800 hover:file:bg-gray-200"
+        />
+        <p class="mt-1 text-sm text-gray-500">
+          {gettext("JPEG, PNG or WebP, up to 8 MB. It is saved as WebP without its metadata.")}
+        </p>
+        <p
+          :for={entry <- @photo_upload.entries}
+          :if={entry.progress < 100}
+          class="mt-1 text-sm text-gray-600"
+          role="status"
+        >
+          {gettext("Uploading… %{progress}%", progress: entry.progress)}
+        </p>
+        <p
+          :for={message <- photo_upload_errors(@photo_upload, @photo_upload_error)}
+          class="mt-1 flex gap-1.5 text-sm text-rose-600"
+          role="alert"
+        >
+          <.icon name="hero-exclamation-circle-mini" class="mt-0.5 size-5 shrink-0" />
+          {message}
+        </p>
+      </div>
       <img
         :if={photo_preview?(@form[:photo])}
         id="photo-preview"
@@ -319,6 +353,21 @@ defmodule ClothingStoreWeb.ProductComponents do
   defp tag_list(form), do: form[:tags].value |> List.wrap() |> Enum.filter(&is_binary/1)
 
   # only a photo that passed validation, so the preview never requests an arbitrary URL
+  defp photo_upload_errors(upload, stored_error) do
+    messages =
+      for error <-
+            upload_errors(upload) ++ Enum.flat_map(upload.entries, &upload_errors(upload, &1)) do
+        case error do
+          :too_large -> gettext("The photo is larger than 8 MB.")
+          :not_accepted -> gettext("Choose a JPEG, PNG or WebP image.")
+          :too_many_files -> gettext("Choose one photo.")
+          _ -> gettext("The photo couldn't be uploaded.")
+        end
+      end
+
+    Enum.uniq(messages ++ List.wrap(stored_error))
+  end
+
   defp photo_preview?(%Phoenix.HTML.FormField{value: value, errors: errors}),
     do: is_binary(value) and value != "" and errors == []
 

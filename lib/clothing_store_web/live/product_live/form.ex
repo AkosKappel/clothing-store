@@ -8,7 +8,7 @@ defmodule ClothingStoreWeb.ProductLive.Form do
 
   alias ClothingStore.ActivityFeed
   alias ClothingStore.Products
-  alias ClothingStore.Products.Product
+  alias ClothingStore.Products.{Photos, Product}
   alias ClothingStoreWeb.Presence
 
   @impl true
@@ -63,6 +63,8 @@ defmodule ClothingStoreWeb.ProductLive.Form do
       <.product_form
         form={@form}
         lock_version={@product.lock_version}
+        photo_upload={@uploads.photo}
+        photo_upload_error={@photo_upload_error}
         action={@action}
         cancel_to={@back_to}
         id="product-form"
@@ -79,7 +81,20 @@ defmodule ClothingStoreWeb.ProductLive.Form do
   def mount(params, _session, socket) do
     {:ok,
      socket
-     |> assign(trigger_submit: false, other_editors: 0, newer: nil, newer_fields: [])
+     |> assign(
+       trigger_submit: false,
+       other_editors: 0,
+       newer: nil,
+       newer_fields: [],
+       photo_upload_error: nil
+     )
+     |> allow_upload(:photo,
+       accept: ~w(.jpg .jpeg .png .webp),
+       max_entries: 1,
+       max_file_size: 8_000_000,
+       auto_upload: true,
+       progress: &photo_progress/3
+     )
      |> apply_action(socket.assigns.live_action, params)}
   end
 
@@ -195,6 +210,32 @@ defmodule ClothingStoreWeb.ProductLive.Form do
 
   def handle_info(:demo_reset, socket), do: {:noreply, socket}
 
+  # once the file is in, it is re-encoded and its path goes into the photo field
+  defp photo_progress(:photo, %{done?: false}, socket), do: {:noreply, socket}
+
+  # the path is LiveView's own temporary file for the upload
+  # sobelow_skip ["Traversal.FileModule"]
+  defp photo_progress(:photo, entry, socket) do
+    case consume_uploaded_entry(socket, entry, &{:ok, Photos.store(File.read!(&1.path))}) do
+      {:ok, path} ->
+        params = Map.put(socket.assigns.form.params, "photo", path)
+        {:noreply, socket |> assign(:photo_upload_error, nil) |> assign_form(params, :validate)}
+
+      {:error, reason} ->
+        {:noreply, assign(socket, :photo_upload_error, photo_error(reason))}
+    end
+  end
+
+  defp photo_error(:not_an_image), do: gettext("Choose a JPEG, PNG or WebP image.")
+
+  defp photo_error(:too_large),
+    do: gettext("The photo has too many pixels (at most 40 megapixels).")
+
+  defp photo_error(:full),
+    do: gettext("The demo has enough uploaded photos for today. Use a photo URL instead.")
+
+  defp photo_error(:unreadable), do: gettext("The photo couldn't be read as an image.")
+
   defp track_editing(socket, product) do
     if connected?(socket) do
       topic = Presence.editing_topic(product.id)
@@ -216,7 +257,8 @@ defmodule ClothingStoreWeb.ProductLive.Form do
       )
 
   defp assign_form(socket, params, action) do
-    params = Map.update(params, "tags", [], &Products.parse_tags/1)
+    # a form that only had its photo uploaded has no tags yet: they stay as they are
+    params = Map.replace_lazy(params, "tags", &Products.parse_tags/1)
 
     changeset =
       socket.assigns.product

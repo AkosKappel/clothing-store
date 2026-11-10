@@ -63,6 +63,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# uploaded product photos; the release uses UPLOADS_DIR (a volume), see runtime.exs
+config :clothing_store, :uploads_dir, Path.expand("../priv/uploads", __DIR__)
+
 config :clothing_store, :demo,
   account: [email: "admin@eshop.com", password: "Qwerty123456"],
   reset: [enabled: false, time: "03:15", timezone: "Europe/Bratislava"],

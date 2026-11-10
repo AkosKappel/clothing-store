@@ -4,6 +4,9 @@ defmodule ClothingStoreWeb.ProductFormLiveTest do
   import Phoenix.LiveViewTest
   import ClothingStore.ProductsFixtures
 
+  alias ClothingStore.Products.Photos
+  alias Vix.Vips.{Image, Operation}
+
   setup :register_and_log_in_user
 
   @valid %{
@@ -135,6 +138,52 @@ defmodule ClothingStoreWeb.ProductFormLiveTest do
 
       {:ok, _} = ClothingStore.Products.update_product(other, %{title: "Elsewhere"})
       refute render(lv) =~ "newer-version"
+    end
+  end
+
+  describe "photo upload" do
+    setup do
+      Photos.clear()
+      on_exit(&Photos.clear/0)
+    end
+
+    test "an uploaded photo fills the photo field and is saved", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/products/new")
+      {:ok, image} = Operation.black(40, 30, bands: 3)
+      {:ok, png} = Image.write_to_buffer(image, ".png")
+
+      photo =
+        file_input(lv, "#product-form", :photo, [
+          %{name: "shirt.png", content: png, type: "image/png"}
+        ])
+
+      render_upload(photo, "shirt.png")
+      html = render(lv)
+
+      assert [_, path] =
+               Regex.run(~r|id="photo-preview" src="(/uploads/[0-9a-f]{32}\.webp)"|, html)
+
+      assert has_element?(lv, ~s|#product_photo[value="#{path}"]|)
+
+      # follow_trigger_action posts only the values given here, so pass what the page now holds
+      form = form(lv, "#product-form", product: %{@valid | photo: path})
+      render_submit(form)
+      conn = follow_trigger_action(form, conn)
+      %{id: id} = redirected_params(conn)
+      assert ClothingStore.Products.get_product!(id).photo == path
+    end
+
+    test "a file that is not an image is refused", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/products/new")
+
+      photo =
+        file_input(lv, "#product-form", :photo, [
+          %{name: "evil.png", content: "<svg onload=alert(1)>", type: "image/png"}
+        ])
+
+      render_upload(photo, "evil.png")
+      assert render(lv) =~ "Choose a JPEG, PNG or WebP image."
+      refute render(lv) =~ "/uploads/"
     end
   end
 end

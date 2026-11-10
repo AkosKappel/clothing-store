@@ -46,3 +46,6 @@ config :phoenix_live_view,
 
 # deleted products are purged by hand in the tests
 config :clothing_store, :purge_deleted, false
+
+# each run starts empty (ClothingStore.Products.Photos)
+config :clothing_store, :uploads_dir, Path.join(System.tmp_dir!(), "tagline-test-uploads")

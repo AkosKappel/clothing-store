@@ -2,7 +2,7 @@ defmodule ClothingStore.Products.Product do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ClothingStore.Products.Variant
+  alias ClothingStore.Products.{Photos, Variant}
 
   schema "products" do
     field :description, :string
@@ -156,6 +156,9 @@ defmodule ClothingStore.Products.Product do
   defp allowed_photo?("/images/" <> _ = path),
     # "%2e%2e" is a dot-segment to browsers too
     do: not String.contains?(String.downcase(path), ["..", "%2e", "\\"])
+
+  defp allowed_photo?("/uploads/" <> _ = path),
+    do: Photos.upload_path?(path)
 
   defp allowed_photo?("https://" <> _ = url) do
     case URI.new(url) do

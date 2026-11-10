@@ -79,6 +79,9 @@ services:
       # the BEAM's schedulers see all host CPUs; keep them modest next to other apps
       ERL_FLAGS: "+S 2:2"
     # the release only writes its runtime config to /tmp (RELEASE_TMP, rel/env.sh.eex)
+    volumes:
+      # uploaded product photos (emptied by the nightly reset)
+      - uploads:/app/uploads
     read_only: true
     tmpfs:
       - /tmp:size=16m
@@ -132,5 +135,6 @@ networks:
     driver: bridge
 
 volumes:
+  uploads:
   # PostgreSQL 18 data (postgres:18 mounts /var/lib/postgresql)
   dbdata:

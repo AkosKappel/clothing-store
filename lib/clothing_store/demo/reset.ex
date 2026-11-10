@@ -1,11 +1,12 @@
 defmodule ClothingStore.Demo.Reset do
   @moduledoc """
   Puts the demo back to its seed state: every product, transaction and user
-  goes, the seeds run again, and open pages are told to reload.
+  goes, as do uploaded photos, the seeds run again, and open pages are told to reload.
   """
   require Logger
   import Ecto.Query
 
+  alias ClothingStore.Products.Photos
   alias ClothingStore.Repo
   alias ClothingStore.Users.UserToken
 
@@ -32,6 +33,7 @@ defmodule ClothingStore.Demo.Reset do
         timeout: :timer.minutes(1)
       )
 
+    Photos.clear()
     Phoenix.PubSub.broadcast(ClothingStore.PubSub, "products", :demo_reset)
     Logger.info("Demo reset finished")
     :ok

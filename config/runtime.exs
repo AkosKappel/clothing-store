@@ -84,6 +84,9 @@ config :clothing_store,
        )
 
 if config_env() == :prod do
+  # a writable volume: the release itself is read-only
+  config :clothing_store, :uploads_dir, System.get_env("UPLOADS_DIR", "/app/uploads")
+
   database_url =
     System.get_env("DATABASE_URL") ||
       raise """

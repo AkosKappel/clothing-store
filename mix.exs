@@ -51,6 +51,8 @@ defmodule ClothingStore.MixProject do
       {:phoenix_live_view, "~> 1.2"},
       {:lazy_html, "~> 0.1", only: :test},
       {:phoenix_live_dashboard, "~> 0.9"},
+      # libvips: uploaded photos are decoded, resized and re-encoded to WebP
+      {:vix, "~> 0.43"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.5", runtime: Mix.env() == :dev},
       {:heroicons,

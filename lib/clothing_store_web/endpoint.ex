@@ -30,6 +30,9 @@ defmodule ClothingStoreWeb.Endpoint do
     # match the exact names in static_paths
     only_matching: ~w(favicon manifest)
 
+  # uploaded product photos (ClothingStore.Products.Photos), outside the release
+  plug Plug.Static, at: "/uploads", from: {ClothingStore.Products.Photos, :dir, []}
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
