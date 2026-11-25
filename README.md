@@ -4,6 +4,8 @@ Author: **Ákos Kappel**
 
 Live Demo: **[Modern Fashion Store](https://tagline.akoskappel.dev)** (press **Try the demo** on the login page; the data resets every night)
 
+Case study: **[akoskappel.dev/projects/modern-fashion-store](https://akoskappel.dev/projects/modern-fashion-store)**
+
 # Table of Contents
 
 - [Tech stack](#tech-stack)
